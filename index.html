@@ -441,6 +441,20 @@ const DATA = [
     ],
     finalLiner:"SRM = 접근을 최종 판정하는 문지기(토큰 SID ↔ 객체 DACL) / 원류=<b>참조 모니터 3요건: 항상호출·변조불가·검증가능</b> / 구현=보안 커널",
     related:["winauth","adminshares"]
+  },
+  {
+    id:"logon", term:"윈도우 대화형 로그온 (winlogon·GINA)", en:"winlogon / GINA / Credential Provider",
+    cat:"시스템 보안",
+    tags:["winlogon","SAS=Ctrl+Alt+Del","GINA(구식)","Credential Provider(신식)","신뢰 경로"],
+    oneLiner:"로그온 총괄=winlogon / 자격증명 수집 UI: 구식 GINA→신식 Credential Provider / Ctrl+Alt+Del=신뢰 경로",
+    blocks:[
+      {k:"def",title:"핵심 — 처리 흐름",d:"사용자 로그인 처리 순서: <b>Ctrl+Alt+Del(SAS)</b> → <code>winlogon.exe</code>(로그온 총괄) → 자격증명 수집 UI(<b>GINA</b> 또는 <b>Credential Provider</b>) → <code>lsass.exe</code>(<b>LSA</b>)가 실제 검증(NTLM·Kerberos) → <b>액세스 토큰</b> 생성 → 이후 접근은 <b>SRM</b>이 판정. '누가 UI를 띄우고, 누가 실제로 검증하나'를 구분하는 게 포인트."},
+      {k:"note",title:"프로세스별 역할 (표로 정리)",d:"<b>winlogon.exe</b>=로그온·로그오프 세션 <b>총괄</b>(항상 이 이름, 구·신 공통) · <b>SAS(Secure Attention Sequence)=Ctrl+Alt+Del</b>=로그인 화면 호출 신호 · <b>GINA/Credential Provider</b>=아이디·비번을 <b>입력받는 UI</b> · <b>lsass(LSA)</b>=받은 자격증명을 <b>실제 검증</b>·토큰 생성. UI(수집)와 LSA(검증)는 <b>다른 역할</b>."},
+      {k:"note",title:"구식 vs 신식 (교체 — 시험 단골)",d:"<b>구식: GINA(Graphical Identification and Authentication)</b> = <code>msgina.dll</code>, Windows NT~XP/2003. winlogon이 이 DLL을 로드해 로그인 UI 제공, 스마트카드·지문용으로 <b>통째 교체</b> 가능. 단점: GINA 하나 잘못되면 <b>로그온 전체가 깨지고</b> 보안·안정성 취약. → <b>신식: Credential Provider(자격증명 공급자)</b>, Windows Vista 이후. <b>모듈형</b>이라 비번·PIN·지문·얼굴이 <b>여러 개 공존</b>, 더 안전·유연. 'GINA는 Vista에서 Credential Provider로 대체됐다'가 핵심."},
+      {k:"warn",title:"Ctrl+Alt+Del을 왜? — 신뢰 경로(Trusted Path)",d:"<b>SAS(Ctrl+Alt+Del)</b>는 <b>winlogon만</b> 가로챌 수 있는 특수 신호. 악성코드가 <b>가짜 로그인 화면</b>을 띄워 비번을 훔치는 <b>로그온 스푸핑</b>을 막아, '지금 이 화면은 진짜 OS'임을 보장하는 <b>신뢰 경로</b>. '로그인 시 Ctrl+Alt+Del을 누르는 이유는?'이 전형적 출제."}
+    ],
+    finalLiner:"winlogon=로그온 총괄 / UI 수집: <b>구식 GINA→신식 Credential Provider(Vista~)</b> / 검증=lsass(LSA) / <b>Ctrl+Alt+Del(SAS)=신뢰 경로</b>(스푸핑 방지)",
+    related:["winauth","process","srm"]
   }
 ];
 
