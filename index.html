@@ -30,7 +30,7 @@
     font-family:var(--sans);line-height:1.6;
     -webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:820px;margin:0 auto;padding:0 16px 80px;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 16px 80px;}
 
   /* ---- header ---- */
   header.top{padding:34px 0 18px;}
@@ -193,6 +193,66 @@
 
   @media(prefers-reduced-motion:reduce){*{transition:none!important;}}
   :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px;}
+
+  /* ---- layout: sidebar + main ---- */
+  .layout{display:grid;grid-template-columns:236px 1fr;gap:22px;align-items:start;}
+  .sidebar{position:sticky;top:14px;display:flex;flex-direction:column;gap:14px;}
+  .side-block{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;}
+  .side-h{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 10px;}
+  .toc-part{margin-bottom:11px;}
+  .toc-part:last-child{margin-bottom:0;}
+  .toc-part-btn{width:100%;text-align:left;background:none;border:0;font-family:inherit;color:var(--ink);
+    font-weight:700;font-size:13px;cursor:pointer;padding:5px 6px;border-radius:7px;display:flex;justify-content:space-between;gap:6px;align-items:center;}
+  .toc-part-btn:hover{background:var(--surface-2);}
+  .toc-part-btn[aria-pressed="true"]{background:var(--accent);color:#fff;}
+  .toc-part-btn .cnt{font-family:var(--mono);font-size:9.5px;font-weight:600;color:var(--ink-soft);flex:none;}
+  .toc-part-btn[aria-pressed="true"] .cnt{color:#cfe0f0;}
+  .toc-part-btn.disabled{color:var(--line-strong);cursor:default;}
+  .toc-part-btn.disabled:hover{background:none;}
+  .toc-secs{list-style:none;margin:3px 0 0;padding:0;}
+  .toc-secs li{font-size:11px;color:var(--ink-soft);padding:1.5px 0 1.5px 9px;margin-left:6px;border-left:2px solid var(--line);}
+  .glossary-btn{width:100%;background:var(--accent);color:#fff;border:0;border-radius:11px;padding:11px;font-family:inherit;font-weight:700;font-size:13.5px;cursor:pointer;transition:background .15s;}
+  .glossary-btn:hover{background:#163a5c;}
+
+  /* ---- group headers ---- */
+  .group-head{margin:24px 0 2px;padding:0 2px;}
+  .group-head:first-child{margin-top:4px;}
+  .group-head h2{font-size:15.5px;font-weight:800;margin:0;letter-spacing:-.01em;display:flex;align-items:center;gap:8px;}
+  .group-head .g-count{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--ink-soft);background:var(--surface-2);border:1px solid var(--line);border-radius:20px;padding:0 7px;}
+  .group-head .g-sub{font-size:12px;color:var(--ink-soft);margin:3px 0 0;}
+
+  /* ---- chain collapsible ---- */
+  details.chain summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  details.chain summary::-webkit-details-marker{display:none;}
+  details.chain summary .chain-label{margin:0;}
+  details.chain summary .chev{font-family:var(--mono);color:var(--ink-soft);font-size:12px;transition:transform .2s;flex:none;}
+  details.chain[open] summary .chev{transform:rotate(90deg);}
+  details.chain .chain-flow{margin-top:14px;}
+
+  /* ---- glossary modal ---- */
+  .gloss-modal{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-start;justify-content:center;
+    padding:40px 16px;background:#14202db3;overflow-y:auto;}
+  .gloss-modal[hidden]{display:none;}
+  .gloss-panel{background:var(--surface);border-radius:16px;max-width:720px;width:100%;padding:22px 22px 26px;box-shadow:0 20px 60px #14202d55;}
+  .gloss-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+  .gloss-top h2{margin:0;font-size:20px;font-weight:800;}
+  .gloss-close{border:1px solid var(--line);background:var(--surface);border-radius:9px;width:34px;height:34px;font-size:20px;line-height:1;cursor:pointer;color:var(--ink-soft);}
+  .gloss-close:hover{background:var(--surface-2);}
+  .gloss-sub{color:var(--ink-soft);font-size:13px;margin:0 0 14px;}
+  .gloss-search{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-family:inherit;font-size:14px;margin-bottom:14px;outline:0;background:var(--surface-2);}
+  .gloss-search:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);background:var(--surface);}
+  .gloss-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .gloss-item{text-align:left;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:9px 11px;cursor:pointer;font-family:inherit;color:inherit;transition:border-color .15s,background .15s;}
+  .gloss-item:hover{border-color:var(--accent);background:var(--accent-soft);}
+  .gloss-item .ab{font-weight:800;font-size:14px;}
+  .gloss-item .full{font-family:var(--mono);font-size:11px;color:var(--accent);margin-top:1px;line-height:1.35;}
+  .gloss-item .ko{font-size:11.5px;color:var(--ink-soft);margin-top:2px;}
+
+  @media(max-width:820px){
+    .layout{grid-template-columns:1fr;}
+    .sidebar{position:static;}
+    .gloss-list{grid-template-columns:1fr;}
+  }
 </style>
 </head>
 <body>
@@ -207,28 +267,58 @@
     </div>
   </header>
 
-  <section class="chain" id="chainMap">
-    <p class="chain-label">SMB 계열 공격 사슬 — 눌러서 카드로 이동</p>
-    <div class="chain-flow" id="chainFlow"></div>
-  </section>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="side-block">
+        <p class="side-h">교재 목차</p>
+        <nav id="toc"></nav>
+      </div>
+      <div class="side-block">
+        <p class="side-h">빠른 도구</p>
+        <button class="glossary-btn" id="glossaryOpen">🔤 약어 모음집</button>
+      </div>
+    </aside>
 
-  <div class="controls">
-    <div class="search-row">
-      <label class="search">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-        <input id="q" type="search" placeholder="개념·용어·포트로 검색 (예: 445, 널세션)" autocomplete="off" />
-      </label>
-      <button class="review-btn" id="reviewToggle" aria-pressed="false">가리기 모드</button>
+    <div class="main-col">
+      <details class="chain" id="chainMap" open>
+        <summary>
+          <span class="chain-label">🔗 SMB 계열 공격 사슬 — 눌러서 카드로 이동</span>
+          <span class="chev">▶</span>
+        </summary>
+        <div class="chain-flow" id="chainFlow"></div>
+      </details>
+
+      <div class="controls">
+        <div class="search-row">
+          <label class="search">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            <input id="q" type="search" placeholder="개념·용어·포트로 검색 (예: 445, 널세션)" autocomplete="off" />
+          </label>
+          <button class="review-btn" id="reviewToggle" aria-pressed="false">가리기 모드</button>
+        </div>
+        <div class="chips" id="chips"></div>
+      </div>
+
+      <main class="cards" id="cards"></main>
+      <p class="empty" id="empty" style="display:none">검색 결과가 없어요.</p>
     </div>
-    <div class="chips" id="chips"></div>
   </div>
-
-  <main class="cards" id="cards"></main>
-  <p class="empty" id="empty" style="display:none">검색 결과가 없어요.</p>
 
   <footer>
     <b>카드 추가하는 법</b> — 이 파일을 열어 <code>const DATA = [ ... ]</code> 배열에 객체 하나를 복사해 넣고 저장하면 끝. 배포해 뒀다면 그 파일만 다시 올리면 반영됩니다. 각 카드 형식은 파일 맨 아래 주석의 템플릿을 참고하세요.
   </footer>
+</div>
+
+<div class="gloss-modal" id="glossaryModal" hidden>
+  <div class="gloss-panel">
+    <div class="gloss-top">
+      <h2>🔤 약어 모음집</h2>
+      <button class="gloss-close" id="glossaryClose" aria-label="닫기">&times;</button>
+    </div>
+    <p class="gloss-sub">약어를 누르면 해당 카드로 이동해요. 검색으로 빠르게 찾을 수 있어요.</p>
+    <input class="gloss-search" id="glossSearch" placeholder="약어·풀네임·뜻 검색 (예: kerberos, 토큰)" autocomplete="off" />
+    <div class="gloss-list" id="glossList"></div>
+  </div>
 </div>
 
 <script>
@@ -458,6 +548,61 @@ const DATA = [
   }
 ];
 
+/* ---------------- 카드 그룹 · 교재 목차 · 약어 모음집 ---------------- */
+// 연관 카드 묶음(순서대로 렌더). 여기에 없는 카드는 자동으로 '기타'로.
+const GROUPS=[
+  {name:"공유·프로토콜 (SMB 계열)", sub:"NetBIOS·SMB·IPC$·관리공유 — 위 공격 사슬과 연결", ids:["netbios","smb","ipc","adminshares"]},
+  {name:"윈도우 인증·로그온", sub:"로그인→검증→접근판정: winlogon→lsass→토큰→SRM", ids:["logon","winauth","ntlm","kerberos","srm","process"]},
+  {name:"파일시스템 (NTFS)", sub:"NTFS 뿌리 + 암호화(EFS·BitLocker)·은닉(ADS)·복원(VSS)", ids:["ntfs","efsbitlocker","ads","vss"]},
+  {name:"포렌식·리버싱", sub:"", ids:["diffing"]},
+];
+// 교재 목차(사이드바). cat이 있으면 그 파트 클릭 시 필터.
+const TOC=[
+  {part:"PART 01 · 시스템 보안", cat:"시스템 보안", secs:["정보시스템 범위·이해","운영체제 구조","위협·공격 기법","예방 및 대응"]},
+  {part:"PART 02 · 네트워크 보안", cat:"네트워크 보안", secs:["네트워크 일반","TCP/IP 구조","공격 기술·대응","네트워크 보안 기술","위협·대응 기술"]},
+  {part:"PART 03 · 애플리케이션 보안", cat:"애플리케이션 보안", secs:["인터넷 응용 보안","DB 보안","전자상거래 보안","개발 보안"]},
+  {part:"PART 04 · 정보보안 일반", cat:"정보보안 일반", secs:["보안 요소 기술","접근 통제","전자서명","암호학"]},
+  {part:"PART 05 · 관리·법률", cat:"정보보안 관리 및 법률", secs:["정보보호 관리","윤리·법규"]},
+];
+// 약어 모음집(가나다/알파벳 정렬). id=클릭 시 이동할 카드.
+const GLOSSARY=[
+  {ab:"ACL",full:"Access Control List",ko:"접근 제어 목록",id:"ntfs"},
+  {ab:"AD",full:"Active Directory",ko:"도메인 계정 중앙 관리",id:"winauth"},
+  {ab:"ADS",full:"Alternate Data Streams",ko:"대체 데이터 스트림(은닉)",id:"ads"},
+  {ab:"AS",full:"Authentication Server",ko:"Kerberos 인증 서버",id:"kerberos"},
+  {ab:"BitLocker",full:"BitLocker Drive Encryption",ko:"볼륨 전체 암호화(TPM)",id:"efsbitlocker"},
+  {ab:"CIFS",full:"Common Internet File System",ko:"SMB의 옛 이름(=SMBv1)",id:"smb"},
+  {ab:"DACL",full:"Discretionary Access Control List",ko:"임의 접근제어 목록",id:"srm"},
+  {ab:"DRA",full:"Data Recovery Agent",ko:"EFS 복구 에이전트",id:"efsbitlocker"},
+  {ab:"EFS",full:"Encrypting File System",ko:"파일 단위 암호화",id:"efsbitlocker"},
+  {ab:"FEK",full:"File Encryption Key",ko:"파일 암호화 대칭키",id:"efsbitlocker"},
+  {ab:"GINA",full:"Graphical Identification and Authentication",ko:"구식 로그인 UI DLL",id:"logon"},
+  {ab:"IPC$",full:"Inter-Process Communication Share",ko:"프로세스 통신·널세션 통로",id:"ipc"},
+  {ab:"KDC",full:"Key Distribution Center",ko:"Kerberos 키 배포 센터",id:"kerberos"},
+  {ab:"Kerberos",full:"(그리스 신화: 머리 셋 지옥문 개)",ko:"도메인 티켓 기반 인증",id:"kerberos"},
+  {ab:"LAPS",full:"Local Administrator Password Solution",ko:"로컬관리자 암호 분산",id:"adminshares"},
+  {ab:"LM",full:"LAN Manager",ko:"구식 취약 해시/인증",id:"winauth"},
+  {ab:"LSA",full:"Local Security Authority",ko:"인증·정책 담당(lsass)",id:"winauth"},
+  {ab:"MFT",full:"Master File Table",ko:"NTFS 파일 메타데이터 표",id:"ntfs"},
+  {ab:"MOTW",full:"Mark of the Web",ko:"인터넷 출처 표시(ADS)",id:"ads"},
+  {ab:"NetBIOS",full:"Network Basic Input/Output System",ko:"LAN 이름 통신(레거시)",id:"netbios"},
+  {ab:"NT",full:"New Technology",ko:"Windows NT 계열(NTFS·NTLM)",id:"ntlm"},
+  {ab:"NTLM",full:"NT LAN Manager",ko:"챌린지-리스폰스 인증",id:"ntlm"},
+  {ab:"PtH",full:"Pass-the-Hash",ko:"해시만으로 인증(공격)",id:"ntlm"},
+  {ab:"SACL",full:"System Access Control List",ko:"감사(audit)용 ACL",id:"srm"},
+  {ab:"SAM",full:"Security Account Manager",ko:"로컬 계정 해시 저장",id:"winauth"},
+  {ab:"SAS",full:"Secure Attention Sequence",ko:"Ctrl+Alt+Del(신뢰 경로)",id:"logon"},
+  {ab:"SID",full:"Security Identifier",ko:"보안 식별자",id:"srm"},
+  {ab:"SMB",full:"Server Message Block",ko:"윈도우 파일공유 프로토콜",id:"smb"},
+  {ab:"SRM",full:"Security Reference Monitor",ko:"접근 최종 판정(참조 모니터)",id:"srm"},
+  {ab:"SSO",full:"Single Sign-On",ko:"한 번 로그인·다수 서비스",id:"kerberos"},
+  {ab:"TGS",full:"Ticket Granting Server",ko:"서비스 티켓 발급",id:"kerberos"},
+  {ab:"TGT",full:"Ticket Granting Ticket",ko:"티켓 발급용 티켓(신분증)",id:"kerberos"},
+  {ab:"TPM",full:"Trusted Platform Module",ko:"보안 칩(BitLocker)",id:"efsbitlocker"},
+  {ab:"VSS",full:"Volume Shadow Copy Service",ko:"시점 스냅샷·복원",id:"vss"},
+  {ab:"WAL",full:"Write-Ahead Logging",ko:"저널링 원리(먼저 기록)",id:"ntfs"},
+].sort((a,b)=>a.ab.localeCompare(b.ab,"en"));
+
 /* ---------------- 렌더링 (건드릴 일 거의 없음) ---------------- */
 const $=(s,el=document)=>el.querySelector(s);
 const $$=(s,el=document)=>[...el.querySelectorAll(s)];
@@ -484,9 +629,34 @@ const chipsEl=$("#chips");
 cats.forEach(c=>{
   const b=document.createElement("button");
   b.className="chip";b.textContent=c;b.setAttribute("aria-pressed",c==="전체");
-  b.onclick=()=>{activeCat=c;$$(".chip").forEach(x=>x.setAttribute("aria-pressed",x.textContent===c));render();};
+  b.onclick=()=>setCat(c);
   chipsEl.appendChild(b);
 });
+
+// 사이드바 교재 목차
+const tocEl=$("#toc");
+TOC.forEach(t=>{
+  const n=DATA.filter(d=>d.cat===t.cat).length;
+  const part=document.createElement("div");part.className="toc-part";
+  const btn=document.createElement("button");
+  btn.className="toc-part-btn"+(n?"":" disabled");
+  btn.dataset.cat=t.cat;
+  btn.innerHTML=`<span>${t.part}</span><span class="cnt">${n?n+"개":"준비중"}</span>`;
+  if(n)btn.onclick=()=>{setCat(t.cat);$(".main-col").scrollIntoView({behavior:"smooth",block:"start"});};
+  part.appendChild(btn);
+  const ul=document.createElement("ul");ul.className="toc-secs";
+  t.secs.forEach(s=>{const li=document.createElement("li");li.textContent=s;ul.appendChild(li);});
+  part.appendChild(ul);
+  tocEl.appendChild(part);
+});
+
+// 카테고리 선택을 칩·목차와 동기화
+function setCat(c){
+  activeCat=c;
+  $$(".chip").forEach(x=>x.setAttribute("aria-pressed",x.textContent===c));
+  $$(".toc-part-btn").forEach(b=>b.setAttribute("aria-pressed",b.dataset.cat===c));
+  render();
+}
 
 function blockHTML(b){
   return `<div class="block ${b.k}"><p class="b-title">${b.title}</p><div class="b-body">${b.d}</div></div>`;
@@ -513,20 +683,34 @@ function match(d){
   const hay=(d.term+" "+d.en+" "+d.oneLiner+" "+(d.tags||[]).join(" ")+" "+JSON.stringify(d.blocks)).toLowerCase();
   return hay.includes(query);
 }
+// 연관 그룹 순서로 묶어서 렌더
+function orderedGroups(){
+  const seen=new Set();
+  const groups=GROUPS.map(g=>{g.ids.forEach(id=>seen.add(id));return {name:g.name,sub:g.sub,cards:g.ids.map(id=>DATA.find(d=>d.id===id)).filter(Boolean)};});
+  const rest=DATA.filter(d=>!seen.has(d.id));
+  if(rest.length)groups.push({name:"기타",sub:"",cards:rest});
+  return groups;
+}
 function render(){
-  const list=DATA.filter(match);
-  $("#cards").innerHTML=list.map(cardHTML).join("");
-  $("#empty").style.display=list.length?"none":"block";
+  let html="",total=0;
+  orderedGroups().forEach(g=>{
+    const vis=g.cards.filter(match);
+    if(!vis.length)return;
+    total+=vis.length;
+    html+=`<div class="group-head"><h2>${g.name} <span class="g-count">${vis.length}</span></h2>${g.sub?`<p class="g-sub">${g.sub}</p>`:""}</div>`;
+    html+=vis.map(cardHTML).join("");
+  });
+  $("#cards").innerHTML=html;
+  $("#empty").style.display=total?"none":"block";
   $$(".card-head").forEach(h=>h.onclick=()=>{
     const c=h.closest(".card");const open=c.classList.toggle("open");
     h.setAttribute("aria-expanded",open);
   });
-  $$("[data-jump]").forEach(a=>a.onclick=e=>{e.stopPropagation();jumpTo(a.dataset.jump);});
+  $$("#cards [data-jump]").forEach(a=>a.onclick=e=>{e.stopPropagation();jumpTo(a.dataset.jump);});
 }
 function jumpTo(id){
-  query="";$("#q").value="";activeCat="전체";
-  $$(".chip").forEach(x=>x.setAttribute("aria-pressed",x.textContent==="전체"));
-  render();
+  query="";$("#q").value="";
+  setCat("전체");
   const c=$("#card-"+id);
   if(c){c.classList.add("open");$(".card-head",c).setAttribute("aria-expanded","true");
     c.scrollIntoView({behavior:"smooth",block:"center"});}
@@ -537,6 +721,24 @@ $("#reviewToggle").onclick=e=>{
   e.currentTarget.setAttribute("aria-pressed",on);
   $$(".card.open").forEach(c=>{c.classList.remove("open");$(".card-head",c).setAttribute("aria-expanded","false");});
 };
+
+/* ---------------- 약어 모음집 ---------------- */
+function renderGlossary(f=""){
+  const q=(f||"").trim().toLowerCase();
+  const list=GLOSSARY.filter(g=>!q||(g.ab+" "+g.full+" "+g.ko).toLowerCase().includes(q));
+  $("#glossList").innerHTML=list.length
+    ? list.map(g=>`<button class="gloss-item" data-jump="${g.id}"><div class="ab">${g.ab}</div><div class="full">${g.full}</div><div class="ko">${g.ko}</div></button>`).join("")
+    : `<p style="color:var(--ink-soft);grid-column:1/-1;margin:6px 2px">일치하는 약어가 없어요.</p>`;
+  $$("#glossList [data-jump]").forEach(a=>a.onclick=()=>{closeGlossary();jumpTo(a.dataset.jump);});
+}
+function openGlossary(){$("#glossaryModal").hidden=false;$("#glossSearch").value="";renderGlossary();$("#glossSearch").focus();}
+function closeGlossary(){$("#glossaryModal").hidden=true;}
+$("#glossaryOpen").onclick=openGlossary;
+$("#glossaryClose").onclick=closeGlossary;
+$("#glossSearch").oninput=e=>renderGlossary(e.target.value);
+$("#glossaryModal").onclick=e=>{if(e.target.id==="glossaryModal")closeGlossary();};
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#glossaryModal").hidden)closeGlossary();});
+
 render();
 
 /* =========================================================================
