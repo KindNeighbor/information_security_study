@@ -383,6 +383,50 @@ const DATA = [
     ],
     finalLiner:"VSS = 시점 스냅샷 백업·'이전 버전' 복원 / <b>랜섬웨어가 vssadmin으로 삭제</b>해 복구 차단 / 포렌식 증거원",
     related:["ntfs"]
+  },
+  {
+    id:"winauth", term:"윈도우 인증 체계", en:"SAM / LSA / LM·NTLM·Kerberos",
+    cat:"시스템 보안",
+    tags:["SAM","lsass=LSA","LM→NTLM→Kerberos","Pass-the-Hash"],
+    oneLiner:"로컬=SAM에 해시 저장 / 처리=lsass(LSA) / 프로토콜 진화 LM→NTLM→Kerberos / 도메인=AD·Kerberos",
+    blocks:[
+      {k:"def",title:"정의",d:"윈도우가 사용자를 확인하는 체계. 자격증명을 처리하는 핵심 프로세스가 <code>lsass.exe</code>=<b>LSA(Local Security Authority, 로컬 보안 인증)</b>. '정상 프로세스' 카드의 lsass가 바로 이 인증 담당이라 자격증명 탈취 표적."},
+      {k:"note",title:"로컬 vs 도메인 (저장 위치)",d:"<b>로컬 계정</b>: 비번 해시가 <b>SAM(Security Account Manager, 보안 계정 관리자)</b> 파일에 저장(<code>C:\\Windows\\System32\\config\\SAM</code>). <b>도메인</b>: <b>AD(Active Directory)</b>가 중앙에서 계정 관리 → 인증은 <b>Kerberos</b>."},
+      {k:"note",title:"인증 프로토콜 진화 (세트 암기)",d:"<b>LM(LAN Manager)</b> 해시=아주 취약(구식, 대소문자 무시·짧음) → <b>NTLM(NT LAN Manager)</b>=챌린지-리스폰스 → <b>Kerberos</b>=도메인 표준(티켓 기반). 뒤로 갈수록 안전 — '버전으로 판단'은 SMB 카드와 같은 논리."},
+      {k:"warn",title:"자격증명 탈취",d:"<b>lsass 메모리</b>에서 해시·때론 평문을 추출(<b>mimikatz</b>), <b>SAM 덤프</b>. 해시만 있어도 <b>Pass-the-Hash</b>로 로그인 가능(NTLM 카드 참고). 관리자 해시가 PC마다 같으면 옆 PC로 번짐(관리 공유 카드의 측면이동)."},
+      {k:"safe",title:"방어",d:"<b>LM 해시 저장 비활성화</b>, 최신 프로토콜(Kerberos) 사용, <b>Credential Guard</b>로 lsass 격리, <b>LAPS(Local Administrator Password Solution)</b>로 로컬관리자 암호 분산. 강한 암호·다단계 인증."}
+    ],
+    finalLiner:"로컬=<b>SAM</b>에 해시 / 처리=<b>lsass(LSA)</b> / 진화 <b>LM→NTLM→Kerberos</b> / 탈취=mimikatz·Pass-the-Hash",
+    related:["process","ntlm","kerberos","adminshares"]
+  },
+  {
+    id:"ntlm", term:"NTLM 인증", en:"NT LAN Manager",
+    cat:"시스템 보안",
+    tags:["챌린지-리스폰스","NT 해시","Pass-the-Hash","NTLM Relay"],
+    oneLiner:"윈도우 챌린지-리스폰스 인증 / 비번은 안 보냄 / 해시만 있으면 뚫리는 Pass-the-Hash 취약",
+    blocks:[
+      {k:"def",title:"정의",d:"<b>NTLM(NT LAN Manager)</b> = 윈도우 <b>챌린지-리스폰스(Challenge-Response)</b> 인증. 비밀번호를 네트워크로 <b>직접 보내지 않는</b> 게 핵심 발상."},
+      {k:"note",title:"동작 흐름",d:"① 서버가 랜덤값 <b>챌린지(nonce)</b> 전송 → ② 클라이언트가 <b>NT 해시로 그 챌린지를 암호화한 응답</b>을 반환 → ③ 서버가 같은 계산으로 검증. 비번·해시 원본은 오가지 않고 '해시를 안다는 증거'만 주고받음."},
+      {k:"warn",title:"취약점 — Pass-the-Hash",d:"챌린지 응답을 <b>해시로 만들기 때문에, 평문 비번 없이 해시만 탈취해도 인증</b>이 됨 = <b>PtH(Pass-the-Hash)</b>. 또 인증을 가로채 다른 서버에 그대로 넘기는 <b>NTLM Relay</b>. <b>LM 해시</b>는 더 심각(약한 구조)."},
+      {k:"safe",title:"방어",d:"가능하면 <b>Kerberos로 전환</b>, NTLM(특히 <b>NTLMv1·LM</b>) 비활성화·제한, <b>SMB 서명</b>으로 릴레이 차단, <b>LAPS</b>로 해시 재사용 차단, Credential Guard."}
+    ],
+    finalLiner:"NTLM = 챌린지-리스폰스(비번 안 보냄) / <b>해시=자격증명 → Pass-the-Hash</b> / 릴레이 취약 → Kerberos 권장",
+    related:["winauth","kerberos","adminshares"]
+  },
+  {
+    id:"kerberos", term:"커버로스 인증", en:"Kerberos",
+    cat:"시스템 보안",
+    tags:["KDC","TGT","티켓","SSO","타임스탬프","Golden Ticket"],
+    oneLiner:"도메인(AD) 표준 인증 / KDC가 티켓 발급(TGT→서비스티켓) / 대칭키·타임스탬프 / SSO",
+    blocks:[
+      {k:"def",title:"정의 (어원으로 기억)",d:"도메인(AD) 기본 인증. 이름은 <b>그리스 신화의 머리 셋 달린 지옥문 개 '케르베로스'</b> — 인증에 <b>3 주체(클라이언트·서버·KDC)</b>가 얽힌 걸 상징. 비번을 네트워크로 안 보내고 <b>티켓</b>으로 신원 증명."},
+      {k:"note",title:"구성 — KDC",d:"핵심은 <b>KDC(Key Distribution Center, 키 배포 센터)</b>. 그 안에 <b>AS(Authentication Server, 인증 서버)</b> + <b>TGS(Ticket Granting Server, 티켓 발급 서버)</b>. 도메인에선 AD 도메인 컨트롤러가 KDC 역할."},
+      {k:"note",title:"인증 흐름 (티켓 2단계 — 시험 단골)",d:"① 로그인 시 <b>AS</b>가 <b>TGT(Ticket Granting Ticket, 티켓 발급용 티켓)</b>를 줌 = '신분증' → ② 서비스 접속 때 그 TGT를 <b>TGS</b>에 제출해 <b>서비스 티켓(ST)</b>을 받음 → ③ 서비스 티켓으로 실제 서버 접속. 한 번 로그인으로 여러 서비스 = <b>SSO(Single Sign-On)</b>."},
+      {k:"note",title:"특징",d:"<b>대칭키</b> 기반 · <b>타임스탬프</b>로 <b>재전송(replay) 공격 방지</b> → 그래서 <b>시간 동기화가 필수</b>(기본 5분 오차 허용). 이 '타임스탬프=리플레이 방지' 포인트가 자주 출제."},
+      {k:"warn",title:"공격",d:"<b>Golden Ticket</b>: KDC의 <code>krbtgt</code> 계정 해시를 훔치면 <b>위조 TGT</b>를 무제한 발급 → 도메인 전체 장악. <b>Pass-the-Ticket</b>(티켓 탈취 재사용), <b>Kerberoasting</b>(서비스 티켓 오프라인 크래킹)."}
+    ],
+    finalLiner:"Kerberos=도메인 표준(머리 셋 개=3주체) / <b>KDC(AS+TGS)</b>가 <b>TGT→서비스티켓</b> 발급 / 대칭키·타임스탬프(리플레이 방지)·SSO / 공격=Golden Ticket",
+    related:["winauth","ntlm"]
   }
 ];
 
