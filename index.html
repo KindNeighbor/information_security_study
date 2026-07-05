@@ -335,8 +335,9 @@ const DATA = [
     oneLiner:"윈도우 기본 파일시스템 / 권한(ACL)·암호화(EFS)·저널링·감사 내장 / FAT엔 없던 보안기능",
     blocks:[
       {k:"def",title:"정의",d:"윈도우 기본 파일시스템. FAT의 후속으로 <b>보안·복구 기능이 내장</b>. 세부 개념(EFS·BitLocker·ADS·VSS)이 전부 이 위에서 도는 '뿌리' 개념 — 이걸 지도로 잡고 나머지를 얹으면 안 헷갈림."},
-      {k:"note",title:"FAT vs NTFS (시험 단골 비교)",d:"<b>FAT엔 없고 NTFS에만 있는 것</b>을 물음: ①<b>접근권한(ACL)</b> ②<b>암호화(EFS)</b> ③<b>저널링(복구)</b> ④감사(Auditing) ⑤압축·대용량·디스크쿼터. FAT은 권한·암호화·저널링이 <b>없다</b> → 보안엔 NTFS."},
-      {k:"note",title:"핵심 구성요소",d:"<code>MFT</code>(마스터 파일 테이블) 모든 파일의 메타데이터 목록 · <code>$LogFile</code> <b>저널링</b>—비정상 종료 시 파일시스템 자동 복구 · <b>ADS</b>(대체 데이터 스트림)—한 파일에 여러 데이터 흐름(양날의 검)."},
+      {k:"note",title:"FAT vs NTFS (시험 단골 비교)",d:"<b>FAT엔 없고 NTFS에만 있는 것</b>을 물음: ①<b>접근권한(ACL, Access Control List=접근제어 목록)</b> ②<b>암호화(EFS)</b> ③<b>저널링(복구)</b> ④감사(Auditing) ⑤압축·대용량·디스크쿼터. FAT은 권한·암호화·저널링이 <b>없다</b> → 보안엔 NTFS."},
+      {k:"note",title:"핵심 구성요소",d:"<code>MFT</code>(마스터 파일 테이블) 모든 파일의 메타데이터 목록 · <code>$LogFile</code> <b>저널링</b> · <b>ADS</b>(대체 데이터 스트림)—한 파일에 여러 데이터 흐름(양날의 검)."},
+      {k:"note",title:"저널링 (Journaling) — 어원으로 이해",d:"<b>journal=일지·(회계) 분개장</b>: 최종 장부에 옮기기 <b>전에</b> 먼저 시간순으로 적어두는 기록('journ'=하루→날마다 적음, journey·저널리스트와 같은 뿌리). 파일시스템도 똑같이 <b>실제 디스크에 쓰기 전, 할 작업을 저널(로그)에 먼저 기록</b>(Write-Ahead Logging) → 도중에 정전·크래시가 나도 재부팅 때 저널을 보고 <b>재실행(redo)/되돌림(rollback)</b>해 일관성 유지. 핵심은 '자동 복구'가 아니라 <b>'하기 전에 먼저 적어둔다'</b>. NTFS=<code>$LogFile</code>, 리눅스 ext3/4·XFS도 저널링."},
       {k:"warn",title:"NTFS라서 생기는 위험",d:"기능이 많아 <b>악용 포인트</b>도 생김: <b>ADS</b>로 악성코드 은닉, <b>VSS</b>(섀도 복사본)를 랜섬웨어가 삭제. 각각은 연결 카드 참고."}
     ],
     finalLiner:"NTFS = 윈도우 기본 FS / <b>권한·암호화·저널링·감사</b> 내장(FAT엔 없음) / 세부개념 EFS·BitLocker·ADS·VSS의 뿌리",
@@ -349,7 +350,7 @@ const DATA = [
     oneLiner:"EFS=파일·폴더 단위 암호화(사용자 계정) / BitLocker=볼륨(드라이브) 전체 암호화(TPM) / '단위'로 구분",
     blocks:[
       {k:"def",title:"EFS (파일 단위)",d:"NTFS 기능. <b>파일·폴더 단위</b> 암호화. 대칭키 <code>FEK</code>로 파일을 암호화하고, 그 FEK를 다시 <b>사용자 공개키</b>로 암호화 → 그 사용자로 로그인해야 복호화. 즉 <b>사용자 계정 기반</b>."},
-      {k:"def",title:"BitLocker (볼륨 전체)",d:"<b>드라이브(볼륨) 전체</b>를 통째로 암호화. <b>TPM</b> 칩과 연동해 부팅 전 무결성 검사. <b>노트북 도난 시 디스크 통째 보호</b>가 대표 시나리오. PIN·복구키로도 잠금."},
+      {k:"def",title:"BitLocker (볼륨 전체)",d:"<b>드라이브(볼륨) 전체</b>를 통째로 암호화. <b>TPM(Trusted Platform Module, 신뢰 플랫폼 모듈)</b>—암호키를 하드웨어에 보관하고 부팅 무결성을 검증하는 <b>별도 보안칩</b>—과 연동해 부팅 전 무결성 검사. <b>노트북 도난 시 디스크 통째 보호</b>가 대표 시나리오. PIN·복구키로도 잠금."},
       {k:"note",title:"비교 (표로 암기 — 함정 방지)",d:"단위: <b>EFS=파일/폴더</b> vs <b>BitLocker=볼륨 전체</b> · 인증: EFS=사용자 인증서 / BitLocker=TPM·PIN·복구키 · 노트북 분실 대비=<b>BitLocker</b> · 특정 파일만 몰래=<b>EFS</b>. 함정: '볼륨 전체 암호화는?→BitLocker', '파일 단위는?→EFS'."},
       {k:"warn",title:"EFS 주의",d:"사용자 <b>인증서(개인키)를 잃으면 복호화 불가</b> → 데이터 영구 손실. 조직은 <b>복구 에이전트(DRA, Data Recovery Agent)</b>를 지정해 대비. 반대로 계정이 탈취되면 자동 복호화되므로 계정 보호가 전제."}
     ],
