@@ -405,7 +405,7 @@ const DATA = [
     tags:["챌린지-리스폰스","NT 해시","Pass-the-Hash","NTLM Relay"],
     oneLiner:"윈도우 챌린지-리스폰스 인증 / 비번은 안 보냄 / 해시만 있으면 뚫리는 Pass-the-Hash 취약",
     blocks:[
-      {k:"def",title:"정의",d:"<b>NTLM(NT LAN Manager)</b> = 윈도우 <b>챌린지-리스폰스(Challenge-Response)</b> 인증. 비밀번호를 네트워크로 <b>직접 보내지 않는</b> 게 핵심 발상."},
+      {k:"def",title:"정의",d:"<b>NTLM(NT LAN Manager)</b> = 윈도우 <b>챌린지-리스폰스(Challenge-Response)</b> 인증. 비밀번호를 네트워크로 <b>직접 보내지 않는</b> 게 핵심 발상. <b>NT=New Technology</b>(Windows NT 계열) — 구식 <b>LM(LAN Manager)</b>의 후속. NTFS의 'NT'와 같은 뿌리라 <b>NT 해시</b>도 같은 작명."},
       {k:"note",title:"동작 흐름",d:"① 서버가 랜덤값 <b>챌린지(nonce)</b> 전송 → ② 클라이언트가 <b>NT 해시로 그 챌린지를 암호화한 응답</b>을 반환 → ③ 서버가 같은 계산으로 검증. 비번·해시 원본은 오가지 않고 '해시를 안다는 증거'만 주고받음."},
       {k:"warn",title:"취약점 — Pass-the-Hash",d:"챌린지 응답을 <b>해시로 만들기 때문에, 평문 비번 없이 해시만 탈취해도 인증</b>이 됨 = <b>PtH(Pass-the-Hash)</b>. 또 인증을 가로채 다른 서버에 그대로 넘기는 <b>NTLM Relay</b>. <b>LM 해시</b>는 더 심각(약한 구조)."},
       {k:"safe",title:"방어",d:"가능하면 <b>Kerberos로 전환</b>, NTLM(특히 <b>NTLMv1·LM</b>) 비활성화·제한, <b>SMB 서명</b>으로 릴레이 차단, <b>LAPS</b>로 해시 재사용 차단, Credential Guard."}
