@@ -283,7 +283,21 @@ const DATA = [
       {k:"safe",title:"방어",d:"레지스트리 <code>RestrictAnonymous</code>(또는 RestrictAnonymousSAM) 값을 올려 익명 접속 제한. 근본적으론 <code>139</code>·<code>445</code>를 외부에 노출하지 않기. IPC$ 자체는 정상 기능 — 문제는 '인증 없이 통하던 것'."}
     ],
     finalLiner:"IPC$ = 윈도우 기본 숨김 관리 공유 / <b>널세션</b>이 빈 자격증명으로 접속 / <b>RestrictAnonymous</b>로 차단",
-    related:["smb","netbios"]
+    related:["smb","netbios","adminshares"]
+  },
+  {
+    id:"adminshares", term:"관리 목적 기본 공유", en:"Administrative / Hidden Shares",
+    cat:"시스템 보안",
+    tags:["$=숨김공유","C$","ADMIN$","IPC$","PsExec 측면이동","net share"],
+    oneLiner:"윈도우가 자동 생성하는 숨김 관리 공유(C$·ADMIN$·IPC$) / 관리자 권한 필요 / 탈취 계정으로 측면이동에 악용",
+    blocks:[
+      {k:"def",title:"정의",d:"윈도우 설치 시 <b>자동 생성</b>되는 숨겨진 관리용 공유. 이름 끝의 <code>$</code>=탐색기에 안 보이는 <b>숨김 공유</b>. 원격 관리 편의를 위해 존재. 현재 목록은 <code>net share</code>로 확인."},
+      {k:"note",title:"종류 (세트로 암기)",d:"<code>C$</code> 각 드라이브 루트(C$·D$…) · <code>ADMIN$</code> = <code>C:\\Windows</code>(%SystemRoot%), 원격 관리용 · <code>IPC$</code> 프로세스 통신·널세션 통로 · <code>PRINT$</code> 프린터 드라이버. 앞의 셋(C$·ADMIN$·IPC$)이 출제 단골."},
+      {k:"warn",title:"악용 — 측면 이동(lateral movement)",d:"공유 자체는 <b>관리자만 접근</b>하는 정상 기능. 문제는 <b>관리자 자격증명 탈취 뒤</b>. <b>PsExec</b>류가 <code>ADMIN$</code>에 서비스 바이너리를 복사 → <code>IPC$</code>·명명된 파이프로 원격 서비스를 실행해 옆 PC로 번짐. IPC$는 옛날 <b>널세션</b>으로 인증 전에 정보까지 흘림."},
+      {k:"safe",title:"방어",d:"근본은 <b>관리자 자격증명 보호</b>: <b>LAPS</b>로 로컬관리자 암호를 PC마다 다르게(패스더해시 대비). 망 분리·<code>445</code> 외부 차단. 필요 시 레지스트리 <code>AutoShareWks</code>/<code>AutoShareServer</code>=0으로 자동 공유 끄기(단 원격 관리도구 영향). 널세션은 <code>RestrictAnonymous</code>."}
+    ],
+    finalLiner:"기본(관리) 공유 = 자동 생성 숨김 공유 <b>C$·ADMIN$·IPC$</b> / 관리자만 접근 / <b>탈취 계정으로 PsExec 측면이동</b>에 악용 / IPC$는 널세션",
+    related:["ipc","smb"]
   },
   {
     id:"process", term:"정상 프로세스 판별", en:"csrss / svchost / lsass ...",
