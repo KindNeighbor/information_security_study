@@ -263,9 +263,10 @@ const DATA = [
     oneLiner:"윈도우 파일공유 프로토콜 / CIFS=SMBv1(취약) / SMBv2·v3는 암호화·무결성 / 포트 445",
     blocks:[
       {k:"def",title:"정의",d:"윈도우 파일·프린터 공유 프로토콜. <b>CIFS는 SMB의 옛 이름 = SMBv1 계열.</b> IPC$·널세션도 전부 이 위에서 돌아감. 포트 <code>445</code>(+ 139)."},
+      {k:"note",title:"NetBIOS와의 관계 — '업그레이드' 아님 (함정 주의)",d:"SMB는 NetBIOS의 상위 버전이 <b>아니다.</b> 역할이 다른 두 계층: <b>NetBIOS</b>=이름 찾기·세션 연결(하부 도우미), <b>SMB</b>=실제 파일 공유(응용). 옛날엔 <b>SMB가 NetBIOS 위에 얹혀</b> 돌았음 → 그래서 포트 137·138·<code>139</code>를 세트로 씀. 이후 SMB가 <code>445</code>에서 <b>직접(direct hosting)</b> 돌면서 NetBIOS 의존을 끊음 → NetBIOS는 레거시로. 시험 함정: 'SMB=NetBIOS 개선판?' → <b>❌ 얹힘 → 445로 독립한 관계</b>."},
       {k:"warn",title:"SMBv1(CIFS)의 취약점 — 워너크라이",d:"SMBv1의 <b>EternalBlue</b> 취약점(NSA 유출)으로 <b>인증 없이 원격 코드 실행</b> 가능. 2017 <b>워너크라이</b> 랜섬웨어가 이걸 써서 같은 망으로 자가 전파(웜)했던 대형 사고. 시험엔 EternalBlue·WannaCry·SMBv1이 세트로 출제."},
       {k:"safe",title:"방어",d:"<b>SMBv1(CIFS)은 끄고 SMBv2/v3를 써라.</b> 특히 SMBv3는 전송 암호화·무결성 검증이 들어가 보안이 크게 개선됨. '더 새 기술이라 안전'이 아니라 <b>버전으로 판단</b>하는 게 핵심."},
-      {k:"note",title:"진화 관점",d:"NetBIOS(레거시) → SMB/CIFS로 진화 → SMBv1은 EternalBlue → SMBv2/v3에서 암호화·무결성 도입. 옛날엔 없던 인증·무결성을 채워가는 게 보안 발전의 전형적 방향."}
+      {k:"note",title:"버전 진화 관점",d:"<b>SMB 버전</b> 진화: SMBv1(CIFS) → EternalBlue 취약 → SMBv2/v3에서 암호화·무결성 도입. 옛날엔 없던 인증·무결성을 채워가는 게 보안 발전의 전형적 방향. (주의: NetBIOS→SMB는 '버전 업'이 아니라 계층 의존이 끊긴 것 — 위 'NetBIOS와의 관계' 블록 참고.)"}
     ],
     finalLiner:"CIFS = SMBv1(취약, 비활성화 대상) · EternalBlue/워너크라이 / <b>SMBv2·v3 = 암호화·무결성 적용판</b> / 포트 445",
     related:["netbios","ipc"]
