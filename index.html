@@ -427,6 +427,20 @@ const DATA = [
     ],
     finalLiner:"Kerberos=도메인 표준(머리 셋 개=3주체) / <b>KDC(AS+TGS)</b>가 <b>TGT→서비스티켓</b> 발급 / 대칭키·타임스탬프(리플레이 방지)·SSO / 공격=Golden Ticket",
     related:["winauth","ntlm"]
+  },
+  {
+    id:"srm", term:"보안 참조 모니터 (SRM) · 참조 모니터", en:"Security Reference Monitor / Reference Monitor",
+    cat:"시스템 보안",
+    tags:["참조 모니터 3요건","액세스 토큰","SID","DACL","보안 커널","접근통제"],
+    oneLiner:"모든 접근을 최종 판정하는 경비원 / 토큰(SID) vs 객체 ACL 비교 / 참조모니터 3요건(항상호출·변조불가·검증가능)",
+    blocks:[
+      {k:"def",title:"정의",d:"<b>SRM(Security Reference Monitor, 보안 참조 모니터)</b> = 윈도우 <b>커널 모드</b>에서 '이 주체가 이 객체에 접근해도 되나'를 <b>최종 판정</b>하는 문지기. 주체의 <b>액세스 토큰</b>과 객체의 <b>ACL</b>을 비교해 허용/거부하고 <b>감사(audit) 로그</b>를 남김."},
+      {k:"note",title:"판정 재료 (윈도우)",d:"주체측: <b>액세스 토큰</b> = 사용자 <b>SID(Security Identifier, 보안 식별자)</b> + 그룹 SID + 권한(privileges). 객체측: <b>DACL(Discretionary ACL, 임의 접근제어 목록)</b>=누가 뭘 할 수 있나 · 감사는 <b>SACL(System ACL)</b>. 로그인 때 LSA가 토큰을 만들고, SRM이 그 토큰으로 매 접근을 검사."},
+      {k:"note",title:"원류 개념 — 참조 모니터 3요건 (시험 핵심·접근통제 PART4)",d:"<b>참조 모니터(Reference Monitor)</b>는 주체-객체 사이 <b>모든 접근을 중재</b>하는 추상 개념. 3대 요건: ①<b>항상 호출(완전성, 우회 불가·bypass 불가)</b> ②<b>변조 불가·격리(tamperproof/isolation)</b> ③<b>검증 가능(작고 단순해 verifiable)</b>. 이를 실제 구현한 것이 <b>보안 커널(Security Kernel)</b> — 윈도우판이 바로 SRM."},
+      {k:"warn",title:"공격 관점",d:"판정의 근거가 <b>액세스 토큰</b>이므로, 토큰을 훔치거나 조작하면 권한 상승·우회 가능(<b>토큰 탈취/사칭, SID 위조</b>). 그래서 참조모니터의 '변조 불가·격리' 요건이 실무에서 중요."}
+    ],
+    finalLiner:"SRM = 접근을 최종 판정하는 문지기(토큰 SID ↔ 객체 DACL) / 원류=<b>참조 모니터 3요건: 항상호출·변조불가·검증가능</b> / 구현=보안 커널",
+    related:["winauth","adminshares"]
   }
 ];
 
