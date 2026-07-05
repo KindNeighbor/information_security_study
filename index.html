@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>정보보안기사 복습 카드</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<style>
+  :root{
+    --bg:#E7ECF1;
+    --surface:#FFFFFF;
+    --surface-2:#F3F6F9;
+    --ink:#14202D;
+    --ink-soft:#5A6C7C;
+    --line:#D2DAE3;
+    --line-strong:#B9C4CF;
+    --accent:#1F4E79;      /* steel blue — 개념/식별 */
+    --accent-soft:#E4EDF6;
+    --warn:#A84A1B;        /* rust — 취약점/위험 */
+    --warn-soft:#FBE9DE;
+    --safe:#1C6350;        /* teal — 방어/대응 */
+    --safe-soft:#DCEFE9;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:var(--sans);line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:820px;margin:0 auto;padding:0 16px 80px;}
+
+  /* ---- header ---- */
+  header.top{padding:34px 0 18px;}
+  .eyebrow{
+    font-family:var(--mono);font-size:11px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--accent);font-weight:600;margin:0 0 8px;
+  }
+  h1.title{
+    font-size:clamp(26px,6vw,38px);font-weight:800;letter-spacing:-.02em;
+    margin:0;line-height:1.12;
+  }
+  .subtitle{color:var(--ink-soft);margin:10px 0 0;font-size:14.5px;}
+  .meta{
+    font-family:var(--mono);font-size:12px;color:var(--ink-soft);
+    margin-top:14px;display:flex;gap:14px;flex-wrap:wrap;
+  }
+  .meta b{color:var(--accent);font-weight:600;}
+
+  /* ---- chain map (signature) ---- */
+  .chain{
+    margin:22px 0 6px;padding:16px 14px;background:var(--surface);
+    border:1px solid var(--line);border-radius:14px;
+  }
+  .chain-label{
+    font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--ink-soft);margin:0 0 12px;
+  }
+  .chain-flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;}
+  .chain-node{
+    flex:1 1 0;min-width:120px;border:1px solid var(--line-strong);
+    background:var(--surface-2);border-radius:10px;padding:9px 10px;
+    cursor:pointer;text-align:left;font-family:inherit;color:inherit;
+    transition:border-color .15s,background .15s,transform .1s;
+  }
+  .chain-node:hover{border-color:var(--accent);background:var(--accent-soft);}
+  .chain-node:active{transform:translateY(1px);}
+  .chain-node .cn-step{font-family:var(--mono);font-size:10px;color:var(--accent);font-weight:600;}
+  .chain-node .cn-term{font-weight:700;font-size:14px;margin-top:2px;}
+  .chain-node .cn-note{font-size:11.5px;color:var(--ink-soft);margin-top:3px;line-height:1.4;}
+  .chain-arrow{
+    align-self:center;color:var(--line-strong);font-family:var(--mono);
+    padding:0 6px;font-size:15px;user-select:none;
+  }
+  @media(max-width:560px){
+    .chain-flow{flex-direction:column;}
+    .chain-node{min-width:0;}
+    .chain-arrow{transform:rotate(90deg);padding:4px 0;}
+  }
+
+  /* ---- controls ---- */
+  .controls{position:sticky;top:0;z-index:20;padding:14px 0 10px;background:linear-gradient(var(--bg) 78%,rgba(231,236,241,0));}
+  .search-row{display:flex;gap:8px;}
+  .search{
+    flex:1;display:flex;align-items:center;gap:8px;background:var(--surface);
+    border:1px solid var(--line);border-radius:11px;padding:0 12px;
+  }
+  .search:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+  .search svg{flex:none;color:var(--ink-soft);}
+  .search input{
+    border:0;outline:0;background:transparent;flex:1;font-family:inherit;
+    font-size:15px;color:var(--ink);padding:11px 0;
+  }
+  .search input::placeholder{color:var(--ink-soft);}
+  .review-btn{
+    flex:none;border:1px solid var(--line);background:var(--surface);
+    border-radius:11px;padding:0 14px;font-family:inherit;font-size:13px;
+    font-weight:600;color:var(--ink-soft);cursor:pointer;white-space:nowrap;
+    transition:all .15s;
+  }
+  .review-btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px;}
+  .chip{
+    border:1px solid var(--line);background:var(--surface);border-radius:999px;
+    padding:6px 13px;font-family:inherit;font-size:12.5px;font-weight:500;
+    color:var(--ink-soft);cursor:pointer;transition:all .15s;
+  }
+  .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff;}
+
+  /* ---- cards ---- */
+  .cards{margin-top:14px;display:flex;flex-direction:column;gap:12px;}
+  .card{
+    background:var(--surface);border:1px solid var(--line);border-radius:14px;
+    overflow:hidden;transition:border-color .15s;
+  }
+  .card.open{border-color:var(--line-strong);}
+  .card-head{
+    width:100%;text-align:left;background:none;border:0;cursor:pointer;
+    padding:16px 18px;font-family:inherit;color:inherit;display:block;
+  }
+  .card-cat{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--accent);font-weight:600;
+  }
+  .card-term{font-size:19px;font-weight:800;letter-spacing:-.01em;margin-top:3px;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;}
+  .card-term .en{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--ink-soft);letter-spacing:0;}
+  .card-oneliner{
+    margin-top:8px;font-size:14px;color:var(--ink-soft);
+    display:flex;gap:7px;align-items:flex-start;
+  }
+  .card-oneliner .k{
+    flex:none;font-family:var(--mono);font-size:10px;font-weight:700;color:var(--safe);
+    border:1px solid var(--safe);border-radius:4px;padding:1px 5px;margin-top:2px;letter-spacing:.05em;
+  }
+  .tags{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;}
+  .tag{
+    font-family:var(--mono);font-size:11px;background:var(--surface-2);
+    border:1px solid var(--line);border-radius:6px;padding:2px 7px;color:var(--ink-soft);
+  }
+  /* review mode hides the answer until opened */
+  body.review .card:not(.open) .card-oneliner,
+  body.review .card:not(.open) .tags{display:none;}
+  body.review .card:not(.open) .card-head::after{
+    content:"눌러서 떠올린 뒤 확인";display:block;margin-top:9px;
+    font-family:var(--mono);font-size:11px;color:var(--line-strong);
+  }
+
+  .card-body{padding:0 18px;max-height:0;overflow:hidden;transition:max-height .28s ease;}
+  .card.open .card-body{max-height:2600px;padding-bottom:8px;}
+  .block{border-left:3px solid var(--line);padding:2px 0 2px 13px;margin:16px 0;}
+  .block .b-title{
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.05em;
+    text-transform:uppercase;margin:0 0 5px;color:var(--ink-soft);
+  }
+  .block .b-body{font-size:14.5px;margin:0;}
+  .block.def{border-color:var(--accent);}
+  .block.def .b-title{color:var(--accent);}
+  .block.warn{border-color:var(--warn);background:var(--warn-soft);border-radius:0 8px 8px 0;padding:10px 13px;}
+  .block.warn .b-title{color:var(--warn);}
+  .block.safe{border-color:var(--safe);background:var(--safe-soft);border-radius:0 8px 8px 0;padding:10px 13px;}
+  .block.safe .b-title{color:var(--safe);}
+  .block.note{border-color:var(--line-strong);}
+
+  code{
+    font-family:var(--mono);font-size:.87em;background:#1420200d;
+    border:1px solid var(--line);border-radius:5px;padding:1px 5px;
+    color:var(--accent);white-space:nowrap;
+  }
+  .block.warn code{color:var(--warn);border-color:#a84a1b40;background:#a84a1b12;}
+  .block.safe code{color:var(--safe);border-color:#1c635040;background:#1c635012;}
+  pre{
+    font-family:var(--mono);font-size:12.5px;background:var(--ink);color:#E7ECF1;
+    padding:11px 13px;border-radius:8px;overflow-x:auto;margin:8px 0 0;line-height:1.5;
+  }
+  .oneliner-final{
+    margin:18px 0 4px;padding:12px 14px;background:var(--accent-soft);
+    border-radius:10px;font-size:14.5px;
+  }
+  .oneliner-final b{color:var(--accent);}
+  .oneliner-final .lbl{
+    font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--accent);display:block;margin-bottom:4px;
+  }
+  .related{margin:14px 0 4px;font-size:12.5px;color:var(--ink-soft);}
+  .related a{color:var(--accent);text-decoration:none;font-weight:600;cursor:pointer;}
+  .related a:hover{text-decoration:underline;}
+
+  .empty{text-align:center;color:var(--ink-soft);padding:50px 0;font-size:15px;}
+  footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);color:var(--ink-soft);font-size:12.5px;line-height:1.7;}
+  footer code{white-space:normal;}
+
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;}}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow">정보보안기사 · 필기 복습</p>
+    <h1 class="title">보안 개념 카드</h1>
+    <p class="subtitle">헷갈리는 개념을 문제 먼저 떠올리고, 눌러서 확인하는 방식으로.</p>
+    <div class="meta">
+      <span>개념 <b id="count">0</b>개</span>
+      <span>업데이트 <b id="updated">—</b></span>
+    </div>
+  </header>
+
+  <section class="chain" id="chainMap">
+    <p class="chain-label">SMB 계열 공격 사슬 — 눌러서 카드로 이동</p>
+    <div class="chain-flow" id="chainFlow"></div>
+  </section>
+
+  <div class="controls">
+    <div class="search-row">
+      <label class="search">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="q" type="search" placeholder="개념·용어·포트로 검색 (예: 445, 널세션)" autocomplete="off" />
+      </label>
+      <button class="review-btn" id="reviewToggle" aria-pressed="false">가리기 모드</button>
+    </div>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <main class="cards" id="cards"></main>
+  <p class="empty" id="empty" style="display:none">검색 결과가 없어요.</p>
+
+  <footer>
+    <b>카드 추가하는 법</b> — 이 파일을 열어 <code>const DATA = [ ... ]</code> 배열에 객체 하나를 복사해 넣고 저장하면 끝. 배포해 뒀다면 그 파일만 다시 올리면 반영됩니다. 각 카드 형식은 파일 맨 아래 주석의 템플릿을 참고하세요.
+  </footer>
+</div>
+
+<script>
+/* =========================================================================
+   카드 데이터 — 여기에 계속 추가하면 됩니다.
+   블록 종류(k): 'def'(정의) · 'warn'(취약점/위험) · 'safe'(방어/대응) · 'note'(참고)
+   본문(d)에는 <code>포트</code>, <b>강조</b>, <pre>명령어</pre> 사용 가능.
+   chain: 숫자를 넣으면 상단 '공격 사슬' 지도에 그 순서로 표시됩니다.
+   ========================================================================= */
+const UPDATED = "2026-07-05";
+
+const DATA = [
+  {
+    id:"netbios", term:"NetBIOS", en:"Network Basic Input/Output System",
+    cat:"네트워크 보안", chain:1, chainNote:"LAN 내 이름 통신",
+    tags:["137","138","139","널세션 표적","레거시"],
+    oneLiner:"LAN 내 이름 기반 통신 / 포트 137·138·139(+445) / 널세션 정보유출 / 안 쓰면 차단",
+    blocks:[
+      {k:"def",title:"정의",d:"같은 근거리망(LAN) 안에서 컴퓨터를 <b>IP가 아닌 이름</b>(예: <code>DESKTOP-ABC123</code>)으로 찾고 통신하게 해주는 옛 윈도우 기술. 탐색기 '네트워크'에 뜨는 PC 이름들이 이거."},
+      {k:"note",title:"포트 (세트로 암기)",d:"<code>137</code> 이름 서비스 · <code>138</code> 데이터그램 · <code>139</code> 세션 서비스. 여기에 <code>445</code>(SMB over TCP)까지 묶어서 기억. 요즘은 139 대신 445로 넘어감."},
+      {k:"warn",title:"취약점",d:"보안 개념이 거의 없던 시절 기술. 외부 노출 시 <b>널 세션(Null Session)</b>으로 인증 없이 접속해 사용자 목록·공유·정책 정보를 긁어감(정찰 단계 단골). 도구: <code>nbtstat</code>, nbtscan, enum4linux."},
+      {k:"safe",title:"방어",d:"쓸 거 아니면 막아라. 외부로 향하는 <code>137~139</code>·<code>445</code> 차단, 안 쓰면 NetBIOS over TCP/IP 비활성화. '안 쓰는데 켜진 서비스'를 줄이는 <b>공격 표면 최소화(하드닝)</b>의 교과서적 예시."},
+      {k:"note",title:"왜 아직 쓰이나",d:"기술이 좋아서가 아니라 <b>레거시 호환성</b> 때문. 공장·병원·관공서의 구형 시스템이 아직 의존. 추세는 확실히 퇴출 → 시험에선 대개 '차단·비활성화 대상'으로 출제."}
+    ],
+    finalLiner:"NetBIOS = LAN 이름 통신 / 137·138·139(+445) / 널세션으로 정보 유출 / <b>안 쓰면 꺼야 할 1순위</b>",
+    related:["smb","ipc"]
+  },
+  {
+    id:"smb", term:"SMB / CIFS", en:"Server Message Block",
+    cat:"네트워크 보안", chain:2, chainNote:"파일공유 프로토콜",
+    tags:["445","CIFS=SMBv1","EternalBlue","워너크라이"],
+    oneLiner:"윈도우 파일공유 프로토콜 / CIFS=SMBv1(취약) / SMBv2·v3는 암호화·무결성 / 포트 445",
+    blocks:[
+      {k:"def",title:"정의",d:"윈도우 파일·프린터 공유 프로토콜. <b>CIFS는 SMB의 옛 이름 = SMBv1 계열.</b> IPC$·널세션도 전부 이 위에서 돌아감. 포트 <code>445</code>(+ 139)."},
+      {k:"warn",title:"SMBv1(CIFS)의 취약점 — 워너크라이",d:"SMBv1의 <b>EternalBlue</b> 취약점(NSA 유출)으로 <b>인증 없이 원격 코드 실행</b> 가능. 2017 <b>워너크라이</b> 랜섬웨어가 이걸 써서 같은 망으로 자가 전파(웜)했던 대형 사고. 시험엔 EternalBlue·WannaCry·SMBv1이 세트로 출제."},
+      {k:"safe",title:"방어",d:"<b>SMBv1(CIFS)은 끄고 SMBv2/v3를 써라.</b> 특히 SMBv3는 전송 암호화·무결성 검증이 들어가 보안이 크게 개선됨. '더 새 기술이라 안전'이 아니라 <b>버전으로 판단</b>하는 게 핵심."},
+      {k:"note",title:"진화 관점",d:"NetBIOS(레거시) → SMB/CIFS로 진화 → SMBv1은 EternalBlue → SMBv2/v3에서 암호화·무결성 도입. 옛날엔 없던 인증·무결성을 채워가는 게 보안 발전의 전형적 방향."}
+    ],
+    finalLiner:"CIFS = SMBv1(취약, 비활성화 대상) · EternalBlue/워너크라이 / <b>SMBv2·v3 = 암호화·무결성 적용판</b> / 포트 445",
+    related:["netbios","ipc"]
+  },
+  {
+    id:"ipc", term:"IPC$ · 널 세션", en:"Inter-Process Communication Share",
+    cat:"시스템 보안", chain:3, chainNote:"빈 자격증명 접속",
+    tags:["숨김 공유","Null Session","RestrictAnonymous"],
+    oneLiner:"윈도우 기본 숨김 관리 공유 / 널세션이 빈 자격증명으로 접속 / RestrictAnonymous로 차단",
+    blocks:[
+      {k:"def",title:"정의",d:"윈도우가 자동 생성하는 <b>숨겨진 관리용 공유</b>(끝의 <code>$</code>=숨김). 파일 공유가 아니라 컴퓨터 간 <b>프로세스 통신</b>(원격 서비스 제어·인증·이름 조회)을 위한 통로."},
+      {k:"warn",title:"널 세션(Null Session)",d:"옛 윈도우는 IPC$ 접속 시 <b>아이디·비밀번호를 비워도 허용</b>했음. 이 빈 연결을 발판으로 사용자 계정·공유·정책 정보를 열람(enumeration).<pre>net use \\\\대상IP\\IPC$ \"\" /user:\"\"</pre>"},
+      {k:"note",title:"공격 사슬",d:"SMB 포트(139·445) 열림 → <b>IPC$ 공유 접속</b> → 빈 자격증명으로 <b>널세션 성립</b> → 시스템 정보 수집. 시험은 '널세션이 이용하는 기본 공유는?→IPC$'처럼 양방향으로 물음."},
+      {k:"safe",title:"방어",d:"레지스트리 <code>RestrictAnonymous</code>(또는 RestrictAnonymousSAM) 값을 올려 익명 접속 제한. 근본적으론 <code>139</code>·<code>445</code>를 외부에 노출하지 않기. IPC$ 자체는 정상 기능 — 문제는 '인증 없이 통하던 것'."}
+    ],
+    finalLiner:"IPC$ = 윈도우 기본 숨김 관리 공유 / <b>널세션</b>이 빈 자격증명으로 접속 / <b>RestrictAnonymous</b>로 차단",
+    related:["smb","netbios"]
+  },
+  {
+    id:"process", term:"정상 프로세스 판별", en:"csrss / svchost / lsass ...",
+    cat:"시스템 보안",
+    tags:["이름 위장","System32 경로","부모 프로세스"],
+    oneLiner:"이름 암기 ❌ / '정상 이름+정상 경로'로 위장 악성 프로세스 판별 ⭕",
+    blocks:[
+      {k:"def",title:"핵심",d:"개별 이름을 달달 외우는 게 아니라, <b>정상 프로세스를 사칭하는 악성 프로세스를 골라내는 법</b>을 아는 것. 그래서 '진짜'가 뭔지 알아야 가짜가 보임."},
+      {k:"warn",title:"판별 ① 이름 위장",d:"한 글자만 비틀어 사칭: 정상 <code>svchost.exe</code> ↔ 악성 <code>scvhost.exe</code>(c·v 뒤바꿈), <code>csrss.exe</code> ↔ <code>csrsss.exe</code>. '다음 중 정상 프로세스는?' 함정 단골."},
+      {k:"warn",title:"판별 ② 실행 경로 (이름보다 중요)",d:"정상 시스템 프로세스는 <code>C:\\Windows\\System32\\</code>에서 실행. 이름이 같아도 경로가 <code>...\\Temp\\</code>·사용자 폴더면 거의 악성. 시스템 파일은 임시·사용자 폴더에서 안 돎."},
+      {k:"note",title:"판별 ③ 부모 프로세스",d:"정상 프로세스는 부모가 정해져 있음(예: svchost의 부모는 services.exe). 엉뚱한 부모면 의심. 1순위는 ①·②, 이건 여유 있을 때."},
+      {k:"note",title:"자주 나오는 6개 (경로+역할만 눈에 익히기)",d:"<code>csrss.exe</code> 콘솔/스레드 · <code>smss.exe</code> 세션관리자(부팅초반) · <code>services.exe</code> 서비스 제어 · <code>svchost.exe</code> 서비스 호스트(여러 개가 정상) · <code>lsass.exe</code> 인증·보안정책(자격증명 탈취 표적, 예: 미미캐츠) · <code>winlogon.exe</code> 로그온."}
+    ],
+    finalLiner:"이름 암기 ❌ / <b>정상 이름 + 정상 경로(System32)</b>로 위장 프로세스 판별 ⭕ — 시험은 '위장된 악성은?'을 물음",
+    related:[]
+  },
+  {
+    id:"diffing", term:"디핑 · 바이너리 디핑", en:"Diffing / Binary Diffing",
+    cat:"포렌식·리버싱",
+    tags:["patch diffing","1-day","BinDiff"],
+    oneLiner:"두 대상의 '차이' 찾기 / 바이너리에 적용=바이너리 디핑 / 패치 전후 비교로 취약점 역추적=패치 디핑",
+    blocks:[
+      {k:"def",title:"디핑",d:"두 대상을 비교해 <b>차이(difference)</b>를 찾는 기술. <code>git diff</code>가 바로 그것 — 커밋 전후로 뭐가 바뀌었는지 보여주는 것."},
+      {k:"def",title:"바이너리 디핑",d:"비교 대상이 소스가 아니라 <b>컴파일된 실행 파일</b>인 경우. 바이트 1:1이 아니라 디스어셈블/디컴파일해 <b>함수·코드 흐름 단위</b>로 변경점을 찾음. 도구: BinDiff(구글), Diaphora + IDA Pro / Ghidra."},
+      {k:"warn",title:"패치 디핑 → 1-day 공격",d:"벤더가 보안 패치를 내면 '무엇을 고쳤는지'는 잘 안 알림. 공격자가 <b>패치 전·후 바이너리를 디핑</b>해 바뀐 부분(=원래 취약했던 지점)을 찾고, 거꾸로 익스플로잇을 만들어 아직 패치 안 한 대상을 노림 = <b>1-day 공격</b>."},
+      {k:"safe",title:"방어 쪽 활용",d:"악성코드 변종 두 개를 디핑해 '백신 회피를 위해 뭘 바꿨나' 분석하거나 멀웨어 패밀리를 분류하는 데도 사용."}
+    ],
+    finalLiner:"디핑=차이 찾기 · 바이너리 디핑=실행파일에 적용 · <b>패치 디핑=패치 전후 비교로 취약점 역추적(1-day)</b>",
+    related:[]
+  }
+];
+
+/* ---------------- 렌더링 (건드릴 일 거의 없음) ---------------- */
+const $=(s,el=document)=>el.querySelector(s);
+const $$=(s,el=document)=>[...el.querySelectorAll(s)];
+let activeCat="전체", query="";
+
+$("#updated").textContent=UPDATED;
+$("#count").textContent=DATA.length;
+
+// chain map
+const chainNodes=DATA.filter(d=>d.chain).sort((a,b)=>a.chain-b.chain);
+const flow=$("#chainFlow");
+chainNodes.forEach((d,i)=>{
+  const b=document.createElement("button");
+  b.className="chain-node";
+  b.innerHTML=`<div class="cn-step">STEP ${d.chain}</div><div class="cn-term">${d.term}</div><div class="cn-note">${d.chainNote||""}</div>`;
+  b.onclick=()=>jumpTo(d.id);
+  flow.appendChild(b);
+  if(i<chainNodes.length-1){const a=document.createElement("span");a.className="chain-arrow";a.textContent="→";flow.appendChild(a);}
+});
+
+// category chips
+const cats=["전체",...new Set(DATA.map(d=>d.cat))];
+const chipsEl=$("#chips");
+cats.forEach(c=>{
+  const b=document.createElement("button");
+  b.className="chip";b.textContent=c;b.setAttribute("aria-pressed",c==="전체");
+  b.onclick=()=>{activeCat=c;$$(".chip").forEach(x=>x.setAttribute("aria-pressed",x.textContent===c));render();};
+  chipsEl.appendChild(b);
+});
+
+function blockHTML(b){
+  return `<div class="block ${b.k}"><p class="b-title">${b.title}</p><div class="b-body">${b.d}</div></div>`;
+}
+function cardHTML(d){
+  const rel=(d.related||[]).map(r=>{const t=DATA.find(x=>x.id===r);return t?`<a data-jump="${r}">${t.term}</a>`:"";}).filter(Boolean).join(" · ");
+  return `<article class="card" id="card-${d.id}">
+    <button class="card-head" aria-expanded="false">
+      <div class="card-cat">${d.cat}</div>
+      <div class="card-term">${d.term}${d.en?`<span class="en">${d.en}</span>`:""}</div>
+      <div class="card-oneliner"><span class="k">한줄</span><span>${d.oneLiner}</span></div>
+      <div class="tags">${(d.tags||[]).map(t=>`<span class="tag">${t}</span>`).join("")}</div>
+    </button>
+    <div class="card-body">
+      ${(d.blocks||[]).map(blockHTML).join("")}
+      ${d.finalLiner?`<div class="oneliner-final"><span class="lbl">시험 한줄정리</span>${d.finalLiner}</div>`:""}
+      ${rel?`<p class="related">연결 개념 → ${rel}</p>`:""}
+    </div>
+  </article>`;
+}
+function match(d){
+  if(activeCat!=="전체"&&d.cat!==activeCat)return false;
+  if(!query)return true;
+  const hay=(d.term+" "+d.en+" "+d.oneLiner+" "+(d.tags||[]).join(" ")+" "+JSON.stringify(d.blocks)).toLowerCase();
+  return hay.includes(query);
+}
+function render(){
+  const list=DATA.filter(match);
+  $("#cards").innerHTML=list.map(cardHTML).join("");
+  $("#empty").style.display=list.length?"none":"block";
+  $$(".card-head").forEach(h=>h.onclick=()=>{
+    const c=h.closest(".card");const open=c.classList.toggle("open");
+    h.setAttribute("aria-expanded",open);
+  });
+  $$("[data-jump]").forEach(a=>a.onclick=e=>{e.stopPropagation();jumpTo(a.dataset.jump);});
+}
+function jumpTo(id){
+  query="";$("#q").value="";activeCat="전체";
+  $$(".chip").forEach(x=>x.setAttribute("aria-pressed",x.textContent==="전체"));
+  render();
+  const c=$("#card-"+id);
+  if(c){c.classList.add("open");$(".card-head",c).setAttribute("aria-expanded","true");
+    c.scrollIntoView({behavior:"smooth",block:"center"});}
+}
+$("#q").oninput=e=>{query=e.target.value.trim().toLowerCase();render();};
+$("#reviewToggle").onclick=e=>{
+  const on=document.body.classList.toggle("review");
+  e.currentTarget.setAttribute("aria-pressed",on);
+  $$(".card.open").forEach(c=>{c.classList.remove("open");$(".card-head",c).setAttribute("aria-expanded","false");});
+};
+render();
+
+/* =========================================================================
+   ▼ 새 카드 템플릿 — 복사해서 DATA 배열에 붙여넣기
+   {
+     id:"고유id", term:"용어", en:"영문/부제(선택)",
+     cat:"시스템 보안",              // 새 값 쓰면 필터 칩 자동 생성
+     chain:4, chainNote:"짧은 설명",  // (선택) 상단 사슬 지도에 순서대로 표시
+     tags:["키워드","포트"],
+     oneLiner:"목록에 보이는 한 줄 요약",
+     blocks:[
+       {k:"def",  title:"정의",   d:"..."},
+       {k:"warn", title:"취약점", d:"... <code>445</code> ..."},
+       {k:"safe", title:"방어",   d:"..."},
+       {k:"note", title:"참고",   d:"..."}
+     ],
+     finalLiner:"시험 한줄정리(선택, <b>강조</b> 가능)",
+     related:["다른카드id"]
+   }
+   ========================================================================= */
+</script>
+</body>
+</html>
