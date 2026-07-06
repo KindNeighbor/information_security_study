@@ -163,6 +163,22 @@
   .block.safe .b-title{color:var(--safe);}
   .block.note{border-color:var(--line-strong);}
 
+  /* ---- 구식↔신식 등 '교체/대비' 구조 ---- */
+  .oldnew{display:flex;flex-direction:column;gap:0;margin:4px 0 2px;}
+  .oldnew .on-item{border:1px solid var(--line);border-radius:11px;padding:11px 13px;font-size:14px;line-height:1.62;}
+  .oldnew .on-item.old{border-color:var(--line-strong);background:var(--surface-2);}
+  .oldnew .on-item.new{border-color:var(--safe);background:var(--safe-soft);}
+  .oldnew .on-label{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:700;
+    letter-spacing:.04em;padding:2px 9px;border-radius:6px;margin-bottom:7px;color:#fff;}
+  .oldnew .on-item.old .on-label{background:var(--line-strong);}
+  .oldnew .on-item.new .on-label{background:var(--safe);}
+  .oldnew .on-item .row{display:block;margin-top:5px;}
+  .oldnew .on-item .row:first-of-type{margin-top:0;}
+  .oldnew .on-sep{align-self:center;font-family:var(--mono);font-size:12px;font-weight:700;
+    color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:4px 13px;margin:9px 0;}
+  .on-key{margin:12px 0 2px;padding:10px 13px;background:var(--accent-soft);border-radius:10px;font-size:13.5px;line-height:1.55;}
+  .on-key .lbl{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.05em;color:var(--accent);display:block;margin-bottom:4px;}
+
   code{
     font-family:var(--mono);font-size:.87em;background:#1420200d;
     border:1px solid var(--line);border-radius:5px;padding:1px 5px;
@@ -552,7 +568,7 @@ const DATA = [
     blocks:[
       {k:"def",title:"핵심 — 처리 흐름",d:"사용자 로그인 처리 순서: <b>Ctrl+Alt+Del(SAS)</b> → <code>winlogon.exe</code>(로그온 총괄) → 자격증명 수집 UI(<b>GINA</b> 또는 <b>Credential Provider</b>) → <code>lsass.exe</code>(<b>LSA</b>)가 실제 검증(NTLM·Kerberos) → <b>액세스 토큰</b> 생성 → 이후 접근은 <b>SRM</b>이 판정. '누가 UI를 띄우고, 누가 실제로 검증하나'를 구분하는 게 포인트."},
       {k:"note",title:"프로세스별 역할 (표로 정리)",d:"<b>winlogon.exe</b>=로그온·로그오프 세션 <b>총괄</b>(항상 이 이름, 구·신 공통) · <b>SAS(Secure Attention Sequence)=Ctrl+Alt+Del</b>=로그인 화면 호출 신호 · <b>GINA/Credential Provider</b>=아이디·비번을 <b>입력받는 UI</b> · <b>lsass(LSA)</b>=받은 자격증명을 <b>실제 검증</b>·토큰 생성. UI(수집)와 LSA(검증)는 <b>다른 역할</b>."},
-      {k:"note",title:"구식 vs 신식 (교체 — 시험 단골)",d:"<b>구식: GINA(Graphical Identification and Authentication)</b> = <code>msgina.dll</code>, Windows NT~XP/2003. winlogon이 이 DLL을 로드해 로그인 UI 제공, 스마트카드·지문용으로 <b>통째 교체</b> 가능. 단점: GINA 하나 잘못되면 <b>로그온 전체가 깨지고</b> 보안·안정성 취약. → <b>신식: Credential Provider(자격증명 공급자)</b>, Windows Vista 이후. <b>모듈형</b>이라 비번·PIN·지문·얼굴이 <b>여러 개 공존</b>, 더 안전·유연. 'GINA는 Vista에서 Credential Provider로 대체됐다'가 핵심."},
+      {k:"note",title:"구식 vs 신식 (교체 — 시험 단골)",d:"<div class='oldnew'><div class='on-item old'><span class='on-label'>구식 · GINA</span><div class='row'><b>GINA(Graphical Identification and Authentication)</b> — 파일 이름은 <code>msgina.dll</code>, 쓰이던 시기는 <b>Windows NT부터 XP·Server 2003까지</b>.</div><div class='row'>winlogon이 이 DLL을 불러와 로그인 화면(자격증명 입력 UI)을 띄운다. 그래서 스마트카드·지문 같은 다른 인증 방식을 넣으려면 이 <b>GINA DLL 자체를 통째로 바꿔야</b> 했다.</div><div class='row'><b>단점</b> — 로그인 UI 전체를 DLL 하나가 책임지는 구조라, <b>이 GINA 하나만 잘못돼도 로그온 과정 전체가 깨진다.</b> 또 여러 인증 수단을 동시에 쓰기 어렵고, 그만큼 보안·안정성이 취약했다.</div></div><div class='on-sep'>▼ Windows Vista에서 대체됨 ▼</div><div class='on-item new'><span class='on-label'>신식 · Credential Provider</span><div class='row'><b>Credential Provider(자격증명 공급자)</b> — 쓰이는 시기는 <b>Windows Vista 이후부터 현재까지</b>.</div><div class='row'><b>모듈형</b> 구조라, 비밀번호·PIN·지문·얼굴 인식 같은 인증 수단이 <b>각각 별도의 모듈</b>로 나뉘어 있고 <b>여러 개가 동시에 공존</b>한다. 그래서 하나에 문제가 생겨도 나머지 인증은 그대로 동작한다.</div><div class='row'><b>장점</b> — 구식보다 안전하고 유연하며, 새로운 인증 수단을 덧붙이기(확장하기)도 쉽다.</div></div></div><p class='on-key'><span class='lbl'>시험 포인트</span><b>'GINA는 Windows Vista에서 Credential Provider로 대체됐다.'</b> — 무엇이 무엇으로, 어느 버전에서 바뀌었는지가 그대로 출제된다.</p>"},
       {k:"warn",title:"Ctrl+Alt+Del을 왜? — 신뢰 경로(Trusted Path)",d:"<b>SAS(Ctrl+Alt+Del)</b>는 <b>winlogon만</b> 가로챌 수 있는 특수 신호. 악성코드가 <b>가짜 로그인 화면</b>을 띄워 비번을 훔치는 <b>로그온 스푸핑</b>을 막아, '지금 이 화면은 진짜 OS'임을 보장하는 <b>신뢰 경로</b>. '로그인 시 Ctrl+Alt+Del을 누르는 이유는?'이 전형적 출제."}
     ],
     finalLiner:"winlogon=로그온 총괄 / UI 수집: <b>구식 GINA→신식 Credential Provider(Vista~)</b> / 검증=lsass(LSA) / <b>Ctrl+Alt+Del(SAS)=신뢰 경로</b>(스푸핑 방지)",
