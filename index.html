@@ -595,6 +595,23 @@ const DATA = [
     ],
     finalLiner:"winlogon=로그온 총괄 / UI 수집: <b>구식 GINA→신식 Credential Provider(Vista~)</b> / 검증=lsass(LSA) / <b>Ctrl+Alt+Del(SAS)=신뢰 경로</b>(스푸핑 방지)",
     related:["winauth","process","srm"]
+  },
+  {
+    id:"registry", term:"윈도우 레지스트리", en:"Windows Registry",
+    cat:"시스템 보안",
+    tags:["루트키 5개","HKLM/HKCU","하이브(Hive)","Run 키 지속성","regedit","포렌식 아티팩트"],
+    oneLiner:"윈도우 설정의 중앙 계층형 DB / 루트키 5개(HKLM·HKCU…) / 하이브 파일(SAM·SECURITY…) / Run 키=악성 지속성·포렌식 흔적",
+    blocks:[
+      {k:"def",title:"정의",d:"윈도우의 <b>하드웨어·운영체제·설치된 프로그램·사용자별 설정</b>을 한곳에 모아 둔 <b>계층형(트리) 중앙 데이터베이스</b>. 옛날 여기저기 흩어져 있던 <code>.ini</code> 설정 파일들을 대체했다. 구조는 <b>키(Key) → 서브키(Subkey) → 값(Value)</b>이며, 값은 <b>이름·데이터·자료형</b>(<code>REG_SZ</code> 문자열, <code>REG_DWORD</code> 숫자 등)으로 이뤄진다. 편집 도구는 <code>regedit</code>, 명령줄은 <code>reg query/add/delete</code>."},
+      {k:"note",title:"최상위 루트 키 5개 (시험 단골)",d:"윈도우가 정한 최상위 키는 5개다.<ul class='klist'><li><b>HKEY_LOCAL_MACHINE (HKLM)</b> — <b>컴퓨터 전체</b> 설정(하드웨어·설치된 SW·SAM·SECURITY·SYSTEM). 모든 사용자 공통.</li><li><b>HKEY_CURRENT_USER (HKCU)</b> — <b>지금 로그인한 사용자</b>의 개인 설정.</li><li><b>HKEY_USERS (HKU)</b> — <b>모든 사용자</b> 프로필 설정의 모음(HKCU는 그중 현재 사용자 부분).</li><li><b>HKEY_CLASSES_ROOT (HKCR)</b> — 파일 확장자 연결·COM 등록 정보.</li><li><b>HKEY_CURRENT_CONFIG (HKCC)</b> — 현재 하드웨어 프로필.</li></ul><p class='on-key'><span class='lbl'>시험 포인트</span>루트키 <b>5개</b>의 이름과 역할, 특히 <b>HKLM ↔ HKCU</b> 구분이 그대로 출제된다.</p>"},
+      {k:"note",title:"HKLM vs HKCU (적용 범위 구분)",d:"둘 다 설정을 담지만 <b>적용 범위</b>가 다르다.<div class='cmp two'><div class='cmp-item'><span class='cmp-label'>HKLM</span><div class='row'>컴퓨터 <b>전체</b>에 적용 — 모든 사용자 공통.</div><div class='row'>수정에 <b>관리자 권한</b>이 필요.</div></div><div class='cmp-item'><span class='cmp-label'>HKCU</span><div class='row'><b>현재 로그인한 사용자</b>에게만 적용.</div><div class='row'>그 사용자 권한으로 수정 가능.</div></div></div>"},
+      {k:"note",title:"하이브(Hive) — 디스크에 저장되는 파일",d:"레지스트리는 메모리에만 있는 게 아니라 <b>하이브(Hive)</b>라는 파일로 디스크에 저장된다.<ul class='klist'><li><b>시스템 하이브</b> — <code>C:\\Windows\\System32\\config\\</code> 폴더 안의 <b>SAM · SECURITY · SOFTWARE · SYSTEM</b>.</li><li><b>사용자 하이브</b> — 각 사용자 폴더의 <code>NTUSER.DAT</code>(그 사용자의 HKCU 내용).</li></ul><p class='on-key'><span class='lbl'>연결</span><b>SAM·SECURITY</b> 하이브에 계정 정보·비밀번호 해시가 들어 있어, 이게 자격증명 탈취의 표적이다(윈도우 인증 체계 카드).</p>"},
+      {k:"warn",title:"보안 위협 — 지속성·자격증명 탈취",d:"<b>① 지속성(Persistence)</b> — 악성코드가 재부팅 후에도 자동 실행되려고 <b>자동 실행 키</b>에 자신을 등록한다. 대표 위치:<pre>HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\nHKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run</pre>같은 자리의 <code>RunOnce</code>도 같은 용도. <b>② 자격증명 탈취</b> — <code>SAM</code>·<code>SECURITY</code> 하이브에서 계정 해시를 덤프해 간다.<p class='on-key'><span class='lbl'>단골</span>'악성코드가 부팅 시 자동 실행되게 하는 대표 레지스트리 위치는?' → <b>Run 키</b>.</p>"},
+      {k:"note",title:"포렌식 — 사용자 행위 흔적의 보고",d:"레지스트리는 <b>사용자 행위 흔적이 잔뜩 남는 곳</b>이라 디지털 포렌식·침해사고 분석의 핵심 아티팩트다. 최근 실행한 프로그램·문서(<b>UserAssist·RecentDocs·MRU</b>), <b>USB 연결 흔적</b>(USBSTOR), 자동 실행 항목, 시각·네트워크 정보 등이 남는다. 분석 도구: <b>RegRipper</b>, Registry Explorer."},
+      {k:"safe",title:"방어",d:"<b>최소 권한</b> — HKLM 등 시스템 영역 수정은 관리자만 가능하게. <b>자동 실행 감시</b> — Sysinternals <b>Autoruns</b>로 Run·서비스 등 자동 실행 지점을 점검, EDR로 Run 키 변경을 탐지. <b>변경 감사</b> — 중요 키에 감사(SACL)를 걸고 정기 백업."}
+    ],
+    finalLiner:"레지스트리 = 윈도우 설정 중앙 계층 DB / 루트키 <b>HKLM·HKCU·HKU·HKCR·HKCC</b> / 하이브(SAM·SECURITY·SOFTWARE·SYSTEM, NTUSER.DAT) / <b>Run 키=악성 지속성</b>·포렌식 흔적",
+    related:["winauth","process","vss"]
   }
 ];
 
@@ -604,6 +621,7 @@ const GROUPS=[
   {name:"공유·프로토콜 (SMB 계열)", sub:"NetBIOS·SMB·IPC$·관리공유 — 위 공격 사슬과 연결", ids:["netbios","smb","ipc","adminshares"]},
   {name:"윈도우 인증·로그온", sub:"로그인→검증→접근판정: winlogon→lsass→토큰→SRM", ids:["logon","winauth","ntlm","kerberos","srm","process"]},
   {name:"파일시스템 (NTFS)", sub:"NTFS 뿌리 + 암호화(EFS·BitLocker)·은닉(ADS)·복원(VSS)", ids:["ntfs","efsbitlocker","ads","vss"]},
+  {name:"레지스트리·시스템 흔적", sub:"윈도우 설정 중앙 DB — 지속성·자격증명·포렌식 아티팩트", ids:["registry"]},
   {name:"포렌식·리버싱", sub:"", ids:["diffing"]},
 ];
 // 교재 목차(사이드바). cat이 있으면 그 파트 클릭 시 필터.
@@ -627,6 +645,8 @@ const GLOSSARY=[
   {ab:"EFS",full:"Encrypting File System",ko:"윈도우의 파일 하나하나 단위 암호화 기능",id:"efsbitlocker"},
   {ab:"FEK",full:"File Encryption Key",ko:"파일을 실제로 암·복호화하는 대칭키(EFS가 사용)",id:"efsbitlocker"},
   {ab:"GINA",full:"Graphical Identification and Authentication",ko:"옛 윈도우의 로그인 화면을 담당하던 모듈",id:"logon"},
+  {ab:"HKCU",full:"HKEY_CURRENT_USER",ko:"레지스트리 루트키 — 현재 로그인한 사용자 설정",id:"registry"},
+  {ab:"HKLM",full:"HKEY_LOCAL_MACHINE",ko:"레지스트리 루트키 — 컴퓨터 전체 설정(모든 사용자 공통)",id:"registry"},
   {ab:"IPC$",full:"Inter-Process Communication Share",ko:"프로세스 간 통신용 기본 공유(널세션 공격의 통로)",id:"ipc"},
   {ab:"KDC",full:"Key Distribution Center",ko:"커버로스에서 인증과 티켓을 발급하는 중앙 서버",id:"kerberos"},
   {ab:"Kerberos",full:"Kerberos (그리스 신화: 머리 셋 지옥문 개)",ko:"티켓을 주고받아 신원을 확인하는 도메인 인증 방식",id:"kerberos"},
