@@ -179,6 +179,28 @@
   .on-key{margin:12px 0 2px;padding:10px 13px;background:var(--accent-soft);border-radius:10px;font-size:13.5px;line-height:1.55;}
   .on-key .lbl{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.05em;color:var(--accent);display:block;margin-bottom:4px;}
 
+  /* ---- 병렬 비교 (A vs B, 우열 아님) ---- */
+  .cmp{display:flex;flex-direction:column;gap:9px;margin:4px 0 2px;}
+  .cmp-item{border:1px solid var(--line);border-radius:11px;padding:11px 13px;font-size:14px;line-height:1.62;background:var(--surface-2);}
+  .cmp-item .cmp-label{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:700;
+    letter-spacing:.03em;padding:2px 9px;border-radius:6px;margin-bottom:7px;background:var(--accent);color:#fff;}
+  .cmp-item .row{display:block;margin-top:5px;}
+  .cmp-item .row:first-of-type{margin-top:0;}
+  @media(min-width:620px){.cmp.two{flex-direction:row;}.cmp.two .cmp-item{flex:1;}}
+
+  /* ---- 진화·단계 (구식 → 표준) ---- */
+  .evo{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;margin:7px 0 2px;}
+  .evo-step{flex:1 1 145px;border:1px solid var(--line-strong);border-radius:10px;padding:9px 11px;background:var(--surface-2);}
+  .evo-step .es-name{font-weight:800;font-size:14px;}
+  .evo-step .es-note{color:var(--ink-soft);font-size:12.5px;margin-top:3px;line-height:1.45;}
+  .evo-arrow{align-self:center;font-family:var(--mono);color:var(--accent);font-weight:700;font-size:15px;padding:0 8px;user-select:none;}
+  @media(max-width:560px){.evo{flex-direction:column;}.evo-arrow{transform:rotate(90deg);padding:5px 0;}}
+
+  /* ---- 세트 암기용 목록 ---- */
+  ul.klist{list-style:none;margin:6px 0 2px;padding:0;display:flex;flex-direction:column;gap:7px;}
+  ul.klist li{border-left:3px solid var(--line);padding:2px 0 2px 11px;font-size:14px;line-height:1.55;}
+  ul.klist.safe-rail li{border-left-color:var(--safe);}
+
   code{
     font-family:var(--mono);font-size:.87em;background:#1420200d;
     border:1px solid var(--line);border-radius:5px;padding:1px 5px;
@@ -366,7 +388,7 @@ const DATA = [
     oneLiner:"LAN 내 이름 기반 통신 / 포트 137·138·139(+445) / 널세션 정보유출 / 안 쓰면 차단",
     blocks:[
       {k:"def",title:"정의",d:"같은 근거리망(LAN) 안에서 컴퓨터를 <b>IP가 아닌 이름</b>(예: <code>DESKTOP-ABC123</code>)으로 찾고 통신하게 해주는 옛 윈도우 기술. 탐색기 '네트워크'에 뜨는 PC 이름들이 이거."},
-      {k:"note",title:"포트 (세트로 암기)",d:"<code>137</code> 이름 서비스 · <code>138</code> 데이터그램 · <code>139</code> 세션 서비스. 여기에 <code>445</code>(SMB over TCP)까지 묶어서 기억. 요즘은 139 대신 445로 넘어감."},
+      {k:"note",title:"포트 (세트로 암기)",d:"<ul class='klist'><li><code>137</code> — 이름 서비스(Name Service).</li><li><code>138</code> — 데이터그램(Datagram).</li><li><code>139</code> — 세션 서비스(Session Service).</li></ul>여기에 <code>445</code>(SMB over TCP)까지 묶어서 기억한다. 요즘은 139 대신 <b>445</b>로 넘어갔다."},
       {k:"warn",title:"취약점",d:"보안 개념이 거의 없던 시절 기술. 외부 노출 시 <b>널 세션(Null Session)</b>으로 인증 없이 접속해 사용자 목록·공유·정책 정보를 긁어감(정찰 단계 단골). 도구: <code>nbtstat</code>, nbtscan, enum4linux."},
       {k:"safe",title:"방어",d:"쓸 거 아니면 막아라. 외부로 향하는 <code>137~139</code>·<code>445</code> 차단, 안 쓰면 NetBIOS over TCP/IP 비활성화. '안 쓰는데 켜진 서비스'를 줄이는 <b>공격 표면 최소화(하드닝)</b>의 교과서적 예시."},
       {k:"note",title:"왜 아직 쓰이나",d:"기술이 좋아서가 아니라 <b>레거시 호환성</b> 때문. 공장·병원·관공서의 구형 시스템이 아직 의존. 추세는 확실히 퇴출 → 시험에선 대개 '차단·비활성화 대상'으로 출제."}
@@ -381,10 +403,10 @@ const DATA = [
     oneLiner:"윈도우 파일공유 프로토콜 / CIFS=SMBv1(취약) / SMBv2·v3는 암호화·무결성 / 포트 445",
     blocks:[
       {k:"def",title:"정의",d:"윈도우 파일·프린터 공유 프로토콜. <b>CIFS(Common Internet File System)는 SMB의 옛 이름 = SMBv1 계열.</b> IPC$·널세션도 전부 이 위에서 돌아감. 포트 <code>445</code>(+ 139)."},
-      {k:"note",title:"NetBIOS와의 관계 — '업그레이드' 아님 (함정 주의)",d:"SMB는 NetBIOS의 상위 버전이 <b>아니다.</b> 역할이 다른 두 계층: <b>NetBIOS</b>=이름 찾기·세션 연결(하부 도우미), <b>SMB</b>=실제 파일 공유(응용). 옛날엔 <b>SMB가 NetBIOS 위에 얹혀</b> 돌았음 → 그래서 포트 137·138·<code>139</code>를 세트로 씀. 이후 SMB가 <code>445</code>에서 <b>직접(direct hosting)</b> 돌면서 NetBIOS 의존을 끊음 → NetBIOS는 레거시로. 시험 함정: 'SMB=NetBIOS 개선판?' → <b>❌ 얹힘 → 445로 독립한 관계</b>."},
+      {k:"note",title:"NetBIOS와의 관계 — '업그레이드' 아님 (함정 주의)",d:"옛날에는 <b>SMB가 NetBIOS 위에 얹혀서</b> 돌아, NetBIOS 포트 <code>137</code>·<code>138</code>·<code>139</code>를 세트로 함께 썼다. 이후 SMB가 <code>445</code>에서 <b>직접(direct hosting)</b> 동작하게 되면서 NetBIOS 의존을 끊었다. 하지만 이건 버전 업그레이드가 아니라, 둘은 <b>역할이 다른 별개의 두 계층</b>이라는 게 핵심이다.<div class='cmp two'><div class='cmp-item'><span class='cmp-label'>NetBIOS · 하부</span><div class='row'>같은 랜(LAN) 안에서 <b>컴퓨터 이름을 찾고 세션을 연결</b>해 주는 도우미 역할.</div></div><div class='cmp-item'><span class='cmp-label'>SMB · 응용</span><div class='row'>그 연결 위에서 <b>실제 파일·프린터를 공유</b>하는 역할.</div></div></div><p class='on-key'><span class='lbl'>시험 함정</span>'SMB는 NetBIOS의 개선판인가?' → <b>❌ 아니다.</b> 위에 얹혀 있다가 <code>445</code>로 독립한 <b>계층 관계</b>일 뿐, 버전 업그레이드가 아니다.</p>"},
       {k:"warn",title:"SMBv1(CIFS)의 취약점 — 워너크라이",d:"SMBv1의 <b>EternalBlue</b> 취약점(NSA 유출)으로 <b>인증 없이 원격 코드 실행</b> 가능. 2017 <b>워너크라이</b> 랜섬웨어가 이걸 써서 같은 망으로 자가 전파(웜)했던 대형 사고. 시험엔 EternalBlue·WannaCry·SMBv1이 세트로 출제."},
       {k:"safe",title:"방어",d:"<b>SMBv1(CIFS)은 끄고 SMBv2/v3를 써라.</b> 특히 SMBv3는 전송 암호화·무결성 검증이 들어가 보안이 크게 개선됨. '더 새 기술이라 안전'이 아니라 <b>버전으로 판단</b>하는 게 핵심."},
-      {k:"note",title:"버전 진화 관점",d:"<b>SMB 버전</b> 진화: SMBv1(CIFS) → EternalBlue 취약 → SMBv2/v3에서 암호화·무결성 도입. 옛날엔 없던 인증·무결성을 채워가는 게 보안 발전의 전형적 방향. (주의: NetBIOS→SMB는 '버전 업'이 아니라 계층 의존이 끊긴 것 — 위 'NetBIOS와의 관계' 블록 참고.)"}
+      {k:"note",title:"버전 진화 관점",d:"SMB는 버전이 올라가며 옛날엔 없던 <b>인증·무결성·암호화</b>를 채워 왔다.<div class='evo'><div class='evo-step'><div class='es-name'>SMBv1 (CIFS)</div><div class='es-note'>가장 오래된 버전. 암호화·무결성이 <b>없다</b> → <b>EternalBlue</b> 취약점, 워너크라이의 무대.</div></div><span class='evo-arrow'>→</span><div class='evo-step'><div class='es-name'>SMBv2</div><div class='es-note'>프로토콜을 정리하고 효율을 개선.</div></div><span class='evo-arrow'>→</span><div class='evo-step'><div class='es-name'>SMBv3</div><div class='es-note'><b>전송 암호화·무결성 검증</b>이 들어가 보안이 크게 강화.</div></div></div><p class='on-key'><span class='lbl'>주의</span><b>NetBIOS→SMB</b>는 이런 '버전 업'이 아니라 계층 의존이 끊긴 것 — 위 'NetBIOS와의 관계' 블록 참고.</p>"}
     ],
     finalLiner:"CIFS = SMBv1(취약, 비활성화 대상) · EternalBlue/워너크라이 / <b>SMBv2·v3 = 암호화·무결성 적용판</b> / 포트 445",
     related:["netbios","ipc"]
@@ -397,7 +419,7 @@ const DATA = [
     blocks:[
       {k:"def",title:"정의",d:"윈도우가 자동 생성하는 <b>숨겨진 관리용 공유</b>(끝의 <code>$</code>=숨김). 파일 공유가 아니라 컴퓨터 간 <b>프로세스 통신</b>(원격 서비스 제어·인증·이름 조회)을 위한 통로."},
       {k:"warn",title:"널 세션(Null Session)",d:"옛 윈도우는 IPC$ 접속 시 <b>아이디·비밀번호를 비워도 허용</b>했음. 이 빈 연결을 발판으로 사용자 계정·공유·정책 정보를 열람(enumeration).<pre>net use \\\\대상IP\\IPC$ \"\" /user:\"\"</pre>"},
-      {k:"note",title:"공격 사슬",d:"SMB 포트(139·445) 열림 → <b>IPC$ 공유 접속</b> → 빈 자격증명으로 <b>널세션 성립</b> → 시스템 정보 수집. 시험은 '널세션이 이용하는 기본 공유는?→IPC$'처럼 양방향으로 물음."},
+      {k:"note",title:"공격 사슬",d:"<div class='evo'><div class='evo-step'><div class='es-name'>① 포트 개방</div><div class='es-note'>SMB 포트(<code>139</code>·<code>445</code>)가 열려 있음.</div></div><span class='evo-arrow'>→</span><div class='evo-step'><div class='es-name'>② IPC$ 접속</div><div class='es-note'>숨김 공유 <code>IPC$</code>에 연결.</div></div><span class='evo-arrow'>→</span><div class='evo-step'><div class='es-name'>③ 널세션</div><div class='es-note'>빈 자격증명으로 <b>널세션 성립</b>.</div></div><span class='evo-arrow'>→</span><div class='evo-step'><div class='es-name'>④ 정보 수집</div><div class='es-note'>계정·공유·정책 등 시스템 정보 열람.</div></div></div><p class='on-key'><span class='lbl'>시험</span>'널세션이 이용하는 기본 공유는?' → <b>IPC$</b> (양방향으로 출제).</p>"},
       {k:"safe",title:"방어",d:"레지스트리 <code>RestrictAnonymous</code>(또는 RestrictAnonymousSAM) 값을 올려 익명 접속 제한. 근본적으론 <code>139</code>·<code>445</code>를 외부에 노출하지 않기. IPC$ 자체는 정상 기능 — 문제는 '인증 없이 통하던 것'."}
     ],
     finalLiner:"IPC$ = 윈도우 기본 숨김 관리 공유 / <b>널세션</b>이 빈 자격증명으로 접속 / <b>RestrictAnonymous</b>로 차단",
@@ -410,7 +432,7 @@ const DATA = [
     oneLiner:"윈도우가 자동 생성하는 숨김 관리 공유(C$·ADMIN$·IPC$) / 관리자 권한 필요 / 탈취 계정으로 측면이동에 악용",
     blocks:[
       {k:"def",title:"정의",d:"윈도우 설치 시 <b>자동 생성</b>되는 숨겨진 관리용 공유. 이름 끝의 <code>$</code>=탐색기에 안 보이는 <b>숨김 공유</b>. 원격 관리 편의를 위해 존재. 현재 목록은 <code>net share</code>로 확인."},
-      {k:"note",title:"종류 (세트로 암기)",d:"<code>C$</code> 각 드라이브 루트(C$·D$…) · <code>ADMIN$</code> = <code>C:\\Windows</code>(%SystemRoot%), 원격 관리용 · <code>IPC$</code> 프로세스 통신·널세션 통로 · <code>PRINT$</code> 프린터 드라이버. 앞의 셋(C$·ADMIN$·IPC$)이 출제 단골."},
+      {k:"note",title:"종류 (세트로 암기)",d:"<ul class='klist'><li><code>C$</code> — 각 드라이브 루트(C$·D$…)에 대한 관리 공유.</li><li><code>ADMIN$</code> — <code>C:\\Windows</code>(%SystemRoot%) 폴더. 원격 관리용.</li><li><code>IPC$</code> — 프로세스 간 통신 통로(옛 <b>널세션</b>의 발판).</li><li><code>PRINT$</code> — 프린터 드라이버 공유.</li></ul><p class='on-key'><span class='lbl'>출제 단골</span>앞의 셋 <b>C$·ADMIN$·IPC$</b>가 시험에 자주 나온다.</p>"},
       {k:"warn",title:"악용 — 측면 이동(lateral movement)",d:"공유 자체는 <b>관리자만 접근</b>하는 정상 기능. 문제는 <b>관리자 자격증명 탈취 뒤</b>. <b>PsExec</b>류가 <code>ADMIN$</code>에 서비스 바이너리를 복사 → <code>IPC$</code>·명명된 파이프로 원격 서비스를 실행해 옆 PC로 번짐. IPC$는 옛날 <b>널세션</b>으로 인증 전에 정보까지 흘림."},
       {k:"safe",title:"방어",d:"근본은 <b>관리자 자격증명 보호</b>: <b>LAPS(Local Administrator Password Solution)</b>로 로컬관리자 암호를 PC마다 다르게(패스더해시 대비). 망 분리·<code>445</code> 외부 차단. 필요 시 레지스트리 <code>AutoShareWks</code>/<code>AutoShareServer</code>=0으로 자동 공유 끄기(단 원격 관리도구 영향). 널세션은 <code>RestrictAnonymous</code>."}
     ],
@@ -427,7 +449,7 @@ const DATA = [
       {k:"warn",title:"판별 ① 이름 위장",d:"한 글자만 비틀어 사칭: 정상 <code>svchost.exe</code> ↔ 악성 <code>scvhost.exe</code>(c·v 뒤바꿈), <code>csrss.exe</code> ↔ <code>csrsss.exe</code>. '다음 중 정상 프로세스는?' 함정 단골."},
       {k:"warn",title:"판별 ② 실행 경로 (이름보다 중요)",d:"정상 시스템 프로세스는 <code>C:\\Windows\\System32\\</code>에서 실행. 이름이 같아도 경로가 <code>...\\Temp\\</code>·사용자 폴더면 거의 악성. 시스템 파일은 임시·사용자 폴더에서 안 돎."},
       {k:"note",title:"판별 ③ 부모 프로세스",d:"정상 프로세스는 부모가 정해져 있음(예: svchost의 부모는 services.exe). 엉뚱한 부모면 의심. 1순위는 ①·②, 이건 여유 있을 때."},
-      {k:"note",title:"자주 나오는 6개 (경로+역할만 눈에 익히기)",d:"<code>csrss.exe</code> 콘솔/스레드 · <code>smss.exe</code> 세션관리자(부팅초반) · <code>services.exe</code> 서비스 제어 · <code>svchost.exe</code> 서비스 호스트(여러 개가 정상) · <code>lsass.exe</code> 인증·보안정책(자격증명 탈취 표적, 예: 미미캐츠) · <code>winlogon.exe</code> 로그온."}
+      {k:"note",title:"자주 나오는 6개 (경로+역할만 눈에 익히기)",d:"이름을 외우기보다 <b>경로와 역할</b>만 눈에 익혀 두면 된다.<ul class='klist'><li><code>csrss.exe</code> — 콘솔/스레드 관리.</li><li><code>smss.exe</code> — 세션 관리자(부팅 초반).</li><li><code>services.exe</code> — 서비스 제어.</li><li><code>svchost.exe</code> — 서비스 호스트(<b>여러 개가 떠 있는 게 정상</b>).</li><li><code>lsass.exe</code> — 인증·보안정책. <b>자격증명 탈취 표적</b>(예: 미미캐츠).</li><li><code>winlogon.exe</code> — 로그온 담당.</li></ul>"}
     ],
     finalLiner:"이름 암기 ❌ / <b>정상 이름 + 정상 경로(System32)</b>로 위장 프로세스 판별 ⭕ — 시험은 '위장된 악성은?'을 물음",
     related:[]
@@ -453,8 +475,8 @@ const DATA = [
     oneLiner:"윈도우 기본 파일시스템 / 권한(ACL)·암호화(EFS)·저널링·감사 내장 / FAT엔 없던 보안기능",
     blocks:[
       {k:"def",title:"정의",d:"윈도우 기본 파일시스템. FAT의 후속으로 <b>보안·복구 기능이 내장</b>. 세부 개념(EFS·BitLocker·ADS·VSS)이 전부 이 위에서 도는 '뿌리' 개념 — 이걸 지도로 잡고 나머지를 얹으면 안 헷갈림."},
-      {k:"note",title:"FAT vs NTFS (시험 단골 비교)",d:"<b>FAT엔 없고 NTFS에만 있는 것</b>을 물음: ①<b>접근권한(ACL, Access Control List=접근제어 목록)</b> ②<b>암호화(EFS)</b> ③<b>저널링(복구)</b> ④감사(Auditing) ⑤압축·대용량·디스크쿼터. FAT은 권한·암호화·저널링이 <b>없다</b> → 보안엔 NTFS."},
-      {k:"note",title:"핵심 구성요소",d:"<code>MFT</code>(Master File Table, 마스터 파일 테이블) 모든 파일의 메타데이터 목록 · <code>$LogFile</code> <b>저널링</b> · <b>ADS</b>(대체 데이터 스트림)—한 파일에 여러 데이터 흐름(양날의 검)."},
+      {k:"note",title:"FAT vs NTFS (시험 단골 비교)",d:"시험은 <b>FAT엔 없고 NTFS에만 있는 것</b>을 묻는다.<div class='cmp two'><div class='cmp-item'><span class='cmp-label'>FAT</span><div class='row'>단순한 옛 파일시스템. <b>접근권한·암호화·저널링이 없다.</b> 보안 용도로는 부적합.</div></div><div class='cmp-item'><span class='cmp-label'>NTFS</span><div class='row'>보안·복구 기능을 갖춘 윈도우 기본 파일시스템.</div></div></div>NTFS에만 있는 기능(= FAT엔 없는 것):<ul class='klist'><li>① <b>접근권한(ACL, Access Control List = 접근제어 목록)</b> — 파일마다 사용자별 허용/거부 지정</li><li>② <b>암호화(EFS)</b> — 파일 단위 암호화</li><li>③ <b>저널링(복구)</b> — 작업 전 로그를 남겨 크래시에서 복구</li><li>④ <b>감사(Auditing)</b> — 접근 시도 기록</li><li>⑤ <b>압축·대용량·디스크 쿼터</b></li></ul><p class='on-key'><span class='lbl'>결론</span>권한·암호화·저널링이 필요하면 <b>NTFS</b>. 'FAT에 없는 기능은?'이 그대로 출제된다.</p>"},
+      {k:"note",title:"핵심 구성요소",d:"<ul class='klist'><li><code>MFT</code> (Master File Table, 마스터 파일 테이블) — 볼륨 안 <b>모든 파일의 메타데이터를 적어 둔 목록</b>.</li><li><code>$LogFile</code> — <b>저널링</b>(작업 로그)을 담는 파일.</li><li><b>ADS</b> (Alternate Data Streams, 대체 데이터 스트림) — 한 파일에 <b>여러 데이터 흐름</b>을 붙이는 기능. 편의이자 은닉에 악용되는 <b>양날의 검</b>.</li></ul>"},
       {k:"note",title:"저널링 (Journaling) — 어원으로 이해",d:"<b>journal=일지·(회계) 분개장</b>: 최종 장부에 옮기기 <b>전에</b> 먼저 시간순으로 적어두는 기록('journ'=하루→날마다 적음, journey·저널리스트와 같은 뿌리). 파일시스템도 똑같이 <b>실제 디스크에 쓰기 전, 할 작업을 저널(로그)에 먼저 기록</b>(Write-Ahead Logging) → 도중에 정전·크래시가 나도 재부팅 때 저널을 보고 <b>재실행(redo)/되돌림(rollback)</b>해 일관성 유지. 핵심은 '자동 복구'가 아니라 <b>'하기 전에 먼저 적어둔다'</b>. NTFS=<code>$LogFile</code>, 리눅스 ext3/4·XFS도 저널링."},
       {k:"warn",title:"NTFS라서 생기는 위험",d:"기능이 많아 <b>악용 포인트</b>도 생김: <b>ADS</b>로 악성코드 은닉, <b>VSS</b>(섀도 복사본)를 랜섬웨어가 삭제. 각각은 연결 카드 참고."}
     ],
@@ -469,7 +491,7 @@ const DATA = [
     blocks:[
       {k:"def",title:"EFS (파일 단위)",d:"NTFS 기능. <b>파일·폴더 단위</b> 암호화. 대칭키 <code>FEK</code>(File Encryption Key=파일 암호화 키)로 파일을 암호화하고, 그 FEK를 다시 <b>사용자 공개키</b>로 암호화 → 그 사용자로 로그인해야 복호화. 즉 <b>사용자 계정 기반</b>."},
       {k:"def",title:"BitLocker (볼륨 전체)",d:"<b>드라이브(볼륨) 전체</b>를 통째로 암호화. <b>TPM(Trusted Platform Module, 신뢰 플랫폼 모듈)</b>—암호키를 하드웨어에 보관하고 부팅 무결성을 검증하는 <b>별도 보안칩</b>—과 연동해 부팅 전 무결성 검사. <b>노트북 도난 시 디스크 통째 보호</b>가 대표 시나리오. PIN·복구키로도 잠금."},
-      {k:"note",title:"비교 (표로 암기 — 함정 방지)",d:"단위: <b>EFS=파일/폴더</b> vs <b>BitLocker=볼륨 전체</b> · 인증: EFS=사용자 인증서 / BitLocker=TPM·PIN·복구키 · 노트북 분실 대비=<b>BitLocker</b> · 특정 파일만 몰래=<b>EFS</b>. 함정: '볼륨 전체 암호화는?→BitLocker', '파일 단위는?→EFS'."},
+      {k:"note",title:"비교 (표로 암기 — 함정 방지)",d:"<div class='cmp two'><div class='cmp-item'><span class='cmp-label'>EFS</span><div class='row'><b>단위</b> — 파일·폴더 하나하나.</div><div class='row'><b>인증</b> — 사용자 인증서(개인키).</div><div class='row'><b>대표 상황</b> — 공용 PC에서 <b>특정 파일만 몰래</b> 보호.</div></div><div class='cmp-item'><span class='cmp-label'>BitLocker</span><div class='row'><b>단위</b> — 드라이브(볼륨) 전체.</div><div class='row'><b>인증</b> — TPM·PIN·복구키.</div><div class='row'><b>대표 상황</b> — <b>노트북 분실·도난</b> 시 디스크 통째 보호.</div></div></div><p class='on-key'><span class='lbl'>시험 함정</span>'볼륨 전체 암호화는?' → <b>BitLocker</b> · '파일 단위 암호화는?' → <b>EFS</b>. '단위'로 구분한다.</p>"},
       {k:"warn",title:"EFS 주의",d:"사용자 <b>인증서(개인키)를 잃으면 복호화 불가</b> → 데이터 영구 손실. 조직은 <b>복구 에이전트(DRA, Data Recovery Agent)</b>를 지정해 대비. 반대로 계정이 탈취되면 자동 복호화되므로 계정 보호가 전제."}
     ],
     finalLiner:"<b>EFS=파일/폴더 단위(사용자 계정·FEK)</b> / <b>BitLocker=볼륨 전체(TPM)</b> / 분실대비=BitLocker · EFS는 복구에이전트(DRA)로 대비",
@@ -509,8 +531,8 @@ const DATA = [
     oneLiner:"로컬=SAM에 해시 저장 / 처리=lsass(LSA) / 프로토콜 진화 LM→NTLM→Kerberos / 도메인=AD·Kerberos",
     blocks:[
       {k:"def",title:"정의",d:"윈도우가 사용자를 확인하는 체계. 자격증명을 처리하는 핵심 프로세스가 <code>lsass.exe</code>=<b>LSA(Local Security Authority, 로컬 보안 인증)</b>. '정상 프로세스' 카드의 lsass가 바로 이 인증 담당이라 자격증명 탈취 표적."},
-      {k:"note",title:"로컬 vs 도메인 (저장 위치)",d:"<b>로컬 계정</b>: 비번 해시가 <b>SAM(Security Account Manager, 보안 계정 관리자)</b> 파일에 저장(<code>C:\\Windows\\System32\\config\\SAM</code>). <b>도메인</b>: <b>AD(Active Directory)</b>가 중앙에서 계정 관리 → 인증은 <b>Kerberos</b>."},
-      {k:"note",title:"인증 프로토콜 진화 (세트 암기)",d:"<b>LM(LAN Manager)</b> 해시=아주 취약(구식, 대소문자 무시·짧음) → <b>NTLM(NT LAN Manager)</b>=챌린지-리스폰스 → <b>Kerberos</b>=도메인 표준(티켓 기반). 뒤로 갈수록 안전 — '버전으로 판단'은 SMB 카드와 같은 논리."},
+      {k:"note",title:"로컬 vs 도메인 (저장 위치)",d:"계정을 어디에 저장하고 무엇으로 인증하는지가 다르다.<div class='cmp two'><div class='cmp-item'><span class='cmp-label'>로컬 계정</span><div class='row'>비밀번호 해시를 그 PC의 <b>SAM(Security Account Manager, 보안 계정 관리자)</b> 파일에 저장.</div><div class='row'>경로: <code>C:\\Windows\\System32\\config\\SAM</code></div></div><div class='cmp-item'><span class='cmp-label'>도메인 계정</span><div class='row'><b>AD(Active Directory)</b>가 계정을 <b>중앙에서</b> 관리.</div><div class='row'>인증은 <b>Kerberos</b>로 처리.</div></div></div>"},
+      {k:"note",title:"인증 프로토콜 진화 (세트 암기)",d:"인증 프로토콜은 세대가 뒤로 갈수록 안전해진다.<div class='evo'><div class='evo-step'><div class='es-name'>LM</div><div class='es-note'>LAN Manager. <b>아주 취약</b>(대소문자 무시·짧은 해시). 구식.</div></div><span class='evo-arrow'>→</span><div class='evo-step'><div class='es-name'>NTLM</div><div class='es-note'>NT LAN Manager. <b>챌린지-리스폰스</b> 방식.</div></div><span class='evo-arrow'>→</span><div class='evo-step'><div class='es-name'>Kerberos</div><div class='es-note'>도메인 <b>표준</b>. 티켓 기반.</div></div></div><p class='on-key'><span class='lbl'>포인트</span>'세대(버전)로 안전성을 판단'하는 논리는 SMB 카드와 같다.</p>"},
       {k:"warn",title:"자격증명 탈취",d:"<b>lsass 메모리</b>에서 해시·때론 평문을 추출(<b>mimikatz</b>), <b>SAM 덤프</b>. 해시만 있어도 <b>Pass-the-Hash</b>로 로그인 가능(NTLM 카드 참고). 관리자 해시가 PC마다 같으면 옆 PC로 번짐(관리 공유 카드의 측면이동)."},
       {k:"safe",title:"방어",d:"<b>LM 해시 저장 비활성화</b>, 최신 프로토콜(Kerberos) 사용, <b>Credential Guard</b>로 lsass 격리, <b>LAPS(Local Administrator Password Solution)</b>로 로컬관리자 암호 분산. 강한 암호·다단계 인증."}
     ],
@@ -524,7 +546,7 @@ const DATA = [
     oneLiner:"윈도우 챌린지-리스폰스 인증 / 비번은 안 보냄 / 해시만 있으면 뚫리는 Pass-the-Hash 취약",
     blocks:[
       {k:"def",title:"정의",d:"<b>NTLM(NT LAN Manager)</b> = 윈도우 <b>챌린지-리스폰스(Challenge-Response)</b> 인증. 비밀번호를 네트워크로 <b>직접 보내지 않는</b> 게 핵심 발상. <b>NT=New Technology</b>(Windows NT 계열) — 구식 <b>LM(LAN Manager)</b>의 후속. NTFS의 'NT'와 같은 뿌리라 <b>NT 해시</b>도 같은 작명."},
-      {k:"note",title:"동작 흐름",d:"① 서버가 랜덤값 <b>챌린지(nonce)</b> 전송 → ② 클라이언트가 <b>NT 해시로 그 챌린지를 암호화한 응답</b>을 반환 → ③ 서버가 같은 계산으로 검증. 비번·해시 원본은 오가지 않고 '해시를 안다는 증거'만 주고받음."},
+      {k:"note",title:"동작 흐름",d:"비밀번호를 보내지 않고 '해시를 안다는 증거'만 주고받는다.<div class='evo'><div class='evo-step'><div class='es-name'>① 챌린지</div><div class='es-note'>서버가 랜덤값 <b>챌린지(nonce)</b>를 보냄.</div></div><span class='evo-arrow'>→</span><div class='evo-step'><div class='es-name'>② 리스폰스</div><div class='es-note'>클라이언트가 <b>NT 해시로 그 챌린지를 암호화한 응답</b>을 반환.</div></div><span class='evo-arrow'>→</span><div class='evo-step'><div class='es-name'>③ 검증</div><div class='es-note'>서버가 같은 계산을 해서 응답이 맞는지 확인.</div></div></div>비밀번호·해시 <b>원본은 네트워크에 오가지 않는다.</b>"},
       {k:"warn",title:"취약점 — Pass-the-Hash",d:"챌린지 응답을 <b>해시로 만들기 때문에, 평문 비번 없이 해시만 탈취해도 인증</b>이 됨 = <b>PtH(Pass-the-Hash)</b>. 또 인증을 가로채 다른 서버에 그대로 넘기는 <b>NTLM Relay</b>. <b>LM 해시</b>는 더 심각(약한 구조)."},
       {k:"safe",title:"방어",d:"가능하면 <b>Kerberos로 전환</b>, NTLM(특히 <b>NTLMv1·LM</b>) 비활성화·제한, <b>SMB 서명</b>으로 릴레이 차단, <b>LAPS</b>로 해시 재사용 차단, Credential Guard."}
     ],
@@ -539,7 +561,7 @@ const DATA = [
     blocks:[
       {k:"def",title:"정의 (어원으로 기억)",d:"도메인(AD) 기본 인증. 이름은 <b>그리스 신화의 머리 셋 달린 지옥문 개 '케르베로스'</b> — 인증에 <b>3 주체(클라이언트·서버·KDC)</b>가 얽힌 걸 상징. 비번을 네트워크로 안 보내고 <b>티켓</b>으로 신원 증명."},
       {k:"note",title:"구성 — KDC",d:"핵심은 <b>KDC(Key Distribution Center, 키 배포 센터)</b>. 그 안에 <b>AS(Authentication Server, 인증 서버)</b> + <b>TGS(Ticket Granting Server, 티켓 발급 서버)</b>. 도메인에선 AD 도메인 컨트롤러가 KDC 역할."},
-      {k:"note",title:"인증 흐름 (티켓 2단계 — 시험 단골)",d:"① 로그인 시 <b>AS</b>가 <b>TGT(Ticket Granting Ticket, 티켓 발급용 티켓)</b>를 줌 = '신분증' → ② 서비스 접속 때 그 TGT를 <b>TGS</b>에 제출해 <b>서비스 티켓(ST)</b>을 받음 → ③ 서비스 티켓으로 실제 서버 접속. 한 번 로그인으로 여러 서비스 = <b>SSO(Single Sign-On)</b>."},
+      {k:"note",title:"인증 흐름 (티켓 2단계 — 시험 단골)",d:"티켓을 두 단계로 받아 서비스에 접속한다.<div class='evo'><div class='evo-step'><div class='es-name'>① 로그인</div><div class='es-note'><b>AS</b>가 <b>TGT</b>(Ticket Granting Ticket, 티켓 발급용 티켓)를 발급 = '신분증'.</div></div><span class='evo-arrow'>→</span><div class='evo-step'><div class='es-name'>② 티켓 교환</div><div class='es-note'>그 TGT를 <b>TGS</b>에 제출해 <b>서비스 티켓(ST)</b>을 받음.</div></div><span class='evo-arrow'>→</span><div class='evo-step'><div class='es-name'>③ 서비스 접속</div><div class='es-note'>서비스 티켓으로 실제 서버에 접속.</div></div></div><p class='on-key'><span class='lbl'>포인트</span>한 번 로그인으로 여러 서비스 이용 = <b>SSO(Single Sign-On)</b>. 'TGT → 서비스 티켓' 2단계가 시험 단골.</p>"},
       {k:"note",title:"특징",d:"<b>대칭키</b> 기반 · <b>타임스탬프</b>로 <b>재전송(replay) 공격 방지</b> → 그래서 <b>시간 동기화가 필수</b>(기본 5분 오차 허용). 이 '타임스탬프=리플레이 방지' 포인트가 자주 출제."},
       {k:"warn",title:"공격",d:"<b>Golden Ticket</b>: KDC의 <code>krbtgt</code> 계정 해시를 훔치면 <b>위조 TGT</b>를 무제한 발급 → 도메인 전체 장악. <b>Pass-the-Ticket</b>(티켓 탈취 재사용), <b>Kerberoasting</b>(서비스 티켓 오프라인 크래킹)."}
     ],
@@ -553,8 +575,8 @@ const DATA = [
     oneLiner:"모든 접근을 최종 판정하는 경비원 / 토큰(SID) vs 객체 ACL 비교 / 참조모니터 3요건(항상호출·변조불가·검증가능)",
     blocks:[
       {k:"def",title:"정의",d:"<b>SRM(Security Reference Monitor, 보안 참조 모니터)</b> = 윈도우 <b>커널 모드</b>에서 '이 주체가 이 객체에 접근해도 되나'를 <b>최종 판정</b>하는 문지기. 주체의 <b>액세스 토큰</b>과 객체의 <b>ACL</b>을 비교해 허용/거부하고 <b>감사(audit) 로그</b>를 남김."},
-      {k:"note",title:"판정 재료 (윈도우)",d:"주체측: <b>액세스 토큰</b> = 사용자 <b>SID(Security Identifier, 보안 식별자)</b> + 그룹 SID + 권한(privileges). 객체측: <b>DACL(Discretionary ACL, 임의 접근제어 목록)</b>=누가 뭘 할 수 있나 · 감사는 <b>SACL(System ACL)</b>. 로그인 때 LSA가 토큰을 만들고, SRM이 그 토큰으로 매 접근을 검사."},
-      {k:"note",title:"원류 개념 — 참조 모니터 3요건 (시험 핵심·접근통제 PART4)",d:"<b>참조 모니터(Reference Monitor)</b>는 주체-객체 사이 <b>모든 접근을 중재</b>하는 추상 개념. 3대 요건: ①<b>항상 호출(완전성, 우회 불가·bypass 불가)</b> ②<b>변조 불가·격리(tamperproof/isolation)</b> ③<b>검증 가능(작고 단순해 verifiable)</b>. 이를 실제 구현한 것이 <b>보안 커널(Security Kernel)</b> — 윈도우판이 바로 SRM."},
+      {k:"note",title:"판정 재료 (윈도우)",d:"SRM은 두 가지를 맞대어 접근을 판정한다.<div class='cmp two'><div class='cmp-item'><span class='cmp-label'>주체측 · 액세스 토큰</span><div class='row'>사용자 <b>SID(Security Identifier, 보안 식별자)</b> + 그룹 SID + 권한(privileges).</div></div><div class='cmp-item'><span class='cmp-label'>객체측 · ACL</span><div class='row'><b>DACL(Discretionary ACL, 임의 접근제어 목록)</b> — 누가 무엇을 할 수 있나.</div><div class='row'>감사(접근 기록)는 <b>SACL(System ACL)</b>이 담당.</div></div></div>로그인 때 <b>LSA</b>가 토큰을 만들고, 이후 <b>SRM</b>이 그 토큰과 객체의 ACL을 비교해 매 접근을 검사한다."},
+      {k:"note",title:"원류 개념 — 참조 모니터 3요건 (시험 핵심·접근통제 PART4)",d:"<b>참조 모니터(Reference Monitor)</b>는 주체와 객체 사이의 <b>모든 접근을 중재</b>하는 추상 개념이다. 갖춰야 할 3대 요건:<ul class='klist'><li>① <b>항상 호출</b> (완전성) — 어떤 접근도 <b>우회할 수 없다</b>(bypass 불가).</li><li>② <b>변조 불가·격리</b> (tamperproof / isolation) — 공격자가 <b>손댈 수 없게</b> 보호·분리된다.</li><li>③ <b>검증 가능</b> (verifiable) — 충분히 <b>작고 단순</b>해서 올바름을 검증할 수 있다.</li></ul>이 개념을 실제로 구현한 것이 <b>보안 커널(Security Kernel)</b>이고, 그 윈도우판이 바로 <b>SRM</b>이다."},
       {k:"warn",title:"공격 관점",d:"판정의 근거가 <b>액세스 토큰</b>이므로, 토큰을 훔치거나 조작하면 권한 상승·우회 가능(<b>토큰 탈취/사칭, SID 위조</b>). 그래서 참조모니터의 '변조 불가·격리' 요건이 실무에서 중요."}
     ],
     finalLiner:"SRM = 접근을 최종 판정하는 문지기(토큰 SID ↔ 객체 DACL) / 원류=<b>참조 모니터 3요건: 항상호출·변조불가·검증가능</b> / 구현=보안 커널",
