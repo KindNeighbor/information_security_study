@@ -760,6 +760,34 @@ const DATA = [
     ],
     finalLiner:"메모리 보호 3종 — <b>스택 카나리</b>(오버플로 감지) · <b>DEP/NX</b>(데이터 영역 실행 금지) · <b>ASLR</b>(주소 무작위화) / 우회: DEP→ROP, ASLR→정보유출·힙스프레이 → 겹쳐 쓴다",
     related:["bof","shellcode","heapspray"]
+  },
+  {
+    id:"memlayout", term:"프로세스 메모리 구조", en:"Text · Data · BSS · Heap · Stack",
+    cat:"시스템 보안",
+    tags:["Text(코드)","Data/BSS(전역)","Heap(동적)","Stack(지역·리턴주소)","힙↑ 스택↓"],
+    oneLiner:"실행 시 메모리는 Text·Data·BSS·Heap·Stack로 나뉜다 / 스택은 지역변수·리턴주소 / 힙↑·스택↓로 자람",
+    blocks:[
+      {k:"def",title:"정의",d:"프로그램이 실행되면 프로세스 메모리가 <b>용도별 영역</b>으로 나뉜다. 버퍼 오버플로가 '무엇을 덮는지'를 이해하려면 이 지도가 먼저다."},
+      {k:"note",title:"5개 영역 (낮은 주소 → 높은 주소)",d:"<ul class='klist'><li><b>Text(코드) 영역</b> — 실행할 <b>기계어 코드</b>. 보통 <b>읽기 전용</b>(수정 방지).</li><li><b>Data 영역</b> — <b>초기화된</b> 전역·정적 변수(<code>int g=5;</code>).</li><li><b>BSS 영역</b> — <b>초기화 안 된</b> 전역·정적 변수(<code>int g;</code>). 이름 유래는 옛 어셈블러 용어 'Block Started by Symbol'.</li><li><b>Heap(힙)</b> — <code>malloc</code>·<code>new</code>로 <b>동적 할당</b>. <b>낮은→높은 주소</b>로 자람(위로).</li><li><b>Stack(스택)</b> — <b>지역변수·함수 호출정보(리턴 주소)</b>. <b>높은→낮은 주소</b>로 자람(아래로).</li></ul>"},
+      {k:"warn",title:"버퍼 오버플로와의 연결",d:"<b>스택 버퍼 오버플로</b> — 스택의 지역 버퍼가 넘치면 같은 스택에 있는 <b>리턴 주소</b>를 덮는다(그래서 흐름 탈취). <b>힙 오버플로</b> — 힙 청크의 <b>관리 정보(메타데이터)</b>를 훼손한다. '어느 영역이 넘치느냐'로 스택 BOF·힙 BOF가 갈린다."},
+      {k:"note",title:"방향 함정 (자주 나옴)",d:"<b>힙은 위로(주소 증가), 스택은 아래로(주소 감소)</b> 자라 서로 마주 본다. 시험 함정: 둘의 성장 방향을 바꿔치기하거나, 'Text=변수', 'BSS=초기화된 변수'처럼 <b>영역별 용도를 뒤섞어</b> 낸다."}
+    ],
+    finalLiner:"메모리 = <b>Text(코드)·Data(초기화 전역)·BSS(미초기화 전역)·Heap(동적)·Stack(지역·리턴주소)</b> / 힙↑·스택↓ / 스택 BOF가 리턴주소를 덮는 무대",
+    related:["bof","cfunc","shellcode"]
+  },
+  {
+    id:"cfunc", term:"위험한 C 함수 vs 안전한 함수", en:"Unsafe / Safe C Functions",
+    cat:"애플리케이션 보안",
+    tags:["gets 최악","strcpy→strncpy","경계검사 없음","n버전=안전","개발 보안"],
+    oneLiner:"길이 검사 없는 C 함수가 버퍼 오버플로 원인 / gets가 최악 / 대체로 n 붙은 버전이 안전판",
+    blocks:[
+      {k:"def",title:"정의",d:"C 표준 함수 중 <b>입력 길이를 검사하지 않는</b> 함수들이 버퍼 오버플로의 단골 원인이다. <b>길이 제한(n)</b>이 있는 버전이나 안전 버전으로 바꾸는 게 개발 보안의 기본."},
+      {k:"warn",title:"위험 함수 → 안전한 대체 (짝으로 암기)",d:"<div class='cmp'><div class='cmp-item'><span class='cmp-label'>gets() → fgets()</span><div class='row'><b>gets는 길이 제한이 아예 없어 최악</b>(표준에서 삭제됨). fgets는 <b>버퍼 크기</b>를 받는다.</div></div><div class='cmp-item'><span class='cmp-label'>strcpy() → strncpy()</span><div class='row'>복사할 <b>최대 길이 n</b>을 지정.</div></div><div class='cmp-item'><span class='cmp-label'>strcat() → strncat()</span><div class='row'>이어붙일 <b>최대 길이 n</b>을 지정.</div></div><div class='cmp-item'><span class='cmp-label'>sprintf() → snprintf()</span><div class='row'>출력 버퍼 <b>크기 n</b>을 넘기지 않게.</div></div><div class='cmp-item'><span class='cmp-label'>scanf(\"%s\") → 폭 지정/fgets</span><div class='row'><code>%s</code>는 무제한 입력 → <code>%9s</code>처럼 <b>폭 지정</b>하거나 fgets.</div></div></div><p class='on-key'><span class='lbl'>핵심</span>대부분 <b>n이 붙으면(길이 제한) 안전판</b>. 가장 위험한 건 <b>gets</b>.</p>"},
+      {k:"note",title:"주의 — n버전도 만능은 아님",d:"<code>strncpy</code>는 길이를 채우면 <b>널 종료(\\0)를 안 붙일 수</b> 있어 또 다른 버그의 원인이 된다. 그래서 현대엔 <code>strlcpy</code>·<code>strcpy_s</code> 등을 권장. 다만 시험은 대개 <b>'n 붙은 버전이 더 안전'</b> 수준으로 묻는다."},
+      {k:"safe",title:"근본 대응",d:"안전한 함수 + <b>경계 검사</b>가 기본, 여기에 컴파일러 <b>스택 카나리</b>·OS <b>DEP·ASLR</b>(메모리 보호 카드)로 겹겹이. 궁극적으론 <b>메모리 안전 언어</b>."}
+    ],
+    finalLiner:"버퍼 오버플로 원인=길이 검사 없는 함수 / <b>gets(최악)·strcpy·strcat·sprintf·scanf(%s)</b> → 안전판 <b>fgets·strncpy·strncat·snprintf</b> / n=길이제한=안전",
+    related:["bof","memlayout"]
   }
 ];
 
@@ -771,7 +799,7 @@ const GROUPS=[
   {name:"파일시스템 (NTFS)", sub:"NTFS 뿌리 + 암호화(EFS·BitLocker)·은닉(ADS)·복원(VSS)", ids:["ntfs","efsbitlocker","ads","vss"]},
   {name:"레지스트리·이벤트 로그 (시스템 흔적)", sub:"윈도우 설정·활동 기록 — 지속성·자격증명·침해 분석·포렌식 아티팩트", ids:["registry","eventlog"]},
   {name:"악성코드", sub:"바이러스 유형·분류(바이러스 vs 웜 vs 트로이, 세대별 진화)·DDE 공격", ids:["virus","dde"]},
-  {name:"메모리 익스플로잇", sub:"버퍼 오버플로 → 셸코드·힙 스프레이로 실행 → 완화(카나리·DEP·ASLR)", ids:["bof","shellcode","heapspray","memprotect"]},
+  {name:"메모리 익스플로잇", sub:"메모리 구조·위험 함수 → 버퍼 오버플로 → 셸코드·힙 스프레이 → 완화(카나리·DEP·ASLR)", ids:["memlayout","bof","cfunc","shellcode","heapspray","memprotect"]},
   {name:"애플리케이션·웹 보안", sub:"웹 인증·인가 위임 — OAuth 등", ids:["oauth"]},
   {name:"포렌식·리버싱", sub:"디지털 포렌식(웹·IE 아티팩트) + 바이너리 디핑", ids:["webartifact","ieartifact","diffing"]},
 ];
@@ -815,6 +843,7 @@ const GLOSSARY=[
   {ab:"NTLM",full:"NT LAN Manager",ko:"서버가 문제를 내고 답하게 하는 윈도우 인증 방식",id:"ntlm"},
   {ab:"DDE",full:"Dynamic Data Exchange",ko:"앱끼리 데이터를 주고받던 구식 통신 방식(오피스 문서 공격에 악용)",id:"dde"},
   {ab:"BOF",full:"Buffer Overflow",ko:"버퍼 크기를 넘겨 인접 메모리를 덮어쓰는 취약점",id:"bof"},
+  {ab:"BSS",full:"Block Started by Symbol",ko:"초기화하지 않은 전역·정적 변수가 놓이는 메모리 영역",id:"memlayout"},
   {ab:"DEP",full:"Data Execution Prevention",ko:"스택·힙 같은 데이터 영역에서 코드 실행을 막아 주입된 셸코드를 차단",id:"memprotect"},
   {ab:"NX",full:"No-eXecute (bit)",ko:"데이터 영역 실행 금지를 CPU에서 구현하는 비트(DEP의 하드웨어 근거)",id:"memprotect"},
   {ab:"ASLR",full:"Address Space Layout Randomization",ko:"메모리 주소를 매번 무작위로 배치해 공격자가 위치를 못 맞추게 함",id:"memprotect"},
