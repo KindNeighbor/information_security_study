@@ -702,6 +702,34 @@ const DATA = [
     ],
     finalLiner:"DDE = 윈도우 구식 IPC(동적 데이터 교환) / 오피스 <b>DDE 필드로 매크로 없이 명령 실행</b> → 매크로 차단 우회 / 방어=DDE 자동실행 비활성화·보호된 보기",
     related:["virus","process"]
+  },
+  {
+    id:"shellcode", term:"셸코드", en:"Shellcode",
+    cat:"시스템 보안",
+    tags:["익스플로잇 페이로드","위치독립코드","널바이트 회피","NOP 슬레드","DEP·ASLR로 방어"],
+    oneLiner:"익스플로잇이 제어권을 뺏은 뒤 실행시키는 작은 기계어 조각 / 이름=셸을 띄우는 코드 / DEP·ASLR로 방어",
+    blocks:[
+      {k:"def",title:"정의 (어원으로 기억)",d:"취약점으로 <b>실행 흐름을 가로챈 뒤</b> 실제로 돌리는 <b>작은 기계어(머신코드) 조각</b>. 이름의 유래는 원래 공격자가 <b>셸(shell)을 띄워</b> 명령 실행 권한을 얻는 코드라서 <b>shell+code</b>. 요즘은 셸을 안 띄우고 백도어·다운로드 등 무슨 일을 하든 이 페이로드를 통칭해 셸코드라 부른다."},
+      {k:"note",title:"특징",d:"<ul class='klist'><li><b>아주 작다</b> — 좁은 취약 공간에 들어가야 하므로.</li><li><b>위치 독립적(position-independent)</b> — 어느 주소에 올라가도 동작.</li><li><b>널바이트(0x00) 회피</b> — 문자열 함수가 0x00에서 잘리므로 이를 피해 작성.</li><li>종류: <b>로컬</b>(권한 상승) · <b>원격</b>(리버스/바인드 셸로 원격 접속).</li></ul>"},
+      {k:"warn",title:"어떻게 실행되나",d:"주로 <b>버퍼 오버플로</b>로 스택의 <b>리턴 주소를 셸코드 위치로 덮어써</b> 흐름을 가로챈다. 정확한 주소를 맞히기 어려우니, 셸코드 앞에 <b>NOP 슬레드</b>(<code>0x90</code>이 죽 이어진 구간)를 깔아 <b>대충 뛰어도 미끄러져</b> 셸코드에 도달하게 한다. 넓게 뿌려 확률을 높이는 게 <b>heap spray</b>(연결 카드)."},
+      {k:"safe",title:"방어",d:"<b>DEP(데이터 실행 방지)</b> — 스택·힙 같은 <b>데이터 영역에서 코드 실행을 금지</b>해 주입된 셸코드가 실행되지 못하게. <b>ASLR(주소 공간 배치 무작위화)</b> — 메모리 주소를 매번 <b>무작위</b>로 배치해 셸코드 위치를 못 맞히게. 그래서 요즘 공격은 코드 주입 대신 기존 코드를 이어붙이는 <b>ROP</b>로 DEP를 우회한다."}
+    ],
+    finalLiner:"셸코드 = 제어 탈취 후 실행되는 작은 기계어(이름=셸 띄우는 코드) / <b>NOP 슬레드</b>로 착지 보조 / 방어 <b>DEP(실행 금지)·ASLR(주소 무작위화)</b>, 우회는 ROP",
+    related:["heapspray","process","diffing"]
+  },
+  {
+    id:"heapspray", term:"힙 스프레이", en:"Heap Spray",
+    cat:"시스템 보안",
+    tags:["셸코드 대량 살포","NOP 슬레드","브라우저·자바스크립트","확률로 착지","ASLR·DEP로 방어"],
+    oneLiner:"힙에 셸코드+NOP 슬레드를 대량으로 뿌려 아무 주소로 점프해도 높은 확률로 셸코드에 착지하게 하는 기법",
+    blocks:[
+      {k:"def",title:"정의 (어원으로 기억)",d:"힙(heap) 메모리에 <b>셸코드 + NOP 슬레드</b> 덩어리를 <b>대량으로 뿌려(spray)</b> 넓은 영역을 채우는 기법. 이름 그대로 힙에 <b>스프레이 뿌리듯</b> 도배한다. 목적은 정확한 주소를 몰라도 <b>대충 아무 힙 주소로 점프</b>시켰을 때 높은 확률로 셸코드에 떨어지게 하는 것."},
+      {k:"note",title:"어디서·어떻게",d:"주로 <b>웹 브라우저·문서 뷰어</b> 취약점에서 쓴다. 공격자가 <b>자바스크립트</b>로 힙에 문자열·배열을 <b>반복 할당</b>해 스프레이한 뒤, <b>Use-After-Free</b> 같은 취약점으로 흐름을 힙으로 튀게 만든다. NOP 슬레드가 있어 스프레이 영역 <b>어디에 떨어져도</b> 셸코드로 미끄러진다."},
+      {k:"warn",title:"왜 효과적인가",d:"정확한 주소를 <b>몰라도 확률로</b> 성공한다. 힙 대부분을 같은 셸코드로 채워 두었으니, 제어 흐름이 그 넓은 구간 아무 데나 도달하면 실행된다. 초기 <b>ASLR을 무력화</b>하는 수단으로도 악용됐다(어차피 넓게 깔아서)."},
+      {k:"safe",title:"방어",d:"<b>DEP·ASLR</b> 기본 적용, 브라우저의 <b>힙 격리·힙 스프레이 탐지</b>(예: 격리 힙, Nozzle 류), 취약점 <b>최신 패치</b>. 근본은 <b>Use-After-Free 같은 메모리 취약점 자체를 없애는 것</b>."}
+    ],
+    finalLiner:"힙 스프레이 = 힙에 <b>셸코드+NOP를 대량 살포</b>해 아무 주소 점프에도 확률로 착지 / 주로 브라우저·자바스크립트 / 방어 DEP·ASLR·힙 보호·패치",
+    related:["shellcode"]
   }
 ];
 
@@ -713,6 +741,7 @@ const GROUPS=[
   {name:"파일시스템 (NTFS)", sub:"NTFS 뿌리 + 암호화(EFS·BitLocker)·은닉(ADS)·복원(VSS)", ids:["ntfs","efsbitlocker","ads","vss"]},
   {name:"레지스트리·이벤트 로그 (시스템 흔적)", sub:"윈도우 설정·활동 기록 — 지속성·자격증명·침해 분석·포렌식 아티팩트", ids:["registry","eventlog"]},
   {name:"악성코드", sub:"바이러스 유형·분류(바이러스 vs 웜 vs 트로이, 세대별 진화)·DDE 공격", ids:["virus","dde"]},
+  {name:"메모리 익스플로잇", sub:"셸코드·힙 스프레이 — 제어 탈취 후 실행, NOP 슬레드·DEP·ASLR", ids:["shellcode","heapspray"]},
   {name:"애플리케이션·웹 보안", sub:"웹 인증·인가 위임 — OAuth 등", ids:["oauth"]},
   {name:"포렌식·리버싱", sub:"디지털 포렌식(웹·IE 아티팩트) + 바이너리 디핑", ids:["webartifact","ieartifact","diffing"]},
 ];
@@ -755,6 +784,10 @@ const GLOSSARY=[
   {ab:"NT",full:"New Technology",ko:"윈도우 NT 계열을 뜻함(NTFS·NTLM의 그 NT)",id:"ntlm"},
   {ab:"NTLM",full:"NT LAN Manager",ko:"서버가 문제를 내고 답하게 하는 윈도우 인증 방식",id:"ntlm"},
   {ab:"DDE",full:"Dynamic Data Exchange",ko:"앱끼리 데이터를 주고받던 구식 통신 방식(오피스 문서 공격에 악용)",id:"dde"},
+  {ab:"DEP",full:"Data Execution Prevention",ko:"스택·힙 같은 데이터 영역에서 코드 실행을 막아 주입된 셸코드를 차단",id:"shellcode"},
+  {ab:"ASLR",full:"Address Space Layout Randomization",ko:"메모리 주소를 매번 무작위로 배치해 공격자가 위치를 못 맞추게 함",id:"shellcode"},
+  {ab:"NOP",full:"No Operation",ko:"아무 일도 안 하는 명령 — 죽 깔아 셸코드에 미끄러져 착지시키는 슬레드",id:"shellcode"},
+  {ab:"ROP",full:"Return-Oriented Programming",ko:"기존 코드 조각을 이어붙여 실행하는 DEP 우회 기법",id:"shellcode"},
   {ab:"OLE",full:"Object Linking and Embedding",ko:"문서에 다른 객체를 넣고 연결하는 기술(DDE의 후속)",id:"dde"},
   {ab:"OAuth",full:"Open Authorization",ko:"비밀번호를 주지 않고 제3자 앱에 제한된 권한만 위임하는 인가 방식",id:"oauth"},
   {ab:"OIDC",full:"OpenID Connect",ko:"OAuth 위에 로그인(신원 확인)을 얹어 인증까지 해 주는 표준",id:"oauth"},
