@@ -13,6 +13,7 @@ const TOPICS = [
   {file:'sysrecord',  title:'레지스트리·이벤트 로그'},
   {file:'malware',    title:'악성코드'},
   {file:'memexploit', title:'메모리 익스플로잇'},
+  {file:'swvuln',     title:'소프트웨어 취약점 (개발 보안)'},
   {file:'webapp',     title:'애플리케이션·웹 보안'},
   {file:'forensics',  title:'포렌식·리버싱'},
   {file:'etc',        title:'기타'},
