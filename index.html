@@ -377,6 +377,7 @@
 <script src="cards/sysrecord.js"></script>
 <script src="cards/malware.js"></script>
 <script src="cards/memexploit.js"></script>
+<script src="cards/unix.js"></script>
 <script src="cards/swvuln.js"></script>
 <script src="cards/webapp.js"></script>
 <script src="cards/forensics.js"></script>
@@ -400,6 +401,7 @@ const GROUPS=[
   {name:"레지스트리·이벤트 로그 (시스템 흔적)", sub:"윈도우 설정·활동 기록 — 지속성·자격증명·침해 분석·포렌식 아티팩트", ids:["registry","eventlog"]},
   {name:"악성코드", sub:"바이러스 유형·분류(바이러스 vs 웜 vs 트로이, 세대별 진화)·DDE 공격", ids:["virus","dde"]},
   {name:"메모리 익스플로잇", sub:"메모리 구조·위험 함수 → 버퍼 오버플로 → 셸코드·힙 스프레이 → 완화(카나리·DEP·ASLR)", ids:["memlayout","bof","cfunc","shellcode","heapspray","memprotect"]},
+  {name:"유닉스·리눅스 보안 기초", sub:"심볼릭/하드 링크·inode, UID/GID·RUID/EUID·SetUID", ids:["symlink","uidgid"]},
   {name:"소프트웨어 취약점 (개발 보안)", sub:"타이밍·로직 결함 — 경쟁 조건(TOCTOU) 등", ids:["race"]},
   {name:"애플리케이션·웹 보안", sub:"웹 인증·인가 위임 — OAuth 등", ids:["oauth"]},
   {name:"포렌식·리버싱", sub:"디지털 포렌식(웹·IE 아티팩트) + 바이너리 디핑", ids:["webartifact","ieartifact","diffing"]},
@@ -460,7 +462,12 @@ const GLOSSARY=[
   {ab:"SID",full:"Security Identifier",ko:"계정·그룹을 구분하는 고유 보안 식별 번호",id:"srm"},
   {ab:"SMB",full:"Server Message Block",ko:"윈도우의 파일·프린터 공유 프로토콜",id:"smb"},
   {ab:"SRM",full:"Security Reference Monitor",ko:"접근 허용 여부를 최종 판정하는 커널 구성요소",id:"srm"},
-  {ab:"SetUID",full:"Set User ID",ko:"실행되는 동안 파일 소유자(주로 root) 권한을 갖게 하는 유닉스 설정",id:"race"},
+  {ab:"SetUID",full:"Set User ID",ko:"실행되는 동안 파일 소유자(주로 root) 권한을 갖게 하는 유닉스 설정",id:"uidgid"},
+  {ab:"UID",full:"User ID",ko:"유닉스가 사용자를 구분하는 숫자(root는 0번)",id:"uidgid"},
+  {ab:"GID",full:"Group ID",ko:"유닉스가 그룹을 구분하는 숫자",id:"uidgid"},
+  {ab:"RUID",full:"Real User ID",ko:"프로세스를 실제로 실행한 사용자의 ID",id:"uidgid"},
+  {ab:"EUID",full:"Effective User ID",ko:"현재 권한 판정에 실제로 쓰이는 사용자 ID",id:"uidgid"},
+  {ab:"inode",full:"index node",ko:"파일의 메타데이터와 실제 데이터 위치를 담은 관리 구조",id:"symlink"},
   {ab:"TOCTOU",full:"Time-Of-Check to Time-Of-Use",ko:"검사 시점과 사용 시점 사이의 틈을 노리는 경쟁 조건 공격",id:"race"},
   {ab:"SSO",full:"Single Sign-On",ko:"한 번 로그인으로 여러 서비스를 이용",id:"kerberos"},
   {ab:"TGS",full:"Ticket Granting Server",ko:"TGT를 받아 서비스용 티켓을 내주는 서버",id:"kerberos"},
