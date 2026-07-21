@@ -749,12 +749,13 @@ const DATA = [
   {
     id:"memprotect", term:"메모리 보호 (완화 기법)", en:"Stack Canary · DEP · ASLR",
     cat:"시스템 보안",
-    tags:["스택 카나리","DEP(NX)","ASLR","완화(mitigation)","대응 아닌 것 함정"],
+    tags:["스택 카나리","DEP(NX)","ASLR","완화(mitigation)","randomize_va_space=2(기출)"],
     oneLiner:"버퍼 오버플로 완화 3종: 스택 카나리(감지)·DEP(실행 금지)·ASLR(주소 무작위화) / 취약점을 없애기보단 악용을 어렵게",
     blocks:[
       {k:"def",title:"정의",d:"버퍼 오버플로 같은 메모리 공격을 <b>완화(mitigation)</b>하는 방어 기법들. 취약점을 완전히 없애지는 못해도 <b>악용을 크게 어렵게</b> 만든다. 대표 3종을 세트로 외운다."},
       {k:"note",title:"3종 세트 (구분해서 암기)",d:"<div class='cmp'><div class='cmp-item'><span class='cmp-label'>스택 카나리 (Stack Canary)</span><div class='row'>리턴 주소 <b>앞에 감시값(카나리)</b>을 심어 두고, 함수 종료 시 <b>값이 바뀌었으면 오버플로로 판단</b>해 중단. 이름 유래=탄광의 카나리(먼저 반응해 위험을 알림).</div></div><div class='cmp-item'><span class='cmp-label'>DEP / NX (데이터 실행 방지)</span><div class='row'>스택·힙 같은 <b>데이터 영역에서 코드 실행을 금지</b> → 주입된 <b>셸코드가 실행되지 못하게</b>.</div></div><div class='cmp-item'><span class='cmp-label'>ASLR (주소 공간 배치 무작위화)</span><div class='row'>스택·힙·라이브러리 <b>주소를 매번 무작위</b>로 배치 → 공격자가 <b>리턴 주소·셸코드 위치를 못 맞춤</b>.</div></div></div>"},
       {k:"warn",title:"각각의 우회 (그래서 겹쳐 쓴다)",d:"완화는 만능이 아니라 각각 우회가 있다 — <b>DEP</b>는 기존 코드를 이어붙이는 <b>ROP</b>로, <b>ASLR</b>은 <b>주소 정보 유출</b>이나 <b>힙 스프레이</b>로. 그래서 <b>여러 겹을 함께</b> 적용해야 실효가 있다."},
+      {k:"note",title:"리눅스 ASLR 설정 (기출)",d:"리눅스에서 ASLR은 커널 파라미터로 켠다.<pre>sysctl -w kernel.randomize_va_space=2</pre>명령 뜯어보기: <b>sysctl</b>=커널 설정 도구 · <b>-w</b>=write(값 쓰기) · <b>kernel.randomize_va_space</b>=커널이 '가상주소공간(VA space)을 무작위화' 곧 <b>ASLR</b>. 값은 무작위화 <b>범위</b>: <code>0</code> 끔 · <code>1</code> 부분(스택·라이브러리) · <code>2</code> 완전(+힙, <b>기본값</b>). 커질수록 강함.<p class='on-key'><span class='lbl'>외울 건 하나</span><code>randomize_va_space</code>(이름이 곧 '가상주소 무작위화'=ASLR), 값 <b>2=완전(기본)</b>. 0·1·2는 랜덤 범위가 커지는 눈금.</p>"},
       {k:"note",title:"시험 포인트",d:"<b>\"버퍼 오버플로 대응 기술이 아닌 것은?\"</b> 형태로 <b>스택 카나리·DEP·ASLR·안전한 함수</b>를 묶어 물으며, 엉뚱한 보기(암호화·백신 등)를 오답으로 끼운다. 각 기법이 <b>무엇을 막는지</b>(감지 / 실행 금지 / 위치 은닉)를 구분해 두면 안 헷갈린다."}
     ],
     finalLiner:"메모리 보호 3종 — <b>스택 카나리</b>(오버플로 감지) · <b>DEP/NX</b>(데이터 영역 실행 금지) · <b>ASLR</b>(주소 무작위화) / 우회: DEP→ROP, ASLR→정보유출·힙스프레이 → 겹쳐 쓴다",
