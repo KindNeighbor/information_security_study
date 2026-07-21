@@ -689,6 +689,19 @@ const DATA = [
     ],
     finalLiner:"OAuth 2.0 = 비밀번호 없이 <b>제한된 권한만 위임하는 인가</b>(≠인증, 인증은 <b>OIDC</b>) / 4주체(소유자·클라이언트·인가서버·자원서버) / <b>Authorization Code</b>로 Access·Refresh 토큰",
     related:["kerberos","winauth"]
+  },
+  {
+    id:"dde", term:"DDE 공격", en:"Dynamic Data Exchange",
+    cat:"시스템 보안",
+    tags:["매크로 없이 실행","DDE 필드","오피스 문서","IPC(구식)","필드 업데이트 팝업"],
+    oneLiner:"윈도우 구식 프로세스 간 통신(IPC) / 오피스 문서의 DDE 필드로 매크로 없이 명령 실행 / 매크로 차단을 우회",
+    blocks:[
+      {k:"def",title:"정의",d:"<b>DDE = Dynamic Data Exchange(동적 데이터 교환)</b>. 윈도우에서 앱끼리 데이터를 실시간으로 주고받던 <b>오래된 프로세스 간 통신(IPC)</b> 방식이다(예: 엑셀 값이 바뀌면 워드 문서에 자동 반영). 뒤에 나온 <b>OLE·COM</b> 이전의 구식 기술이다."},
+      {k:"warn",title:"DDE 공격 — 매크로 없이 명령 실행 (핵심)",d:"공격자는 워드·엑셀 문서에 <b>DDE 필드</b>를 넣어, <b>매크로를 전혀 쓰지 않고</b> 외부 명령(<code>cmd</code>·<code>powershell</code>)을 실행시킨다. 2017년경 피싱에 크게 악용됐다.<p class='on-key'><span class='lbl'>왜 위험</span>'문서 매크로만 끄면 안전'이라는 방어를 <b>우회(macro-less)</b>한다. 문서를 열 때 뜨는 <b>\"필드를 업데이트하시겠습니까?\"</b> 팝업이 전형적 신호."},
+      {k:"safe",title:"방어",d:"MS가 오피스의 <b>DDE 자동 실행을 기본 비활성화</b>(레지스트리 설정)했다. <b>매크로와 DDE를 모두 차단</b>, 출처 불명 문서는 <b>보호된 보기(Protected View)</b>로 열고 '필드 업데이트' 팝업에서 <b>업데이트하지 않기</b>. 매크로 바이러스 방어와 세트로 기억."}
+    ],
+    finalLiner:"DDE = 윈도우 구식 IPC(동적 데이터 교환) / 오피스 <b>DDE 필드로 매크로 없이 명령 실행</b> → 매크로 차단 우회 / 방어=DDE 자동실행 비활성화·보호된 보기",
+    related:["virus","process"]
   }
 ];
 
@@ -699,7 +712,7 @@ const GROUPS=[
   {name:"윈도우 인증·로그온", sub:"로그인→검증→접근판정: winlogon→lsass→토큰→SRM", ids:["logon","winauth","ntlm","kerberos","srm","process"]},
   {name:"파일시스템 (NTFS)", sub:"NTFS 뿌리 + 암호화(EFS·BitLocker)·은닉(ADS)·복원(VSS)", ids:["ntfs","efsbitlocker","ads","vss"]},
   {name:"레지스트리·이벤트 로그 (시스템 흔적)", sub:"윈도우 설정·활동 기록 — 지속성·자격증명·침해 분석·포렌식 아티팩트", ids:["registry","eventlog"]},
-  {name:"악성코드", sub:"바이러스 유형·분류(바이러스 vs 웜 vs 트로이, 세대별 진화)", ids:["virus"]},
+  {name:"악성코드", sub:"바이러스 유형·분류(바이러스 vs 웜 vs 트로이, 세대별 진화)·DDE 공격", ids:["virus","dde"]},
   {name:"애플리케이션·웹 보안", sub:"웹 인증·인가 위임 — OAuth 등", ids:["oauth"]},
   {name:"포렌식·리버싱", sub:"디지털 포렌식(웹·IE 아티팩트) + 바이너리 디핑", ids:["webartifact","ieartifact","diffing"]},
 ];
@@ -741,6 +754,8 @@ const GLOSSARY=[
   {ab:"NetBIOS",full:"Network Basic Input/Output System",ko:"옛 랜 환경에서 이름으로 통신하던 오래된 방식",id:"netbios"},
   {ab:"NT",full:"New Technology",ko:"윈도우 NT 계열을 뜻함(NTFS·NTLM의 그 NT)",id:"ntlm"},
   {ab:"NTLM",full:"NT LAN Manager",ko:"서버가 문제를 내고 답하게 하는 윈도우 인증 방식",id:"ntlm"},
+  {ab:"DDE",full:"Dynamic Data Exchange",ko:"앱끼리 데이터를 주고받던 구식 통신 방식(오피스 문서 공격에 악용)",id:"dde"},
+  {ab:"OLE",full:"Object Linking and Embedding",ko:"문서에 다른 객체를 넣고 연결하는 기술(DDE의 후속)",id:"dde"},
   {ab:"OAuth",full:"Open Authorization",ko:"비밀번호를 주지 않고 제3자 앱에 제한된 권한만 위임하는 인가 방식",id:"oauth"},
   {ab:"OIDC",full:"OpenID Connect",ko:"OAuth 위에 로그인(신원 확인)을 얹어 인증까지 해 주는 표준",id:"oauth"},
   {ab:"PtH",full:"Pass-the-Hash",ko:"암호 대신 훔친 해시값만으로 로그인하는 공격",id:"ntlm"},
