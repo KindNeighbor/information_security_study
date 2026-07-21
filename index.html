@@ -730,6 +730,34 @@ const DATA = [
     ],
     finalLiner:"힙 스프레이 = 힙에 <b>셸코드+NOP를 대량 살포</b>해 아무 주소 점프에도 확률로 착지 / 주로 브라우저·자바스크립트 / 방어 DEP·ASLR·힙 보호·패치",
     related:["shellcode"]
+  },
+  {
+    id:"bof", term:"버퍼 오버플로", en:"Buffer Overflow (BOF)",
+    cat:"시스템 보안",
+    tags:["경계검사 없음","리턴 주소 덮어쓰기","스택 스매싱","위험 함수 strcpy·gets","스택·힙 BOF"],
+    oneLiner:"버퍼 크기를 넘겨 인접 메모리를 덮는 취약점 / 리턴 주소를 덮어 셸코드로 점프 / 경계검사 없는 C 함수가 원인",
+    blocks:[
+      {k:"def",title:"정의",d:"<b>버퍼(고정 크기 메모리 공간)에 그 크기를 넘는 데이터를 써넣어</b> 인접한 메모리를 덮어쓰는 취약점. <b>경계 검사(길이 확인)를 하지 않는</b> C/C++ 계열 함수에서 주로 발생한다."},
+      {k:"warn",title:"스택 버퍼 오버플로 — 핵심 원리",d:"지역 변수 버퍼가 넘치면 같은 스택에 있는 <b>리턴 주소(return address)</b>까지 덮인다. 함수가 끝나면 그 <b>덮인 주소로 점프</b>하므로, 공격자는 리턴 주소를 <b>셸코드 위치(보통 NOP 슬레드 앞)</b>로 바꿔 실행 흐름을 가로챈다. 이 스택 파괴를 <b>스택 스매싱(Stack Smashing)</b>이라 한다."},
+      {k:"note",title:"종류·위험 함수",d:"종류: <b>스택 BOF</b>(가장 전형적) · <b>힙 BOF</b>(힙 관리 정보 훼손) · 정수 오버플로가 유발하기도. 길이 검사 없는 <b>위험 함수</b> <code>strcpy</code>·<code>gets</code>·<code>sprintf</code>·<code>strcat</code> → 안전한 대체 <code>strncpy</code>·<code>fgets</code>·<code>snprintf</code>."},
+      {k:"safe",title:"방어",d:"<b>경계 검사</b>와 <b>안전한 함수</b> 사용이 근본. 여기에 컴파일러·OS의 완화 기법을 겹친다 — <b>스택 카나리</b>, <b>DEP</b>, <b>ASLR</b>(메모리 보호 카드 참고). 궁극적으로는 <b>메모리 안전 언어</b>(Rust 등)나 관리 언어."}
+    ],
+    finalLiner:"버퍼 오버플로 = 버퍼 크기를 넘겨 인접 메모리 덮기 / 스택은 <b>리턴 주소 덮어 셸코드로 점프</b>(스택 스매싱) / 원인=경계검사 없는 함수 / 방어=안전한 함수+카나리·DEP·ASLR",
+    related:["shellcode","heapspray","memprotect","diffing"]
+  },
+  {
+    id:"memprotect", term:"메모리 보호 (완화 기법)", en:"Stack Canary · DEP · ASLR",
+    cat:"시스템 보안",
+    tags:["스택 카나리","DEP(NX)","ASLR","완화(mitigation)","대응 아닌 것 함정"],
+    oneLiner:"버퍼 오버플로 완화 3종: 스택 카나리(감지)·DEP(실행 금지)·ASLR(주소 무작위화) / 취약점을 없애기보단 악용을 어렵게",
+    blocks:[
+      {k:"def",title:"정의",d:"버퍼 오버플로 같은 메모리 공격을 <b>완화(mitigation)</b>하는 방어 기법들. 취약점을 완전히 없애지는 못해도 <b>악용을 크게 어렵게</b> 만든다. 대표 3종을 세트로 외운다."},
+      {k:"note",title:"3종 세트 (구분해서 암기)",d:"<div class='cmp'><div class='cmp-item'><span class='cmp-label'>스택 카나리 (Stack Canary)</span><div class='row'>리턴 주소 <b>앞에 감시값(카나리)</b>을 심어 두고, 함수 종료 시 <b>값이 바뀌었으면 오버플로로 판단</b>해 중단. 이름 유래=탄광의 카나리(먼저 반응해 위험을 알림).</div></div><div class='cmp-item'><span class='cmp-label'>DEP / NX (데이터 실행 방지)</span><div class='row'>스택·힙 같은 <b>데이터 영역에서 코드 실행을 금지</b> → 주입된 <b>셸코드가 실행되지 못하게</b>.</div></div><div class='cmp-item'><span class='cmp-label'>ASLR (주소 공간 배치 무작위화)</span><div class='row'>스택·힙·라이브러리 <b>주소를 매번 무작위</b>로 배치 → 공격자가 <b>리턴 주소·셸코드 위치를 못 맞춤</b>.</div></div></div>"},
+      {k:"warn",title:"각각의 우회 (그래서 겹쳐 쓴다)",d:"완화는 만능이 아니라 각각 우회가 있다 — <b>DEP</b>는 기존 코드를 이어붙이는 <b>ROP</b>로, <b>ASLR</b>은 <b>주소 정보 유출</b>이나 <b>힙 스프레이</b>로. 그래서 <b>여러 겹을 함께</b> 적용해야 실효가 있다."},
+      {k:"note",title:"시험 포인트",d:"<b>\"버퍼 오버플로 대응 기술이 아닌 것은?\"</b> 형태로 <b>스택 카나리·DEP·ASLR·안전한 함수</b>를 묶어 물으며, 엉뚱한 보기(암호화·백신 등)를 오답으로 끼운다. 각 기법이 <b>무엇을 막는지</b>(감지 / 실행 금지 / 위치 은닉)를 구분해 두면 안 헷갈린다."}
+    ],
+    finalLiner:"메모리 보호 3종 — <b>스택 카나리</b>(오버플로 감지) · <b>DEP/NX</b>(데이터 영역 실행 금지) · <b>ASLR</b>(주소 무작위화) / 우회: DEP→ROP, ASLR→정보유출·힙스프레이 → 겹쳐 쓴다",
+    related:["bof","shellcode","heapspray"]
   }
 ];
 
@@ -741,7 +769,7 @@ const GROUPS=[
   {name:"파일시스템 (NTFS)", sub:"NTFS 뿌리 + 암호화(EFS·BitLocker)·은닉(ADS)·복원(VSS)", ids:["ntfs","efsbitlocker","ads","vss"]},
   {name:"레지스트리·이벤트 로그 (시스템 흔적)", sub:"윈도우 설정·활동 기록 — 지속성·자격증명·침해 분석·포렌식 아티팩트", ids:["registry","eventlog"]},
   {name:"악성코드", sub:"바이러스 유형·분류(바이러스 vs 웜 vs 트로이, 세대별 진화)·DDE 공격", ids:["virus","dde"]},
-  {name:"메모리 익스플로잇", sub:"셸코드·힙 스프레이 — 제어 탈취 후 실행, NOP 슬레드·DEP·ASLR", ids:["shellcode","heapspray"]},
+  {name:"메모리 익스플로잇", sub:"버퍼 오버플로 → 셸코드·힙 스프레이로 실행 → 완화(카나리·DEP·ASLR)", ids:["bof","shellcode","heapspray","memprotect"]},
   {name:"애플리케이션·웹 보안", sub:"웹 인증·인가 위임 — OAuth 등", ids:["oauth"]},
   {name:"포렌식·리버싱", sub:"디지털 포렌식(웹·IE 아티팩트) + 바이너리 디핑", ids:["webartifact","ieartifact","diffing"]},
 ];
@@ -784,10 +812,12 @@ const GLOSSARY=[
   {ab:"NT",full:"New Technology",ko:"윈도우 NT 계열을 뜻함(NTFS·NTLM의 그 NT)",id:"ntlm"},
   {ab:"NTLM",full:"NT LAN Manager",ko:"서버가 문제를 내고 답하게 하는 윈도우 인증 방식",id:"ntlm"},
   {ab:"DDE",full:"Dynamic Data Exchange",ko:"앱끼리 데이터를 주고받던 구식 통신 방식(오피스 문서 공격에 악용)",id:"dde"},
-  {ab:"DEP",full:"Data Execution Prevention",ko:"스택·힙 같은 데이터 영역에서 코드 실행을 막아 주입된 셸코드를 차단",id:"shellcode"},
-  {ab:"ASLR",full:"Address Space Layout Randomization",ko:"메모리 주소를 매번 무작위로 배치해 공격자가 위치를 못 맞추게 함",id:"shellcode"},
+  {ab:"BOF",full:"Buffer Overflow",ko:"버퍼 크기를 넘겨 인접 메모리를 덮어쓰는 취약점",id:"bof"},
+  {ab:"DEP",full:"Data Execution Prevention",ko:"스택·힙 같은 데이터 영역에서 코드 실행을 막아 주입된 셸코드를 차단",id:"memprotect"},
+  {ab:"NX",full:"No-eXecute (bit)",ko:"데이터 영역 실행 금지를 CPU에서 구현하는 비트(DEP의 하드웨어 근거)",id:"memprotect"},
+  {ab:"ASLR",full:"Address Space Layout Randomization",ko:"메모리 주소를 매번 무작위로 배치해 공격자가 위치를 못 맞추게 함",id:"memprotect"},
   {ab:"NOP",full:"No Operation",ko:"아무 일도 안 하는 명령 — 죽 깔아 셸코드에 미끄러져 착지시키는 슬레드",id:"shellcode"},
-  {ab:"ROP",full:"Return-Oriented Programming",ko:"기존 코드 조각을 이어붙여 실행하는 DEP 우회 기법",id:"shellcode"},
+  {ab:"ROP",full:"Return-Oriented Programming",ko:"기존 코드 조각을 이어붙여 실행하는 DEP 우회 기법",id:"memprotect"},
   {ab:"OLE",full:"Object Linking and Embedding",ko:"문서에 다른 객체를 넣고 연결하는 기술(DDE의 후속)",id:"dde"},
   {ab:"OAuth",full:"Open Authorization",ko:"비밀번호를 주지 않고 제3자 앱에 제한된 권한만 위임하는 인가 방식",id:"oauth"},
   {ab:"OIDC",full:"OpenID Connect",ko:"OAuth 위에 로그인(신원 확인)을 얹어 인증까지 해 주는 표준",id:"oauth"},
