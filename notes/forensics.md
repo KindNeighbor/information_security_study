@@ -4,7 +4,7 @@
 
 ## 웹 브라우저 아티팩트 — Web Browser Artifacts
 
-`포렌식·리버싱`  `방문기록·캐시·쿠키` `다운로드 목록` `브라우저별 저장방식` `SQLite vs index.dat` `사용자 행위 재구성`
+`시스템 보안`  `방문기록·캐시·쿠키` `다운로드 목록` `브라우저별 저장방식` `SQLite vs index.dat` `사용자 행위 재구성`
 
 **한줄:** 브라우저 사용 흔적 분석 / 공통 항목: 방문기록·캐시·쿠키·다운로드 / 브라우저마다 저장 형식 다름 / 지운 기록도 복구 가능
 
@@ -41,7 +41,7 @@ _관련 개념: ieartifact · eventlog · registry_
 
 ## 인터넷 익스플로러(IE) 아티팩트 — Internet Explorer Artifacts
 
-`포렌식·리버싱`  `index.dat` `WebCacheV01.dat` `ESE DB` `TypedURLs` `IE10Analyzer` `esentutl`
+`시스템 보안`  `index.dat` `WebCacheV01.dat` `ESE DB` `TypedURLs` `IE10Analyzer` `esentutl`
 
 **한줄:** IE 사용 흔적 / 구버전=index.dat → IE10·11·구Edge=WebCacheV01.dat(ESE DB) / 주소창 입력 URL=레지스트리 TypedURLs
 
@@ -80,7 +80,7 @@ _관련 개념: webartifact · registry · eventlog_
 
 ## 디핑 · 바이너리 디핑 — Diffing / Binary Diffing
 
-`포렌식·리버싱`  `patch diffing` `1-day` `BinDiff`
+`시스템 보안`  `patch diffing` `1-day` `BinDiff`
 
 **한줄:** 두 대상의 '차이' 찾기 / 바이너리에 적용=바이너리 디핑 / 패치 전후 비교로 취약점 역추적=패치 디핑
 

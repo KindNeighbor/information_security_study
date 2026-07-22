@@ -5,7 +5,7 @@ window.DATA = (window.DATA || []).concat(
     "id": "webartifact",
     "term": "웹 브라우저 아티팩트",
     "en": "Web Browser Artifacts",
-    "cat": "포렌식·리버싱",
+    "cat": "시스템 보안",
     "tags": [
       "방문기록·캐시·쿠키",
       "다운로드 목록",
@@ -47,7 +47,7 @@ window.DATA = (window.DATA || []).concat(
     "id": "ieartifact",
     "term": "인터넷 익스플로러(IE) 아티팩트",
     "en": "Internet Explorer Artifacts",
-    "cat": "포렌식·리버싱",
+    "cat": "시스템 보안",
     "tags": [
       "index.dat",
       "WebCacheV01.dat",
@@ -90,7 +90,7 @@ window.DATA = (window.DATA || []).concat(
     "id": "diffing",
     "term": "디핑 · 바이너리 디핑",
     "en": "Diffing / Binary Diffing",
-    "cat": "포렌식·리버싱",
+    "cat": "시스템 보안",
     "tags": [
       "patch diffing",
       "1-day",

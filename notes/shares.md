@@ -4,7 +4,7 @@
 
 ## NetBIOS — Network Basic Input/Output System
 
-`네트워크 보안`  `137` `138` `139` `널세션 표적` `레거시`
+`시스템 보안`  `137` `138` `139` `널세션 표적` `레거시`
 
 **한줄:** LAN 내 이름 기반 통신 / 포트 137·138·139(+445) / 널세션 정보유출 / 안 쓰면 차단
 
@@ -39,7 +39,7 @@ _관련 개념: smb · ipc_
 
 ## SMB / CIFS — Server Message Block
 
-`네트워크 보안`  `445` `CIFS=SMBv1` `EternalBlue` `워너크라이`
+`시스템 보안`  `445` `CIFS=SMBv1` `EternalBlue` `워너크라이`
 
 **한줄:** 윈도우 파일공유 프로토콜 / CIFS=SMBv1(취약) / SMBv2·v3는 암호화·무결성 / 포트 445
 

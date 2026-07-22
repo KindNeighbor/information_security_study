@@ -5,7 +5,7 @@ window.DATA = (window.DATA || []).concat(
     "id": "netbios",
     "term": "NetBIOS",
     "en": "Network Basic Input/Output System",
-    "cat": "네트워크 보안",
+    "cat": "시스템 보안",
     "chain": 1,
     "chainNote": "LAN 내 이름 통신",
     "tags": [
@@ -53,7 +53,7 @@ window.DATA = (window.DATA || []).concat(
     "id": "smb",
     "term": "SMB / CIFS",
     "en": "Server Message Block",
-    "cat": "네트워크 보안",
+    "cat": "시스템 보안",
     "chain": 2,
     "chainNote": "파일공유 프로토콜",
     "tags": [
