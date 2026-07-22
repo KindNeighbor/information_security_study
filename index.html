@@ -379,6 +379,7 @@
 <script src="cards/memexploit.js"></script>
 <script src="cards/unix.js"></script>
 <script src="cards/swvuln.js"></script>
+<script src="cards/threat.js"></script>
 <script src="cards/webapp.js"></script>
 <script src="cards/forensics.js"></script>
 <script>
@@ -403,6 +404,7 @@ const GROUPS=[
   {name:"메모리 익스플로잇", sub:"메모리 구조·위험 함수 → 버퍼 오버플로 → 셸코드·힙 스프레이 → 완화(카나리·DEP·ASLR)", ids:["memlayout","bof","cfunc","shellcode","heapspray","memprotect"]},
   {name:"유닉스·리눅스 보안 기초", sub:"심볼릭/하드 링크·inode, UID/GID·RUID/EUID·SetUID", ids:["symlink","uidgid"]},
   {name:"소프트웨어 취약점 (개발 보안)", sub:"타이밍·로직 결함 — 경쟁 조건(TOCTOU) 등", ids:["race"]},
+  {name:"고급 위협 (APT·킬체인·DLL)", sub:"APT가 사이버 킬체인 단계를 따라 진행, DLL 인젝션·하이재킹 기법", ids:["apt","killchain","dll"]},
   {name:"애플리케이션·웹 보안", sub:"웹 인증·인가 위임 — OAuth 등", ids:["oauth"]},
   {name:"포렌식·리버싱", sub:"디지털 포렌식(웹·IE 아티팩트) + 바이너리 디핑", ids:["webartifact","ieartifact","diffing"]},
 ];
@@ -417,6 +419,9 @@ const TOC=[
 // 약어 모음집(가나다/알파벳 정렬). id=클릭 시 이동할 카드.
 const GLOSSARY=[
   {ab:"ACL",full:"Access Control List",ko:"누가 무엇에 접근할 수 있는지 나열한 목록",id:"ntfs"},
+  {ab:"APT",full:"Advanced Persistent Threat",ko:"특정 표적을 장기간 은밀히 노리는 지능형 지속 공격",id:"apt"},
+  {ab:"C2",full:"Command and Control",ko:"공격자가 감염된 시스템을 외부에서 원격 조종하는 통신 채널",id:"killchain"},
+  {ab:"DLL",full:"Dynamic Link Library",ko:"여러 프로그램이 공유하며 실행 시 불러 쓰는 코드 묶음 파일",id:"dll"},
   {ab:"AD",full:"Active Directory",ko:"도메인의 계정·정책을 중앙에서 관리하는 서비스",id:"winauth"},
   {ab:"ADS",full:"Alternate Data Streams",ko:"파일에 몰래 덧붙일 수 있는 보조 데이터 흐름(은닉에 악용)",id:"ads"},
   {ab:"AS",full:"Authentication Server",ko:"커버로스에서 최초 로그인을 확인해 주는 인증 서버",id:"kerberos"},

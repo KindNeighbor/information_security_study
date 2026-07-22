@@ -12,7 +12,8 @@
 | 메모리 익스플로잇 | 6 | [memexploit.md](memexploit.md) |
 | 유닉스·리눅스 보안 기초 | 2 | [unix.md](unix.md) |
 | 소프트웨어 취약점 (개발 보안) | 1 | [swvuln.md](swvuln.md) |
+| 고급 위협 (APT·킬체인·DLL) | 3 | [threat.md](threat.md) |
 | 애플리케이션·웹 보안 | 1 | [webapp.md](webapp.md) |
 | 포렌식·리버싱 | 3 | [forensics.md](forensics.md) |
 
-**총 31개 카드.**
+**총 34개 카드.**
