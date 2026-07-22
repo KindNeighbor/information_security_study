@@ -330,14 +330,6 @@
     </aside>
 
     <div class="main-col">
-      <details class="chain" id="chainMap" open>
-        <summary>
-          <span class="chain-label">🔗 SMB 계열 공격 사슬 — 눌러서 카드로 이동</span>
-          <span class="chev">▶</span>
-        </summary>
-        <div class="chain-flow" id="chainFlow"></div>
-      </details>
-
       <div class="controls">
         <div class="search-row">
           <label class="search">
@@ -490,17 +482,6 @@ let activeCat="전체", query="";
 $("#updated").textContent=UPDATED;
 $("#count").textContent=DATA.length;
 
-// chain map
-const chainNodes=DATA.filter(d=>d.chain).sort((a,b)=>a.chain-b.chain);
-const flow=$("#chainFlow");
-chainNodes.forEach((d,i)=>{
-  const b=document.createElement("button");
-  b.className="chain-node";
-  b.innerHTML=`<div class="cn-step">STEP ${d.chain}</div><div class="cn-term">${d.term}</div><div class="cn-note">${d.chainNote||""}</div>`;
-  b.onclick=()=>jumpTo(d.id);
-  flow.appendChild(b);
-  if(i<chainNodes.length-1){const a=document.createElement("span");a.className="chain-arrow";a.textContent="→";flow.appendChild(a);}
-});
 
 // category chips
 const cats=["전체",...new Set(DATA.map(d=>d.cat))];
