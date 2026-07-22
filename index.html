@@ -326,6 +326,7 @@
       <div class="side-block">
         <p class="side-h">빠른 도구</p>
         <button class="glossary-btn" id="glossaryOpen">🔤 약어 모음집</button>
+        <button class="glossary-btn" id="quizOpen" style="margin-top:8px;background:var(--safe)">🎲 복습 퀴즈</button>
       </div>
     </aside>
 
@@ -374,6 +375,7 @@
 <script src="cards/threat.js"></script>
 <script src="cards/webapp.js"></script>
 <script src="cards/forensics.js"></script>
+<script src="quiz.js" defer></script>
 <script>
 /* =========================================================================
    카드 데이터 — 여기에 계속 추가하면 됩니다.
@@ -481,6 +483,9 @@ let activeCat="전체", query="";
 
 $("#updated").textContent=UPDATED;
 $("#count").textContent=DATA.length;
+
+// quiz.js가 읽을 수 있게 노출 (카드 데이터·약어집)
+window.DATA=DATA; window.GLOSSARY=GLOSSARY;
 
 
 // category chips
