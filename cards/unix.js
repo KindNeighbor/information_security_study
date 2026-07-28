@@ -29,6 +29,65 @@ window.DATA = (window.DATA || []).concat(
     "related": ["uidgid", "symlink"]
   },
   {
+    "id": "linuxarch",
+    "term": "리눅스 구조 (커널·셸·파일시스템)",
+    "en": "Kernel · Shell · File System",
+    "cat": "시스템 보안",
+    "tags": ["커널=자원관리 핵심", "셸=명령 해석기", "사용자→셸→커널→HW", "시스템 콜", "파일시스템=/ 트리"],
+    "oneLiner": "안쪽부터 하드웨어→커널(자원관리 핵심)→셸(명령 해석기)→사용자 / 커널이 핵심, 셸은 사용자와 커널을 잇는 다리",
+    "blocks": [
+      {
+        "k": "def",
+        "title": "계층 구조 (양파처럼)",
+        "d": "리눅스는 안쪽부터 <b>하드웨어 → 커널 → 셸 → 사용자·응용</b>의 계층 구조. 안으로 갈수록 핵심·강력하고, 바깥일수록 사용자와 가깝다."
+      },
+      {
+        "k": "note",
+        "title": "각 층의 역할 (어원으로 기억)",
+        "d": "<ul class='klist'><li><b>커널(Kernel, 알맹이·핵)</b> — OS의 <b>핵심</b>. 프로세스·메모리·파일시스템·장치(하드웨어)·네트워크를 <b>직접 관리</b>. 부팅 시 메모리에 올라와 상주.</li><li><b>셸(Shell, 껍데기)</b> — 사용자 명령을 받아 <b>해석해 커널에 전달</b>하는 <b>명령 해석기</b>. 커널을 감싼 껍데기라 이 이름. 스크립트로 자동화.</li><li><b>파일시스템(File System)</b> — 데이터를 <b>계층적 트리</b>로 관리. 최상위 <code>/</code>(루트) 하나에서 시작하며, <b>모든 것을 '파일'로 취급</b>(장치도 파일).</li></ul>"
+      },
+      {
+        "k": "warn",
+        "title": "함정 · 보안 연결",
+        "d": "사용자 프로그램은 하드웨어에 직접 못 대고 <b>시스템 콜</b>로만 커널에 요청한다. 셸은 사용자↔커널의 <b>다리</b>라, 셸 접근·셸 스크립트가 곧 <b>공격 표면</b>(웹셸·셸쇼크 등).<p class='on-key'><span class='lbl'>시험 함정</span>'<b>커널</b>=명령 해석기'(X, 그건 셸) · '<b>셸</b>=자원 관리'(X, 그건 커널)처럼 <b>둘의 역할을 뒤바꿔</b> 낸다.</p>"
+      }
+    ],
+    "finalLiner": "안쪽→바깥: 하드웨어→<b>커널</b>(자원관리 핵심)→<b>셸</b>(명령 해석기=커널의 껍데기)→사용자 / 파일시스템=<code>/</code>부터 트리, 모든 게 파일 / 함정: 커널↔셸 역할 바꿔치기",
+    "related": ["linuxfeat", "shelltypes", "process"]
+  },
+  {
+    "id": "shelltypes",
+    "term": "셸 종류 (bash·sh·csh·ksh)",
+    "en": "Shell Types",
+    "cat": "시스템 보안",
+    "tags": ["sh=본셸(원조)", "bash=리눅스 기본", "csh=C 문법", "ksh=콘셸", "로그인 셸=/etc/passwd"],
+    "oneLiner": "sh(본셸 원조)→bash(리눅스 표준)·csh(C 문법)·ksh(콘셸)·zsh / 사용자 로그인 셸은 /etc/passwd 마지막 필드",
+    "blocks": [
+      {
+        "k": "def",
+        "title": "정의",
+        "d": "셸은 여러 종류가 있고 문법·기능이 조금씩 다르다. 시험엔 <b>약자 풀네임</b>과 '리눅스 기본 셸이 무엇인가'가 잘 나온다."
+      },
+      {
+        "k": "note",
+        "title": "종류 (풀네임=곧 유래)",
+        "d": "<ul class='klist'><li><b>sh</b> = <b>Bourne Shell</b>(본 셸) — 스티브 본이 만든 <b>최초의 표준</b> 유닉스 셸. 다른 셸의 뿌리.</li><li><b>bash</b> = <b>Bourne Again SHell</b> — sh를 확장·개선. <b>리눅스의 기본 셸</b>, 가장 널리 쓰임.</li><li><b>csh</b> = <b>C Shell</b> — <b>C 언어 문법</b> 스타일. 빌 조이 작.</li><li><b>ksh</b> = <b>Korn Shell</b>(콘 셸) — sh 호환 + csh 기능. 데이비드 콘 작.</li><li><b>tcsh</b>(csh 개선), <b>zsh</b>(강력한 기능, 요즘 macOS 기본).</li></ul>"
+      },
+      {
+        "k": "note",
+        "title": "확인·설정 (실무/시험)",
+        "d": "현재 셸 확인 <code>echo $SHELL</code> · 사용 가능한 셸 목록 <code>/etc/shells</code> · 사용자별 <b>로그인 셸</b>은 <code>/etc/passwd</code>의 <b>마지막 필드</b>(예: <code>/bin/bash</code>)."
+      },
+      {
+        "k": "safe",
+        "title": "보안 포인트",
+        "d": "로그인이 필요 없는 <b>서비스·시스템 계정</b>은 로그인 셸을 <code>/sbin/nologin</code>이나 <code>/bin/false</code>로 지정해 <b>셸 접근을 차단</b>한다(계정 잠금·공격 표면 축소)."
+      }
+    ],
+    "finalLiner": "sh=원조 본셸 / <b>bash=리눅스 기본</b>(Bourne Again SHell) / csh=C 문법 / ksh=콘셸(sh+csh) / 로그인 셸=<code>/etc/passwd</code> 마지막 필드, 차단은 <code>nologin</code>",
+    "related": ["linuxarch", "uidgid"]
+  },
+  {
     "id": "symlink",
     "term": "심볼릭 링크 · 하드 링크",
     "en": "Symbolic / Hard Link",
