@@ -152,6 +152,38 @@ window.DATA = (window.DATA || []).concat(
     "related": ["bashfiles", "shelltypes", "uidgid"]
   },
   {
+    "id": "shellshock",
+    "term": "셸쇼크",
+    "en": "Shellshock (CVE-2014-6271, Bashdoor)",
+    "cat": "시스템 보안",
+    "tags": ["bash 취약점", "환경변수로 명령 주입", "CGI 원격 실행(RCE)", "2014년 발견", "패치로 방어"],
+    "oneLiner": "bash가 환경변수 속 함수 정의 뒤에 붙은 추가 명령까지 실행하는 취약점 / CGI 웹서버로 원격 명령 실행 / 패치로 방어",
+    "blocks": [
+      {
+        "k": "def",
+        "title": "정의",
+        "d": "2014년 발견된 <b>bash</b>의 치명적 취약점(별명 Bashdoor). bash가 <b>환경변수에 담긴 함수 정의</b>를 불러올 때, 함수 뒤에 붙은 <b>추가 명령까지 실행</b>해버린다 → 환경변수만 조작하면 <b>임의 명령 실행</b>. 20여 년간 잠복해 있었다."
+      },
+      {
+        "k": "note",
+        "title": "원리 · 테스트 페이로드",
+        "d": "환경변수 값이 <code>() { :;}; 악성명령</code> 형태면, bash가 앞부분을 함수로 해석하다 <b>뒤의 악성명령을 실행</b>한다.<p class='on-key'><span class='lbl'>취약 여부 테스트</span><code>env x='() { :;}; echo vulnerable' bash -c \"echo test\"</code> → <b>vulnerable</b>이 출력되면 취약한 bash."
+      },
+      {
+        "k": "warn",
+        "title": "왜 위험 — CGI 원격 실행",
+        "d": "HTTP 요청 헤더(User-Agent 등)가 <b>환경변수로 전달</b>되는 <b>CGI 웹서버</b>(Apache <code>mod_cgi</code>)에서, 원격 공격자가 헤더에 페이로드를 넣어 <b>서버에서 원격 명령 실행(RCE)</b>이 가능하다. DHCP 클라이언트·SSH ForceCommand 등도 벡터. <b>인증 없이 원격</b>이라 파급력이 컸다."
+      },
+      {
+        "k": "safe",
+        "title": "방어",
+        "d": "근본 대책은 <b>bash를 최신으로 패치·업데이트</b>. WAF로 페이로드 차단은 임시방편이고, 불필요한 <b>CGI 비활성화</b>·서버 최소화가 함께 필요."
+      }
+    ],
+    "finalLiner": "셸쇼크 = bash가 <b>환경변수 속 함수 정의 뒤 추가 명령까지 실행</b>(2014, CVE-2014-6271) / <b>CGI 웹서버로 원격 명령 실행(RCE)</b> / 방어=<b>bash 패치</b>",
+    "related": ["shellenv", "shelltypes", "bashfiles"]
+  },
+  {
     "id": "symlink",
     "term": "심볼릭 링크 · 하드 링크",
     "en": "Symbolic / Hard Link",
