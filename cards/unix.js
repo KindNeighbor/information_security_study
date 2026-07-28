@@ -56,6 +56,43 @@ window.DATA = (window.DATA || []).concat(
     "related": ["linuxfeat", "shelltypes", "process"]
   },
   {
+    "id": "linuxfs",
+    "term": "리눅스 파일시스템 구조",
+    "en": "Linux File System (FHS)",
+    "cat": "시스템 보안",
+    "tags": ["/ 루트부터 트리", "FHS 표준", "/etc·/var·/tmp·/bin", "파일 종류(ls -l 첫 문자)", "ext4·저널링"],
+    "oneLiner": "최상위 /(루트)부터 하나의 트리(FHS) / 드라이브 문자 없이 마운트 / 주요 디렉터리 용도(/etc 설정·/var 로그·/tmp 임시) / 모든 게 파일",
+    "blocks": [
+      {
+        "k": "def",
+        "title": "정의",
+        "d": "리눅스는 최상위 <code>/</code>(루트) 하나에서 시작하는 <b>계층적 트리</b>다. 표준 배치를 <b>FHS(Filesystem Hierarchy Standard)</b>라 한다. 윈도우의 <code>C:</code>·<code>D:</code> 같은 <b>드라이브 문자가 없고</b>, 디스크·장치는 트리의 한 지점에 <b>마운트</b>해 붙인다."
+      },
+      {
+        "k": "note",
+        "title": "주요 디렉터리 (보안 핵심 굵게)",
+        "d": "<ul class='klist'><li><code>/bin</code>·<code>/sbin</code> — 필수 명령(바이너리), <code>sbin</code>=관리자용</li><li><b><code>/etc</code></b> — <b>환경설정 파일</b>(<code>passwd</code>·<code>shadow</code>·<code>fstab</code> 등). 보안의 핵심</li><li><code>/home</code> 일반 사용자 홈 · <code>/root</code> root의 홈</li><li><b><code>/var</code></b> 가변 데이터, 특히 <b><code>/var/log</code>(로그)</b></li><li><b><code>/tmp</code></b> 임시파일, <b>누구나 쓰기 가능</b>(스티키 비트) → 경쟁조건·심링크 공격 표적</li><li><code>/dev</code> 장치파일 · <code>/proc</code> 프로세스·커널 정보(가상) · <code>/usr</code> 응용 · <code>/boot</code> 부팅 커널 · <code>/lib</code> 라이브러리</li></ul>"
+      },
+      {
+        "k": "note",
+        "title": "파일 종류 (ls -l 첫 문자)",
+        "d": "리눅스는 <b>모든 것을 파일로</b> 취급한다. <code>ls -l</code> 맨 앞 한 글자로 구분: <code>-</code> 일반파일 · <code>d</code> 디렉터리 · <code>l</code> 심볼릭 링크 · <code>b</code> 블록장치 · <code>c</code> 문자장치 · <code>p</code> 파이프 · <code>s</code> 소켓."
+      },
+      {
+        "k": "note",
+        "title": "파일시스템 종류",
+        "d": "<b>ext2 → ext3 → ext4</b>(리눅스 표준), <code>xfs</code> 등. <b>ext3부터 저널링(journaling)</b>: 변경 내용을 먼저 기록해 <b>비정상 종료 시 빠른 복구·무결성</b>을 보장."
+      },
+      {
+        "k": "safe",
+        "title": "보안 포인트",
+        "d": "<code>/etc</code>(설정)·<code>/var/log</code>(로그)·<code>/tmp</code>(공용 쓰기)가 보안 관점의 급소. 로그 <b>위·변조 방지</b>, <code>/tmp</code> <b>스티키 비트</b> 유지, 중요 영역은 별도 파티션으로 <b>분리 마운트</b>(<code>noexec</code>·<code>nosuid</code> 옵션)."
+      }
+    ],
+    "finalLiner": "리눅스 FS = <code>/</code>부터 하나의 트리(<b>FHS</b>), 드라이브 문자 없이 <b>마운트</b> / 급소 디렉터리 <code>/etc</code>설정·<code>/var/log</code>로그·<code>/tmp</code>공용쓰기 / 파일종류 <code>ls -l</code> 첫 문자(<code>d</code>·<code>l</code>·<code>-</code>) / <b>ext4·저널링</b>",
+    "related": ["linuxarch", "symlink", "race"]
+  },
+  {
     "id": "shelltypes",
     "term": "셸 종류 (bash·sh·csh·ksh)",
     "en": "Shell Types",
