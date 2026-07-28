@@ -254,6 +254,14 @@
   .toc-part-btn.disabled:hover{background:none;}
   .toc-secs{list-style:none;margin:3px 0 0;padding:0;}
   .toc-secs li{font-size:11px;color:var(--ink-soft);padding:1.5px 0 1.5px 9px;margin-left:6px;border-left:2px solid var(--line);}
+  .toc-sec-btn{display:flex;align-items:center;gap:6px;width:100%;text-align:left;background:none;border:0;
+    font-family:inherit;font-size:11px;color:var(--accent);cursor:pointer;padding:1px 4px 1px 0;border-radius:5px;font-weight:600;}
+  .toc-sec-btn:hover{background:var(--surface-2);}
+  .toc-sec-btn>span:first-child{flex:1;}
+  .toc-sec-btn .cnt{font-family:var(--mono);font-size:9px;color:var(--ink-soft);flex:none;}
+  .toc-sec-btn[aria-pressed="true"]{background:var(--accent);color:#fff;padding-left:6px;}
+  .toc-sec-btn[aria-pressed="true"] .cnt{color:#cfe0f0;}
+  .toc-secs li:has(.toc-sec-btn){border-left-color:var(--accent);padding-top:0;padding-bottom:0;}
   .glossary-btn{width:100%;background:var(--accent);color:#fff;border:0;border-radius:11px;padding:11px;font-family:inherit;font-weight:700;font-size:13.5px;cursor:pointer;transition:background .15s;}
   .glossary-btn:hover{background:#163a5c;}
 
@@ -484,7 +492,7 @@ const GLOSSARY=[
 /* ---------------- 렌더링 (건드릴 일 거의 없음) ---------------- */
 const $=(s,el=document)=>el.querySelector(s);
 const $$=(s,el=document)=>[...el.querySelectorAll(s)];
-let activeCat="전체", query="";
+let activeCat="전체", activeSec=null, query="";
 
 $("#updated").textContent=UPDATED;
 $("#count").textContent=DATA.length;
@@ -503,6 +511,17 @@ cats.forEach(c=>{
   chipsEl.appendChild(b);
 });
 
+// PART 01 소단원(③위협·공격 / ④예방·대응) — 그룹에서 자동 도출
+// 유닉스·리눅스 그룹 = 위협·공격 기법, 나머지 PART01(시스템 보안) = 예방 및 대응
+const SEC_ATTACK="위협·공격 기법", SEC_DEFEND="예방 및 대응", LINUX_GROUP="유닉스·리눅스 보안 기초";
+const CARD_SEC={};
+GROUPS.forEach(g=>g.ids.forEach(id=>{
+  const d=DATA.find(x=>x.id===id);
+  if(!d||d.cat!=="시스템 보안")return;            // PART 01 카드만 소단원 부여
+  CARD_SEC[id]=(g.name===LINUX_GROUP)?SEC_ATTACK:SEC_DEFEND;
+}));
+const secCount=(cat,s)=>DATA.filter(d=>d.cat===cat&&CARD_SEC[d.id]===s).length;
+
 // 사이드바 교재 목차
 const tocEl=$("#toc");
 TOC.forEach(t=>{
@@ -515,16 +534,35 @@ TOC.forEach(t=>{
   if(n)btn.onclick=()=>{setCat(t.cat);$(".main-col").scrollIntoView({behavior:"smooth",block:"start"});};
   part.appendChild(btn);
   const ul=document.createElement("ul");ul.className="toc-secs";
-  t.secs.forEach(s=>{const li=document.createElement("li");li.textContent=s;ul.appendChild(li);});
+  t.secs.forEach(s=>{
+    const li=document.createElement("li");
+    const cnt=secCount(t.cat,s);
+    if(cnt>0){
+      const sb=document.createElement("button");
+      sb.className="toc-sec-btn";sb.dataset.cat=t.cat;sb.dataset.sec=s;
+      sb.innerHTML=`<span>${s}</span><span class="cnt">${cnt}</span>`;
+      sb.onclick=()=>{setSec(t.cat,s);$(".main-col").scrollIntoView({behavior:"smooth",block:"start"});};
+      li.appendChild(sb);
+    }else li.textContent=s;
+    ul.appendChild(li);
+  });
   part.appendChild(ul);
   tocEl.appendChild(part);
 });
 
 // 카테고리 선택을 칩·목차와 동기화
 function setCat(c){
-  activeCat=c;
+  activeCat=c;activeSec=null;
   $$(".chip").forEach(x=>x.setAttribute("aria-pressed",x.textContent===c));
   $$(".toc-part-btn").forEach(b=>b.setAttribute("aria-pressed",b.dataset.cat===c));
+  $$(".toc-sec-btn").forEach(b=>b.setAttribute("aria-pressed","false"));
+  render();
+}
+function setSec(cat,sec){
+  activeCat=cat;activeSec=sec;
+  $$(".chip").forEach(x=>x.setAttribute("aria-pressed",x.textContent===cat));
+  $$(".toc-part-btn").forEach(b=>b.setAttribute("aria-pressed",b.dataset.cat===cat));
+  $$(".toc-sec-btn").forEach(b=>b.setAttribute("aria-pressed",b.dataset.cat===cat&&b.dataset.sec===sec));
   render();
 }
 
@@ -535,7 +573,7 @@ function cardHTML(d){
   const rel=(d.related||[]).map(r=>{const t=DATA.find(x=>x.id===r);return t?`<a data-jump="${r}">${t.term}</a>`:"";}).filter(Boolean).join(" · ");
   return `<article class="card" id="card-${d.id}">
     <button class="card-head" aria-expanded="false">
-      <div class="card-cat">${d.cat}</div>
+      <div class="card-cat">${d.cat}${CARD_SEC[d.id]?` · ${CARD_SEC[d.id]}`:""}</div>
       <div class="card-term">${d.term}${d.en?`<span class="en">${d.en}</span>`:""}</div>
       <div class="card-oneliner"><span class="k">한줄</span><span>${d.oneLiner}</span></div>
       <div class="tags">${(d.tags||[]).map(t=>`<span class="tag">${t}</span>`).join("")}</div>
@@ -549,6 +587,7 @@ function cardHTML(d){
 }
 function match(d){
   if(activeCat!=="전체"&&d.cat!==activeCat)return false;
+  if(activeSec&&CARD_SEC[d.id]!==activeSec)return false;
   if(!query)return true;
   const hay=(d.term+" "+d.en+" "+d.oneLiner+" "+(d.tags||[]).join(" ")+" "+JSON.stringify(d.blocks)).toLowerCase();
   return hay.includes(query);
