@@ -120,6 +120,38 @@ window.DATA = (window.DATA || []).concat(
     "related": ["shelltypes", "uidgid"]
   },
   {
+    "id": "shellenv",
+    "term": "셸 환경 변수",
+    "en": "Shell Environment Variables",
+    "cat": "시스템 보안",
+    "tags": ["환경변수 vs 셸변수", "PATH·HOME·SHELL", "export로 승격", "env·printenv·set", "PATH 조작 공격"],
+    "oneLiner": "셸·프로그램이 참조하는 설정값 / 환경변수=자식 프로세스로 상속(export) vs 셸변수=현재 셸만 / PATH 조작은 권한상승 공격",
+    "blocks": [
+      {
+        "k": "def",
+        "title": "정의",
+        "d": "셸과 프로그램이 동작에 참조하는 <b>이름=값</b> 형태의 설정값. <code>$이름</code>으로 참조한다(예: <code>echo $HOME</code>). 로그인·셸 시작 시 <code>.bash_profile</code>·<code>.bashrc</code>에서 설정된다."
+      },
+      {
+        "k": "note",
+        "title": "환경 변수 vs 셸 변수 (핵심 구분)",
+        "d": "<div class='cmp'><div class='cmp-item'><span class='cmp-label'>셸 변수 (지역)</span><div class='row'><code>이름=값</code>으로 지정. <b>현재 셸에서만</b> 유효, <b>자식 프로세스엔 상속 안 됨.</b></div></div><div class='cmp-item'><span class='cmp-label'>환경 변수 (전역)</span><div class='row'><code>export 이름</code>으로 <b>승격</b>하면 <b>자식 프로세스에도 상속</b>. 시스템 전반 동작에 영향.</div></div></div>"
+      },
+      {
+        "k": "note",
+        "title": "주요 변수 · 조회 명령",
+        "d": "<ul class='klist'><li><b>PATH</b> — 실행 파일을 찾는 <b>검색 경로</b> 목록</li><li><b>HOME</b> 홈 디렉터리 · <b>SHELL</b> 로그인 셸 · <b>USER/LOGNAME</b> 사용자명 · <b>PWD</b> 현재 경로 · <b>LANG</b> 언어 · <b>PS1</b> 프롬프트 모양</li></ul>조회: <code>env</code>·<code>printenv</code>(환경변수 목록) · <code>set</code>(셸변수+환경변수) · <code>echo $PATH</code>(값) · <code>export</code>(승격) · <code>unset</code>(삭제)."
+      },
+      {
+        "k": "warn",
+        "title": "보안 — PATH 조작 공격",
+        "d": "<b>PATH</b>에 현재 디렉터리(<code>.</code>)나 쓰기 가능한 경로가 <b>앞쪽</b>에 있으면, 공격자가 정상 명령 이름(예: <code>ls</code>)의 <b>악성 파일</b>을 심어 그게 대신 실행되게 만든다. <b>SetUID 프로그램</b>과 결합하면 <b>권한 상승</b>.<p class='on-key'><span class='lbl'>방어</span>PATH에 <code>.</code>을 넣지 말고, 중요한 명령은 <b>절대 경로</b>로 실행. (로더 변수 <code>LD_PRELOAD</code>·<code>LD_LIBRARY_PATH</code> 조작으로 악성 라이브러리를 주입하는 공격도 같은 맥락)</p>"
+      }
+    ],
+    "finalLiner": "<b>환경변수</b>(<code>export</code>→자식 상속) vs <b>셸변수</b>(현재 셸만) / 주요=<code>PATH·HOME·SHELL</code> / 조회 <code>env·printenv·set</code> / <b>PATH에 <code>.</code> 넣으면 권한상승 공격</b>(절대경로·<code>.</code> 제거로 방어)",
+    "related": ["bashfiles", "shelltypes", "uidgid"]
+  },
+  {
     "id": "symlink",
     "term": "심볼릭 링크 · 하드 링크",
     "en": "Symbolic / Hard Link",
