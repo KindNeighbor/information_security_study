@@ -88,6 +88,38 @@ window.DATA = (window.DATA || []).concat(
     "related": ["linuxarch", "uidgid"]
   },
   {
+    "id": "bashfiles",
+    "term": "bash 환경 설정 파일",
+    "en": ".bash_profile · .bashrc · .bash_logout",
+    "cat": "시스템 보안",
+    "tags": ["로그인 시 .bash_profile", "셸마다 .bashrc", "로그아웃 .bash_logout", "전역 /etc/profile", "자동실행=지속성 표적"],
+    "oneLiner": ".bash_profile=로그인 시 1회 / .bashrc=셸 열 때마다 / .bash_logout=로그아웃 시 / 자동 실행이라 백도어 지속성 표적",
+    "blocks": [
+      {
+        "k": "def",
+        "title": "정의",
+        "d": "사용자 홈 디렉터리(<code>~</code>)에 있는 <b>숨김 파일</b>(이름이 <code>.</code>으로 시작=닷파일). 셸이 <b>시작·종료할 때 자동으로 읽어</b> 환경(변수·alias·함수)을 설정한다."
+      },
+      {
+        "k": "note",
+        "title": "언제 실행되나 (핵심)",
+        "d": "<ul class='klist'><li><code>~/.bash_profile</code> — <b>로그인 시 1회</b> 실행(login shell). 환경변수·<code>PATH</code> 설정. (없으면 <code>.bash_login</code>→<code>.profile</code> 순으로 대체)</li><li><code>~/.bashrc</code> — <b>셸을 열 때마다</b> 실행(새 터미널·서브셸 등 비로그인 인터랙티브). alias·함수·프롬프트. 보통 <code>.bash_profile</code>이 <code>.bashrc</code>를 불러 준다.</li><li><code>~/.bash_logout</code> — <b>로그아웃 시</b> 실행. 정리 작업(임시파일 삭제·<code>clear</code> 등).</li><li>전역: <code>/etc/profile</code>(시스템 전체 로그인), <code>/etc/bashrc</code>(전체 셸).</li></ul>"
+      },
+      {
+        "k": "note",
+        "title": "시험 함정 — 로그인 vs 비로그인",
+        "d": "<b>로그인 셸</b>이 읽는 건 <code>.bash_profile</code>, <b>인터랙티브 비로그인 셸</b>(터미널 새 창 등)이 읽는 건 <code>.bashrc</code>. 이 둘을 뒤바꿔 내는 문제가 많다."
+      },
+      {
+        "k": "warn",
+        "title": "보안 — 지속성(persistence) 표적",
+        "d": "로그인·셸 시작 때 <b>자동 실행</b>되므로, 공격자가 <code>.bashrc</code>·<code>.bash_profile</code>에 악성 명령을 심으면 <b>재접속·셸 실행 때마다 다시 실행</b>된다(백도어 <b>지속성</b> 확보). 그래서 이 파일들의 <b>무결성·이상 항목</b>이 점검 대상이다."
+      }
+    ],
+    "finalLiner": "<code>.bash_profile</code>=<b>로그인 1회</b> / <code>.bashrc</code>=<b>셸 열 때마다</b> / <code>.bash_logout</code>=<b>로그아웃 시</b> / 전역=<code>/etc/profile</code> / 자동실행이라 백도어 <b>지속성</b> 표적",
+    "related": ["shelltypes", "uidgid"]
+  },
+  {
     "id": "symlink",
     "term": "심볼릭 링크 · 하드 링크",
     "en": "Symbolic / Hard Link",

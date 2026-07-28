@@ -89,6 +89,37 @@ _관련 개념: linuxarch · uidgid_
 
 ---
 
+## bash 환경 설정 파일 — .bash_profile · .bashrc · .bash_logout
+
+`시스템 보안`  `로그인 시 .bash_profile` `셸마다 .bashrc` `로그아웃 .bash_logout` `전역 /etc/profile` `자동실행=지속성 표적`
+
+**한줄:** .bash_profile=로그인 시 1회 / .bashrc=셸 열 때마다 / .bash_logout=로그아웃 시 / 자동 실행이라 백도어 지속성 표적
+
+**정의**
+
+사용자 홈 디렉터리(`~`)에 있는 **숨김 파일**(이름이 `.`으로 시작=닷파일). 셸이 **시작·종료할 때 자동으로 읽어** 환경(변수·alias·함수)을 설정한다.
+
+**언제 실행되나 (핵심)**
+
+- `~/.bash_profile` — **로그인 시 1회** 실행(login shell). 환경변수·`PATH` 설정. (없으면 `.bash_login`→`.profile` 순으로 대체)
+- `~/.bashrc` — **셸을 열 때마다** 실행(새 터미널·서브셸 등 비로그인 인터랙티브). alias·함수·프롬프트. 보통 `.bash_profile`이 `.bashrc`를 불러 준다.
+- `~/.bash_logout` — **로그아웃 시** 실행. 정리 작업(임시파일 삭제·`clear` 등).
+- 전역: `/etc/profile`(시스템 전체 로그인), `/etc/bashrc`(전체 셸).
+
+**시험 함정 — 로그인 vs 비로그인**
+
+**로그인 셸**이 읽는 건 `.bash_profile`, **인터랙티브 비로그인 셸**(터미널 새 창 등)이 읽는 건 `.bashrc`. 이 둘을 뒤바꿔 내는 문제가 많다.
+
+**보안 — 지속성(persistence) 표적**
+
+로그인·셸 시작 때 **자동 실행**되므로, 공격자가 `.bashrc`·`.bash_profile`에 악성 명령을 심으면 **재접속·셸 실행 때마다 다시 실행**된다(백도어 **지속성** 확보). 그래서 이 파일들의 **무결성·이상 항목**이 점검 대상이다.
+
+> **시험 한줄정리:** `.bash_profile`=**로그인 1회** / `.bashrc`=**셸 열 때마다** / `.bash_logout`=**로그아웃 시** / 전역=`/etc/profile` / 자동실행이라 백도어 **지속성** 표적
+
+_관련 개념: shelltypes · uidgid_
+
+---
+
 ## 심볼릭 링크 · 하드 링크 — Symbolic / Hard Link
 
 `시스템 보안`  `바로가기=경로` `ln -s` `inode` `하드=같은 실데이터` `심링크 공격(TOCTOU)`
