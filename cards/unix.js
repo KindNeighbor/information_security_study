@@ -199,6 +199,43 @@ window.DATA = (window.DATA || []).concat(
     "related": ["partition", "fsinternal", "linuxfs"]
   },
   {
+    "id": "fstypes",
+    "term": "파일시스템 종류",
+    "en": "ext2/3/4 · XFS · NFS · procfs",
+    "cat": "시스템 보안",
+    "tags": ["ext2=저널링 없음", "ext3부터 저널링", "ext4=리눅스 표준", "XFS=RHEL7+ 기본", "NFS=네트워크"],
+    "oneLiner": "리눅스 로컬=ext2→ext3(저널링)→ext4·XFS / 네트워크=NFS·CIFS / 가상=proc·tmpfs / 타 OS=FAT·NTFS",
+    "blocks": [
+      {
+        "k": "def",
+        "title": "정리하는 법 — 3그룹",
+        "d": "종류가 많아 보이지만 <b>①로컬(디스크) ②네트워크 ③가상(메모리)</b> 세 갈래로 묶으면 간단하다. 시험은 주로 <b>①의 계보(저널링 여부)</b>를 묻는다."
+      },
+      {
+        "k": "note",
+        "title": "① 로컬 — ext 계보 (핵심)",
+        "d": "<div class='evo'><div class='evo-step'><div class='es-name'>ext2</div><div class='es-note'><b>저널링 없음</b>. 비정상 종료 시 <code>fsck</code> 전체 검사로 <b>복구가 느림</b>.</div></div><span class='evo-arrow'>→</span><div class='evo-step'><div class='es-name'>ext3</div><div class='es-note'><b>저널링 도입</b>. 빠른 복구·무결성.</div></div><span class='evo-arrow'>→</span><div class='evo-step'><div class='es-name'>ext4</div><div class='es-note'><b>리눅스 표준</b>. 대용량·성능 개선(extent 방식).</div></div></div><p class='on-key'><span class='lbl'>저널링(journaling)이란</span>변경 내용을 <b>먼저 저널(로그)에 기록</b>한 뒤 실제 반영 → 정전·비정상 종료 때 저널만 보고 <b>빠르게 복구</b>. <b>ext2만 저널링이 없다</b>(시험 단골).</p>"
+      },
+      {
+        "k": "note",
+        "title": "① 로컬 — 그 외",
+        "d": "<ul class='klist'><li><b>XFS</b> — 대용량·고성능 저널링. <b>RHEL/CentOS 7 이후 기본</b>.</li><li><b>Btrfs</b> — 스냅샷·체크섬 등 최신 기능.</li><li><b>JFS</b>(IBM)·<b>ReiserFS</b> — 저널링 계열(구형).</li><li><b>swap</b> — 파일시스템은 아니지만 <b>가상 메모리</b>용 전용 영역.</li></ul>"
+      },
+      {
+        "k": "note",
+        "title": "② 네트워크 · ③ 가상 · 타 OS",
+        "d": "<ul class='klist'><li><b>네트워크</b>: <b>NFS</b>(Network File System, 유닉스 표준 원격 공유) · <b>CIFS/SMB</b>(윈도우 공유 마운트).</li><li><b>가상(메모리)</b>: <b><code>/proc</code></b>(procfs — 프로세스·커널 정보) · <code>sysfs</code> · <b><code>tmpfs</code></b>(메모리에 올리는 임시 저장, 재부팅 시 사라짐).</li><li><b>타 OS</b>: <b>FAT/FAT32·exFAT</b>(호환성 좋음, 권한 없음) · <b>NTFS</b>(윈도우) · <b>ISO9660</b>(CD/DVD).</li></ul>"
+      },
+      {
+        "k": "safe",
+        "title": "보안 포인트",
+        "d": "<b>FAT 계열은 파일 권한·소유자 개념이 없어</b> 보안이 약하다(USB 등). <b>NFS</b>는 잘못 설정하면(<code>/etc/exports</code>에 <code>no_root_squash</code>·전체 공개) <b>원격에서 파일 접근·권한 상승</b>으로 이어진다. 확인은 <code>df -T</code>·<code>mount</code>·<code>/etc/fstab</code>."
+      }
+    ],
+    "finalLiner": "<b>ext2(저널링 X) → ext3(저널링 O) → ext4(표준)</b>, <b>XFS</b>(RHEL7+ 기본) / 네트워크 <b>NFS</b>·CIFS / 가상 <code>proc</code>·<code>tmpfs</code> / 타OS FAT(권한 없음·취약)·NTFS",
+    "related": ["linuxfs", "fsadmin", "fsinternal"]
+  },
+  {
     "id": "shelltypes",
     "term": "셸 종류 (bash·sh·csh·ksh)",
     "en": "Shell Types",
