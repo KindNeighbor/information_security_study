@@ -162,6 +162,43 @@ window.DATA = (window.DATA || []).concat(
     "related": ["linuxfs", "fsinternal"]
   },
   {
+    "id": "fsadmin",
+    "term": "파일시스템 관리 (생성·검사·마운트)",
+    "en": "mkfs · fsck · mount",
+    "cat": "시스템 보안",
+    "tags": ["mkfs=생성(포맷)", "fsck=무결성 검사·복구", "mount/umount", "언마운트 후 fsck", "/etc/fstab 자동"],
+    "oneLiner": "파티션 생애주기: mkfs로 생성(포맷) → mount로 연결 → fsck로 검사·복구 / fsck는 마운트 해제 후 실행",
+    "blocks": [
+      {
+        "k": "def",
+        "title": "흐름으로 기억",
+        "d": "파티션을 나눈 뒤 <b>①파일시스템 생성(<code>mkfs</code>) → ②마운트(<code>mount</code>)해서 사용 → ③문제 생기면 검사·복구(<code>fsck</code>)</b>. 세 명령이 한 세트다."
+      },
+      {
+        "k": "note",
+        "title": "① 생성 — mkfs",
+        "d": "<b><code>mkfs</code>(Make File System)</b> — 파티션에 파일시스템을 <b>만든다(포맷)</b>. 이때 <b>슈퍼 블록·아이노드 리스트·데이터 블록</b> 구조가 잡힌다. 예: <code>mkfs -t ext4 /dev/sdb1</code> 또는 <code>mkfs.ext4 /dev/sdb1</code>.<br><b>주의:</b> 기존 데이터가 <b>지워진다</b>."
+      },
+      {
+        "k": "note",
+        "title": "② 마운트 — mount · umount",
+        "d": "<b><code>mount</code></b>로 파일시스템을 디렉터리(마운트 포인트)에 <b>연결</b>, <b><code>umount</code></b>로 해제. 예: <code>mount /dev/sdb1 /data</code>. 부팅 시 <b>자동 마운트</b>는 <code>/etc/fstab</code>에 등록.<p class='on-key'><span class='lbl'>보안 옵션</span><code>nosuid</code>(SetUID 무시)·<code>noexec</code>(실행 금지)·<code>nodev</code>(장치파일 무시)·<code>ro</code>(읽기 전용) — <code>/tmp</code>·<code>/home</code> 등에 적용해 공격 표면을 줄인다.</p>"
+      },
+      {
+        "k": "warn",
+        "title": "③ 무결성 검사 — fsck (함정 주의)",
+        "d": "<b><code>fsck</code>(File System Check)</b> — 슈퍼 블록·아이노드·연결 상태 등 <b>파일시스템 구조의 이상을 검사·복구</b>한다. 비정상 종료·전원 장애 후 사용.<p class='on-key'><span class='lbl'>시험 함정</span>반드시 <b>마운트 해제(umount) 상태</b>에서 실행해야 한다 — 마운트된 채로 돌리면 <b>오히려 손상</b>될 수 있다. 복구된 소유자 불명 파일은 <b><code>lost+found</code></b> 디렉터리에 들어간다.</p>"
+      },
+      {
+        "k": "note",
+        "title": "헷갈리지 말 것 — 두 가지 '무결성'",
+        "d": "<b><code>fsck</code></b>=<b>파일시스템 구조</b>의 무결성(디스크가 깨졌나). <b>Tripwire</b> 같은 <b>무결성 점검 도구</b>=<b>파일 내용 변조</b> 여부(해시 비교로 침입자가 파일을 바꿨나). 이름은 비슷하지만 <b>목적이 다르다.</b>"
+      }
+    ],
+    "finalLiner": "<b><code>mkfs</code></b> 생성(포맷) → <b><code>mount</code></b> 연결(<code>/etc/fstab</code>, 옵션 <code>nosuid·noexec</code>) → <b><code>fsck</code></b> 구조 검사·복구(<b>반드시 언마운트 후</b>, 복구본은 <code>lost+found</code>) / fsck≠Tripwire(파일 변조 점검)",
+    "related": ["partition", "fsinternal", "linuxfs"]
+  },
+  {
     "id": "shelltypes",
     "term": "셸 종류 (bash·sh·csh·ksh)",
     "en": "Shell Types",
