@@ -470,7 +470,7 @@ window.DATA = (window.DATA || []).concat(
       {
         "k": "note",
         "title": "RUID vs EUID (시험 핵심)",
-        "d": "한 프로세스는 여러 UID를 가진다.<p class='on-key'><span class='lbl'>구분</span><b>RUID(Real UID, 실제)</b>=이 프로세스를 <b>실제로 실행한 사용자</b>('나 누구냐'). <b>EUID(Effective UID, 유효)</b>=<b>지금 권한 판정에 실제로 쓰이는</b> UID('지금 뭘 할 수 있냐'). 평소엔 둘이 같지만, <b>SetUID</b> 프로그램을 실행하면 <b>EUID가 파일 소유자(주로 root)로 바뀐다</b> → 일반 사용자가 잠깐 root 권한. (Saved UID도 있음)</p>"
+        "d": "한 프로세스는 <b>신분증을 2개</b> 갖고 다닌다 — <b>RUID=신분, EUID=권한</b>.<div class='cmp two'><div class='cmp-item'><span class='cmp-label'>RUID (Real UID, 실제)</span><div class='row'>이 프로세스를 <b>실제로 실행한 사용자</b>. '나 누구냐'.<br>🪪 <b>주민등록증</b> — 안 바뀐다.</div></div><div class='cmp-item'><span class='cmp-label'>EUID (Effective UID, 유효)</span><div class='row'><b>지금 권한 판정에 실제로 쓰이는</b> UID. '지금 뭘 할 수 있냐'.<br>🎫 <b>지금 찬 출입증</b> — 바뀔 수 있다.</div></div></div><p class='on-key'><span class='lbl'>왜 '유효(Effective)'인가</span>커널이 “이 파일 열게 해줄까?”를 판단할 때 <b>실제로 들여다보는 값이 EUID</b>라서 — <b>효력을 발휘하는</b> ID라는 뜻이다. 평소엔 RUID=EUID지만, <b>SetUID</b> 프로그램을 실행하면 <b>EUID만</b> 소유자(주로 root)로 바뀐다.</p><b>user1(1000)이 <code>passwd</code> 실행할 때</b><ul class='klist'><li>실행 전 — RUID 1000 / EUID 1000 → shadow 못 건드림</li><li><b>실행 중 — RUID 1000 / EUID 0(root)</b> → <b>shadow 수정 가능</b></li><li>종료 후 — RUID 1000 / EUID 1000 → 원래대로</li></ul><b>RUID가 1000으로 남아 있는 게 핵심</b> — 프로그램이 '권한은 root지만 실행자는 user1'임을 알아서 <b>user1의 비밀번호만</b> 바꿔준다. 확인은 <code>id -u</code>(EUID)·<code>id -ru</code>(RUID). ※ <b>Saved UID</b>는 권한을 잠깐 내렸다 되돌리려고 원래 EUID를 <b>보관</b>해두는 자리."
       },
       {
         "k": "note",
@@ -535,6 +535,11 @@ window.DATA = (window.DATA || []).concat(
         "k": "def",
         "title": "정의 — 일반 rwx 앞에 붙는 네 번째 자리",
         "d": "<code>chmod 4755</code>처럼 <b>맨 앞 한 자리</b>가 특수 권한이다. <b>SetUID=4 · SetGID=2 · 스티키 비트=1</b> (더해서 쓸 수 있음)."
+      },
+      {
+        "k": "note",
+        "title": "SetUID가 왜 필요한가 — 딜레마로 이해하기",
+        "d": "비밀번호를 바꾸려면 <code>/etc/shadow</code>를 고쳐야 하는데, 그 파일은 <b>권한 400 — root만 읽기</b>다. 여기서 딜레마가 생긴다.<ul class='klist'><li>사용자에게 <code>/etc/shadow</code> <b>쓰기 권한을 주면</b> → <b>남의 비밀번호까지</b> 바꿀 수 있다 ❌</li><li><b>안 주면</b> → <b>자기 비밀번호도</b> 못 바꾼다 ❌</li></ul><p class='on-key'><span class='lbl'>SetUID의 답</span><b>권한을 '사람'이 아니라 '프로그램'에 붙인다.</b> — “이 프로그램을 <b>실행하는 동안만</b> 너는 잠깐 소유자(root)가 된다.” 그래서 <code>passwd</code>는 root 권한으로 shadow를 고치되, <b>하는 일이 정해져 있어</b> 그 이상은 못 한다.<br>🏦 비유: 금고엔 내가 못 들어가지만, <b>창구 직원</b>(=SetUID 프로그램)이 금고 권한으로 <b>내 것만</b> 꺼내준다.</p>"
       },
       {
         "k": "note",
