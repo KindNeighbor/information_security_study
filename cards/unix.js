@@ -125,6 +125,43 @@ window.DATA = (window.DATA || []).concat(
     "related": ["linuxfs", "symlink", "uidgid"]
   },
   {
+    "id": "partition",
+    "term": "디스크 파티션",
+    "en": "Disk Partition",
+    "cat": "시스템 보안",
+    "tags": ["물리 디스크 논리 분할", "마운트·/etc/fstab", "swap=가상메모리", "MBR vs GPT", "/dev/sda1"],
+    "oneLiner": "하나의 물리 디스크를 논리 영역으로 분할 / 마운트로 트리에 연결(/etc/fstab) / 중요 영역 분리로 보안·장애 격리",
+    "blocks": [
+      {
+        "k": "def",
+        "title": "정의",
+        "d": "하나의 물리 디스크를 <b>여러 논리 영역으로 나눈 것</b>. 각 파티션에 파일시스템을 만들어 <b>마운트</b>해 쓴다. 장치명은 <code>/dev/sda</code>(첫 디스크)·<code>/dev/sda1</code>(그 첫 파티션), <code>sdb</code>…"
+      },
+      {
+        "k": "note",
+        "title": "왜 나누나 (보안·관리)",
+        "d": "<ul class='klist'><li><b>장애 격리</b> — <code>/var</code>(로그) 폭주·<code>/home</code> 과다 사용이 나도 <b>루트(<code>/</code>) 시스템은 보호</b>.</li><li><b>보안 강화</b> — 분리 파티션에 <b><code>nosuid</code>·<code>noexec</code>·<code>nodev</code></b> 마운트 옵션 → SetUID·실행 차단.</li><li><b>백업·복구</b>가 쉽고 손상 범위가 좁아진다.</li></ul>"
+      },
+      {
+        "k": "note",
+        "title": "주요 파티션 · swap",
+        "d": "<code>/</code>(루트, 필수) · <code>/boot</code>(부팅 커널) · <code>/home</code> · <code>/var</code> · <code>/tmp</code> · <b><code>swap</code>(스왑)</b>=<b>가상 메모리</b>(물리 메모리가 부족할 때 디스크를 메모리처럼 사용)."
+      },
+      {
+        "k": "note",
+        "title": "파티션 테이블 — MBR vs GPT",
+        "d": "<div class='cmp'><div class='cmp-item'><span class='cmp-label'>MBR (구방식)</span><div class='row'>디스크 첫 섹터에 부트코드+파티션 테이블. 최대 <b>2TB</b>, <b>주 파티션 4개</b> 제한.</div></div><div class='cmp-item'><span class='cmp-label'>GPT (신방식)</span><div class='row'><b>대용량·많은 파티션</b> 지원, <b>UEFI</b>와 함께 사용. 요즘 표준.</div></div></div>"
+      },
+      {
+        "k": "note",
+        "title": "마운트 · /etc/fstab",
+        "d": "파티션을 디렉터리에 연결하는 것이 <b>마운트</b>(<code>mount</code> 명령). 부팅 시 <b>자동 마운트</b> 설정은 <code>/etc/fstab</code>에 적는다(마운트 옵션도 여기서)."
+      }
+    ],
+    "finalLiner": "파티션 = 물리 디스크를 <b>논리 분할</b>(<code>/dev/sda1</code>) / <b>마운트</b>로 트리에 연결(<code>/etc/fstab</code>) / <b>swap</b>=가상메모리 / <b>MBR</b>(2TB·4개) vs <b>GPT</b>(대용량) / 중요영역 분리+<code>nosuid·noexec</code>로 보안",
+    "related": ["linuxfs", "fsinternal"]
+  },
+  {
     "id": "shelltypes",
     "term": "셸 종류 (bash·sh·csh·ksh)",
     "en": "Shell Types",
