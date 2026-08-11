@@ -236,6 +236,70 @@ window.DATA = (window.DATA || []).concat(
     "related": ["linuxfs", "fsadmin", "fsinternal"]
   },
   {
+    "id": "boot",
+    "term": "리눅스 부팅 순서 · 부트로더",
+    "en": "Boot Sequence · GRUB / LILO",
+    "cat": "시스템 보안",
+    "tags": ["BIOS→MBR→부트로더→커널→init", "GRUB·LILO", "MBR=부트 마스터", "싱글유저 모드 위험", "GRUB 패스워드"],
+    "oneLiner": "전원→BIOS/UEFI→MBR의 부트로더(GRUB)→커널 로드→init/systemd→런레벨 서비스 / 부트로더는 물리 접근 시 root 탈취 통로",
+    "blocks": [
+      {
+        "k": "def",
+        "title": "부팅 순서 (외울 흐름)",
+        "d": "<div class='evo'><div class='evo-step'><div class='es-name'>1 BIOS/UEFI</div><div class='es-note'>전원 ON → 하드웨어 점검(POST) → 부팅 장치 선택.</div></div><span class='evo-arrow'>→</span><div class='evo-step'><div class='es-name'>2 MBR</div><div class='es-note'>디스크 <b>첫 섹터</b>의 부트 코드 실행 = <b>부트 마스터</b> 영역.</div></div><span class='evo-arrow'>→</span><div class='evo-step'><div class='es-name'>3 부트로더</div><div class='es-note'><b>GRUB</b>이 커널을 골라 메모리에 <b>적재</b>.</div></div><span class='evo-arrow'>→</span><div class='evo-step'><div class='es-name'>4 커널</div><div class='es-note'>커널 초기화·장치 인식, 루트 파일시스템 마운트.</div></div><span class='evo-arrow'>→</span><div class='evo-step'><div class='es-name'>5 init/systemd</div><div class='es-note'><b>최초 프로세스(PID 1)</b>. 런레벨·서비스 실행 → 로그인 화면.</div></div></div>"
+      },
+      {
+        "k": "note",
+        "title": "부트로더 — GRUB vs LILO",
+        "d": "<b>부트로더</b>는 커널을 찾아 메모리에 올려 실행시키는 프로그램.<div class='cmp'><div class='cmp-item'><span class='cmp-label'>GRUB (GRand Unified Bootloader)</span><div class='row'><b>현재 표준</b>. 부팅 시 <b>메뉴로 커널 선택</b>, 설정 변경이 유연. 설정 <code>/boot/grub/grub.conf</code>(GRUB2는 <code>grub.cfg</code>).</div></div><div class='cmp-item'><span class='cmp-label'>LILO (LInux LOader)</span><div class='row'>구형. 설정을 바꾸면 <b>다시 설치해야</b> 반영됨(<code>/etc/lilo.conf</code>).</div></div></div>"
+      },
+      {
+        "k": "warn",
+        "title": "보안 — 물리 접근 시 root 탈취",
+        "d": "부팅 메뉴에서 <b>싱글 유저 모드(런레벨 1)</b>로 들어가면 <b>패스워드 없이 root 셸</b>을 얻을 수 있다 → <b>물리적 접근만으로 시스템 장악</b>. 부트로더 설정을 고쳐 커널 옵션을 바꾸는 것도 가능."
+      },
+      {
+        "k": "safe",
+        "title": "방어",
+        "d": "<b>GRUB 패스워드 설정</b>(부팅 메뉴·편집 잠금), <b>BIOS/UEFI 패스워드</b>와 <b>부팅 순서 고정</b>(USB·CD 부팅 차단), 서버실 <b>물리적 접근 통제</b>. 이 셋이 세트."
+      }
+    ],
+    "finalLiner": "부팅 = <b>BIOS/UEFI → MBR → 부트로더(GRUB) → 커널 → init/systemd(PID 1)</b> / GRUB=표준(메뉴 선택) vs LILO=구형(재설치 필요) / <b>싱글유저 모드로 root 탈취</b> → GRUB·BIOS 패스워드로 방어",
+    "related": ["partition", "runlevel", "linuxarch"]
+  },
+  {
+    "id": "runlevel",
+    "term": "런레벨",
+    "en": "Run Level · systemd target",
+    "cat": "시스템 보안",
+    "tags": ["0=종료 6=재부팅", "1=싱글유저", "3=텍스트 5=GUI", "/etc/inittab", "systemd target"],
+    "oneLiner": "시스템 동작 상태(0~6): 0종료·1싱글유저·3텍스트·5GUI·6재부팅 / 요즘은 systemd target으로 대체",
+    "blocks": [
+      {
+        "k": "def",
+        "title": "정의",
+        "d": "리눅스가 어떤 <b>동작 상태(모드)</b>로 실행될지 나타내는 번호. <b>init</b>이 런레벨에 맞는 서비스들을 시작한다. 예전 기본 설정은 <code>/etc/inittab</code>."
+      },
+      {
+        "k": "note",
+        "title": "런레벨 0~6 (시험 단골)",
+        "d": "<ul class='klist'><li><b>0</b> — 시스템 <b>종료(halt)</b></li><li><b>1</b> — <b>싱글 유저 모드</b>(단일 사용자, 관리·복구용. <b>패스워드 없이 root</b> → 보안 위험)</li><li><b>2</b> — 다중 사용자(<b>NFS 등 네트워크 서비스 제외</b>)</li><li><b>3</b> — <b>다중 사용자 + 네트워크</b>, <b>텍스트(CLI)</b> 모드 ← 서버 기본</li><li><b>4</b> — <b>사용하지 않음</b>(예약)</li><li><b>5</b> — 다중 사용자 + <b>X 윈도우(GUI)</b></li><li><b>6</b> — <b>재부팅(reboot)</b></li></ul><p class='on-key'><span class='lbl'>함정</span><b>0(종료)과 6(재부팅)</b>을 기본 런레벨로 설정하면 <b>부팅이 끝나자마자 꺼지거나 무한 재부팅</b>. 4는 미사용.</p>"
+      },
+      {
+        "k": "note",
+        "title": "명령 · systemd 시대",
+        "d": "확인 <code>runlevel</code>·<code>who -r</code> / 변경 <code>init 3</code>·<code>telinit 3</code>.<br>요즘 배포판은 <b>systemd</b>가 init을 대체해 런레벨 대신 <b>target</b>을 쓴다: <code>poweroff</code>(0)·<code>rescue</code>(1)·<code>multi-user</code>(3)·<code>graphical</code>(5)·<code>reboot</code>(6). 기본값 확인·변경은 <code>systemctl get-default</code>·<code>set-default</code>."
+      },
+      {
+        "k": "safe",
+        "title": "보안 포인트",
+        "d": "서버는 불필요한 GUI를 빼고 <b>런레벨 3(텍스트)</b>로 운영해 <b>공격 표면을 줄인다</b>. <b>싱글 유저 모드(1)</b>는 물리 접근자에게 root를 내주므로 <b>GRUB 패스워드</b>로 막는다."
+      }
+    ],
+    "finalLiner": "런레벨 <b>0=종료·1=싱글유저(root 위험)·2=NFS없는 다중·3=텍스트(서버)·4=미사용·5=GUI·6=재부팅</b> / systemd에선 <code>multi-user·graphical</code> target / 서버는 3으로 최소화",
+    "related": ["boot", "linuxarch"]
+  },
+  {
     "id": "shelltypes",
     "term": "셸 종류 (bash·sh·csh·ksh)",
     "en": "Shell Types",
