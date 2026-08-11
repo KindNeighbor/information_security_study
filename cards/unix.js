@@ -485,6 +485,213 @@ window.DATA = (window.DATA || []).concat(
     ],
     "finalLiner": "유닉스는 사용자=<b>UID</b>·그룹=<b>GID</b> 숫자로 식별(root=0) / 권한 판정은 <b>EUID(유효)</b> / <b>SetUID 실행 → EUID=소유자</b>(잠깐 root) → 권한 상승·경쟁조건의 무대",
     "related": ["race", "symlink"]
+  },
+  {
+    "id": "fileperm",
+    "term": "파일 권한 (rwx · chmod · umask)",
+    "en": "File Permission",
+    "cat": "시스템 보안",
+    "tags": ["r4·w2·x1", "소유자/그룹/기타", "chmod 755", "umask=뺄셈", "디렉터리 x=진입"],
+    "oneLiner": "권한 rwx(읽기4·쓰기2·실행1)를 소유자/그룹/기타 3자리로 / chmod로 변경 / umask는 기본권한에서 빼는 값(파일666·디렉터리777 기준)",
+    "blocks": [
+      {
+        "k": "def",
+        "title": "구조 — ls -l 읽는 법",
+        "d": "<code>-rwxr-xr-x</code> → 맨 앞 <b>1글자=파일 종류</b>(<code>-</code>일반, <code>d</code>디렉터리), 그다음 <b>3자리씩 3묶음</b>.<ul class='klist'><li><b>u</b>(user/소유자) <b>rwx</b> · <b>g</b>(group/그룹) <b>r-x</b> · <b>o</b>(other/기타) <b>r-x</b></li><li>숫자 값: <b>r=4(read) · w=2(write) · x=1(execute)</b> → 더해서 표기. <code>rwx</code>=7, <code>r-x</code>=5, <code>rw-</code>=6</li></ul>"
+      },
+      {
+        "k": "note",
+        "title": "chmod — 권한 변경 (두 방식)",
+        "d": "<b><code>chmod</code>(change mode)</b><ul class='klist'><li><b>8진수(숫자) 방식</b>: <code>chmod 755 file</code> → <code>rwxr-xr-x</code>. <code>644</code>=<code>rw-r--r--</code>(일반 파일 표준), <code>600</code>=소유자만.</li><li><b>기호 방식</b>: <code>chmod u+x file</code>(소유자에 실행 추가) · <code>chmod go-w file</code>(그룹·기타 쓰기 제거) · <code>a</code>=all.</li></ul>소유자 변경 <b><code>chown</code></b>(change owner), 그룹 변경 <b><code>chgrp</code></b>."
+      },
+      {
+        "k": "warn",
+        "title": "디렉터리 권한 — 함정",
+        "d": "디렉터리에서는 의미가 달라진다.<ul class='klist'><li><b>r</b> — 목록 보기(<code>ls</code>)</li><li><b>w</b> — 그 안에 <b>파일 생성·삭제</b>(파일 자체 권한과 무관하게 <b>삭제 가능</b>!)</li><li><b>x</b> — 그 디렉터리로 <b>진입</b>(<code>cd</code>)·통과</li></ul><b>x 없으면 들어갈 수 없다</b>, <b>디렉터리 w가 있으면 남의 파일도 지울 수 있다</b>(→ 스티키 비트가 필요한 이유)."
+      },
+      {
+        "k": "note",
+        "title": "umask — 디폴트 권한 (계산법)",
+        "d": "<b><code>umask</code></b>는 새로 만드는 파일·디렉터리의 <b>기본 권한에서 빼는(마스킹) 값</b>.<p class='on-key'><span class='lbl'>계산</span>기준값: <b>파일 666</b>(실행권한 없음)·<b>디렉터리 777</b>. 여기서 umask를 뺀다.<br>umask <b>022</b> → 파일 <b>644</b>(<code>rw-r--r--</code>), 디렉터리 <b>755</b>(<code>rwxr-xr-x</code>).<br>umask <b>077</b> → 파일 <b>600</b>, 디렉터리 <b>700</b> (가장 안전).<br>※ 파일은 처음부터 <b>실행권한이 안 붙는다</b>는 게 함정.</p>설정은 <code>umask 022</code>, 영구 적용은 <code>/etc/profile</code>·<code>~/.bashrc</code>."
+      },
+      {
+        "k": "safe",
+        "title": "보안 포인트",
+        "d": "<b>최소 권한 원칙</b> — 불필요한 <b>쓰기·실행 권한 제거</b>. 특히 <b>기타(other)에 쓰기 권한</b>(<code>777</code>)은 매우 위험. 중요 설정 파일은 <code>600</code>·<code>644</code>, umask는 <b>022 이상(권장 027·077)</b>."
+      }
+    ],
+    "finalLiner": "<b>r4·w2·x1</b>을 <b>소유자/그룹/기타</b> 3자리로(<code>755</code>=<code>rwxr-xr-x</code>) / <code>chmod</code> 변경·<code>chown</code> 소유자 / 디렉터리는 <b>x=진입·w=삭제</b> / <b>umask=뺄셈</b>(파일 666·디렉터리 777 기준, 022→644·755)",
+    "related": ["specialperm", "uidgid", "linuxfs"]
+  },
+  {
+    "id": "specialperm",
+    "term": "특수 권한 (SetUID · SetGID · 스티키 비트)",
+    "en": "SetUID · SetGID · Sticky Bit",
+    "cat": "시스템 보안",
+    "tags": ["SetUID 4000", "SetGID 2000", "스티키 1000", "passwd=4755·/tmp=1777", "find -perm -4000"],
+    "oneLiner": "SetUID(4000)=실행 중 소유자 권한 / SetGID(2000)=그룹 권한·디렉터리 그룹 상속 / 스티키(1000)=자기 파일만 삭제 / 점검=find -perm -4000",
+    "blocks": [
+      {
+        "k": "def",
+        "title": "정의 — 일반 rwx 앞에 붙는 네 번째 자리",
+        "d": "<code>chmod 4755</code>처럼 <b>맨 앞 한 자리</b>가 특수 권한이다. <b>SetUID=4 · SetGID=2 · 스티키 비트=1</b> (더해서 쓸 수 있음)."
+      },
+      {
+        "k": "note",
+        "title": "셋의 역할",
+        "d": "<ul class='klist'><li><b>SetUID(4000)</b> — 실행하는 동안 <b>EUID가 파일 소유자</b>가 된다(주로 root). 예: <code>/usr/bin/passwd</code>가 일반 사용자도 <code>/etc/shadow</code>를 고칠 수 있는 이유. 표시: 소유자 x자리에 <b><code>s</code></b> → <code>-rw<b>s</b>r-xr-x</code>(4755)</li><li><b>SetGID(2000)</b> — 실행 중 <b>그룹 권한</b>을 얻음. <b>디렉터리</b>에 걸면 그 안에 만든 파일이 <b>디렉터리의 그룹을 상속</b>(공동 작업 디렉터리). 표시: 그룹 x자리에 <b><code>s</code></b></li><li><b>스티키 비트(1000)</b> — <b>디렉터리</b>에 설정. 그 안에서 <b>자기 소유 파일만 삭제</b> 가능. 대표: <code>/tmp</code> → <code>drwxrwxrw<b>t</b></code>(1777). 표시: 기타 x자리에 <b><code>t</code></b></li></ul><p class='on-key'><span class='lbl'>대문자 S·T의 의미</span>원래 <b>실행 권한(x)이 없는데</b> 특수 권한만 걸리면 <b>대문자 <code>S</code>·<code>T</code></b>로 표시된다(설정은 됐지만 실행 불가 상태).</p>"
+      },
+      {
+        "k": "note",
+        "title": "설정 · 점검 명령 (시험 단골)",
+        "d": "설정: <code>chmod 4755 file</code>(SetUID) · <code>chmod u+s file</code> / <code>chmod 2755</code>·<code>g+s</code>(SetGID) / <code>chmod 1777 dir</code>·<code>o+t</code>(스티키)<p class='on-key'><span class='lbl'>SetUID 파일 찾기</span><code>find / -perm -4000 -print</code> — <b>SetUID가 설정된 모든 파일</b>을 찾는다(정기 점검 필수). SetGID는 <code>-perm -2000</code>.<br>※ <code>-4000</code>(앞에 <b>붙임표</b>)은 '그 비트를 <b>포함</b>하는' 것, <code>4000</code>은 '권한이 <b>정확히</b> 4000'인 것. 실무·시험 모두 <b><code>-4000</code></b>을 주로 쓴다.</p>"
+      },
+      {
+        "k": "warn",
+        "title": "보안 — 권한 상승의 온상",
+        "d": "SetUID 프로그램에 <b>버퍼 오버플로·경쟁 조건(TOCTOU)·PATH 조작</b> 취약점이 있으면 <b>root 권한 탈취</b>로 직결된다. 그래서 <b>불필요한 SetUID 파일 제거</b>(<code>chmod u-s</code>)와 <b>주기적 목록 점검</b>(위 find 명령)이 리눅스 보안의 기본이다."
+      }
+    ],
+    "finalLiner": "<b>SetUID 4</b>(실행 중 소유자 권한, <code>passwd</code>=4755, 표시 <code>s</code>) · <b>SetGID 2</b>(그룹 권한·디렉터리 그룹 상속) · <b>스티키 1</b>(디렉터리, <b>자기 파일만 삭제</b>, <code>/tmp</code>=1777, 표시 <code>t</code>) / 점검 <code>find / -perm -4000 -print</code>",
+    "related": ["fileperm", "uidgid", "race"]
+  },
+  {
+    "id": "passwdfile",
+    "term": "계정 파일 (/etc/passwd · /etc/shadow)",
+    "en": "Password & Shadow File",
+    "cat": "시스템 보안",
+    "tags": ["passwd 7필드", "shadow 9필드", "x=shadow로 이동", "644 vs 400", "존 더 리퍼"],
+    "oneLiner": "/etc/passwd=계정 정보 7필드(누구나 읽기 가능, 패스워드 자리는 x) / /etc/shadow=암호화된 패스워드 9필드(root만) / 크래킹 대상",
+    "blocks": [
+      {
+        "k": "note",
+        "title": "/etc/passwd — 7개 필드 (순서 그대로 출제)",
+        "d": "<pre>root:x:0:0:root:/root:/bin/bash</pre><ul class='klist'><li>① <b>사용자명</b> ② <b>패스워드 자리</b>(<b><code>x</code></b>=실제 해시는 shadow에 있음) ③ <b>UID</b> ④ <b>GID</b> ⑤ <b>설명(코멘트)</b> ⑥ <b>홈 디렉터리</b> ⑦ <b>로그인 셸</b></li></ul>권한은 <b>644</b> — <b>누구나 읽을 수 있다</b>(프로그램들이 UID↔이름 변환에 필요해서)."
+      },
+      {
+        "k": "warn",
+        "title": "왜 shadow로 분리했나 (핵심)",
+        "d": "옛날엔 <b>암호화된 패스워드가 passwd 파일 안에</b> 있었다 → 파일이 <b>644라 누구나 읽을 수 있으니</b> 해시를 그대로 복사해 <b>오프라인 크래킹</b>이 가능했다. 그래서 해시만 <b><code>/etc/shadow</code>로 분리</b>하고 권한을 <b>400(또는 600) — root만 읽기</b>로 잠갔다. passwd의 <code>x</code>는 '해시는 shadow에 있다'는 표시."
+      },
+      {
+        "k": "note",
+        "title": "/etc/shadow — 9개 필드",
+        "d": "① 사용자명 ② <b>암호화된 패스워드(해시)</b> ③ 마지막 변경일 ④ <b>최소</b> 사용일 ⑤ <b>최대</b> 사용일(만료 주기) ⑥ <b>경고</b> 일수 ⑦ <b>비활성</b> 유예일 ⑧ <b>계정 만료일</b> ⑨ 예약<p class='on-key'><span class='lbl'>해시 자리 표시</span><code>*</code>·<code>!</code>=<b>로그인 잠금</b>, 빈 칸=<b>패스워드 없음(매우 위험)</b>. 최근 해시는 <code>$6$</code>(SHA-512)로 시작.</p>"
+      },
+      {
+        "k": "warn",
+        "title": "패스워드 크래킹 · 존 더 리퍼",
+        "d": "해시를 얻으면 <b>오프라인 크래킹</b>을 시도한다.<ul class='klist'><li><b>사전 공격</b>(Dictionary) — 흔한 단어 목록 대입</li><li><b>무차별 대입</b>(Brute Force) — 모든 조합</li><li><b>레인보우 테이블</b> — 미리 계산한 해시표 (→ <b>솔트(salt)</b>로 무력화)</li></ul><b>존 더 리퍼(John the Ripper)</b> — 대표적인 패스워드 크래킹 도구. <b>공격 도구이자, 관리자가 자기 시스템의 취약한 암호를 점검하는 도구</b>로도 쓴다."
+      },
+      {
+        "k": "safe",
+        "title": "방어",
+        "d": "<b>shadow 분리 유지</b>·권한 확인, <b>솔트+강한 해시(SHA-512)</b>, <b>복잡도·만료 주기 정책</b>, 로그인 실패 <b>계정 잠금</b>, 불필요 계정 삭제·<code>/sbin/nologin</code> 처리."
+      }
+    ],
+    "finalLiner": "<code>/etc/passwd</code> <b>7필드</b>(이름:<b>x</b>:UID:GID:설명:홈:셸, <b>644 누구나 읽기</b>) / <code>/etc/shadow</code> <b>9필드</b>(해시+만료 정책, <b>root만</b>) / 분리 이유=<b>오프라인 크래킹 방지</b> / 크래킹 도구=<b>존 더 리퍼</b>, 방어=솔트·SHA-512",
+    "related": ["uidgid", "shelltypes", "fileperm"]
+  },
+  {
+    "id": "linuxlog",
+    "term": "리눅스 로그 파일",
+    "en": "Linux Log Files (utmp·wtmp·btmp)",
+    "cat": "시스템 보안",
+    "tags": ["utmp=현재접속", "wtmp=접속이력", "btmp=실패기록", "바이너리→전용명령", "WORM 무결성"],
+    "oneLiner": "/var/log에 기록 / utmp=현재 접속(who)·wtmp=접속 이력(last)·btmp=실패(lastb)·lastlog=마지막 로그인 / 바이너리라 전용 명령으로만 조회",
+    "blocks": [
+      {
+        "k": "def",
+        "title": "위치",
+        "d": "대부분 <b><code>/var/log</code></b> 아래에 쌓인다. 침해사고 분석의 1차 증거이자, <b>공격자가 가장 먼저 지우려는 대상</b>."
+      },
+      {
+        "k": "warn",
+        "title": "3대 로그 (utmp·wtmp·btmp — 시험 핵심)",
+        "d": "<ul class='klist'><li><b>utmp</b> — <b>현재 로그인 중</b>인 사용자. 조회: <b><code>who</code></b>·<code>w</code>·<code>users</code></li><li><b>wtmp</b> — <b>로그인/로그아웃 이력</b>(누가 언제 접속했다 나갔나), 재부팅 기록도. 조회: <b><code>last</code></b></li><li><b>btmp</b> — <b>실패한 로그인 시도</b>(<b>b</b>ad). <b>무차별 대입 공격 탐지</b>의 핵심. 조회: <b><code>lastb</code></b></li><li><b>lastlog</b> — 사용자별 <b>마지막 로그인</b> 시각. 조회: <code>lastlog</code></li></ul><p class='on-key'><span class='lbl'>함정</span>이 넷은 <b>바이너리 파일</b>이라 <code>cat</code>·<code>vi</code>로 열면 깨진다 → <b>반드시 전용 명령</b>으로 봐야 한다. (텍스트 로그와 구분해서 출제)</p>"
+      },
+      {
+        "k": "note",
+        "title": "그 밖의 로그 (텍스트)",
+        "d": "<ul class='klist'><li><b><code>secure</code></b>(데비안 계열은 <code>auth.log</code>) — <b>인증·su·sudo·SSH 접속</b> 기록. 침입 분석 1순위</li><li><b><code>messages</code></b>(<code>syslog</code>) — 시스템 전반 메시지</li><li><code>cron</code> — 예약 작업 실행 · <code>xferlog</code> — FTP 전송 · <code>sulog</code> — su 사용 · <code>dmesg</code> — 부팅·커널</li><li><b>acct/pacct</b> — 사용자가 실행한 <b>명령어</b> 기록(<code>lastcomm</code>)</li></ul>수집·관리는 <b><code>syslog</code>/<code>rsyslog</code></b> 데몬이 담당(<code>/etc/rsyslog.conf</code>)."
+      },
+      {
+        "k": "safe",
+        "title": "로그 무결성 — WORM · 원격 로그",
+        "d": "공격자는 흔적을 지우려 로그를 <b>삭제·변조</b>한다. 그래서:<ul class='klist'><li><b>WORM(Write Once Read Many)</b> — <b>한 번 기록하면 수정·삭제할 수 없는</b> 저장 매체·방식. 로그를 여기 보관하면 <b>위·변조 자체가 불가능</b>해 증거 능력이 생긴다.</li><li><b>원격 로그 서버</b>로 실시간 전송(로컬을 지워도 사본이 남음)</li><li>로그 파일 <b>권한 최소화</b>, <b>정기 백업·보존 기간</b> 준수, 무결성 점검(해시)</li></ul>"
+      }
+    ],
+    "finalLiner": "<code>/var/log</code>: <b>utmp</b>=현재접속(<code>who</code>)·<b>wtmp</b>=접속이력(<code>last</code>)·<b>btmp</b>=<b>실패</b>(<code>lastb</code>)·<b>lastlog</b>=마지막로그인 → <b>바이너리라 전용 명령</b> / <code>secure</code>=인증 / 무결성=<b>WORM</b>·원격 로그 서버",
+    "related": ["passwdfile", "linuxfs", "cron"]
+  },
+  {
+    "id": "cron",
+    "term": "cron · crontab (예약 작업)",
+    "en": "cron · crontab · at",
+    "cat": "시스템 보안",
+    "tags": ["분 시 일 월 요일", "crontab -e/-l/-r", "at=1회성", "cron.allow/deny", "백도어 지속성"],
+    "oneLiner": "정해진 시각에 작업을 자동 실행하는 데몬 / crontab 5필드=분 시 일 월 요일 / at은 1회성 / 공격자의 백도어 지속성 수단",
+    "blocks": [
+      {
+        "k": "def",
+        "title": "정의 (어원)",
+        "d": "<b>cron</b>은 그리스어 <b>chronos(시간)</b>에서 온 이름. <b>주기적으로</b> 명령을 실행하는 데몬(<code>crond</code>)이고, 그 일정표가 <b>crontab</b>(cron table)이다. <b><code>at</code></b>은 <b>1회성</b> 예약(한 번만 실행) — 이 둘의 구분이 자주 나온다."
+      },
+      {
+        "k": "note",
+        "title": "crontab 형식 — 5개 필드 (순서 암기)",
+        "d": "<pre>분  시  일  월  요일   명령\n *   *   *   *    *</pre><ul class='klist'><li><b>분</b> 0–59 · <b>시</b> 0–23 · <b>일</b> 1–31 · <b>월</b> 1–12 · <b>요일</b> 0–7(<b>0과 7 모두 일요일</b>)</li><li>예) <code>30 2 * * *</code> = 매일 <b>새벽 2시 30분</b> · <code>0 */6 * * *</code> = 6시간마다</li></ul>※ <b>시·분 순서가 아니라 분·시 순서</b>인 게 함정."
+      },
+      {
+        "k": "note",
+        "title": "명령 · 파일 위치",
+        "d": "<code>crontab -e</code>(편집) · <code>crontab -l</code>(목록) · <code>crontab -r</code>(<b>전체 삭제 — 주의</b>) · <code>crontab -u 사용자</code>(관리자가 지정)<br>사용자별 파일 <code>/var/spool/cron/</code>, 시스템 전역 <code>/etc/crontab</code>·<code>/etc/cron.d/</code>·<code>cron.daily</code> 등."
+      },
+      {
+        "k": "warn",
+        "title": "보안 — 지속성(persistence) 수단",
+        "d": "공격자는 침투 후 <b>cron에 악성 스크립트를 등록</b>해 <b>재부팅·시간이 지나도 반복 실행</b>되게 만든다(백도어 <b>지속성</b> 확보, 역방향 셸 주기적 접속 등). 그래서 침해사고 조사 때 <b>crontab 목록은 필수 점검 대상</b>이다."
+      },
+      {
+        "k": "safe",
+        "title": "방어 — cron.allow / cron.deny",
+        "d": "<b><code>/etc/cron.allow</code></b>에 적힌 사용자만 cron 사용 허용, <b><code>/etc/cron.deny</code></b>는 차단 목록. <b>allow가 있으면 allow 우선</b>(거기 없는 사람은 전부 차단)이라 <b>allow 방식이 더 안전</b>하다. 그 외: crontab 정기 점검, cron 로그(<code>/var/log/cron</code>) 확인, 등록 스크립트 <b>권한·소유자 확인</b>.(<code>at</code>도 <code>at.allow</code>·<code>at.deny</code>로 동일하게 제어)"
+      }
+    ],
+    "finalLiner": "cron=<b>주기</b> 실행(chronos), <b>at=1회성</b> / crontab <b>분 시 일 월 요일</b>(요일 0·7=일요일) / <code>-e</code>편집·<code>-l</code>목록·<code>-r</code>전체삭제 / <b>백도어 지속성</b> 표적 → <code>cron.allow</code>로 통제·정기 점검",
+    "related": ["linuxlog", "bashfiles", "apt"]
+  },
+  {
+    "id": "sectools",
+    "term": "리눅스 보안 도구 · 점검 명령",
+    "en": "Security Tools · Kali Linux",
+    "cat": "시스템 보안",
+    "tags": ["칼리 리눅스=모의해킹 배포판", "목적별 분류", "Tripwire 무결성", "chkrootkit 루트킷", "find로 이상 파일 탐지"],
+    "oneLiner": "목적별 분류가 핵심(스캔·취약점·패킷·크래킹·무결성·탐지) / 칼리 리눅스=도구 내장 모의해킹 배포판 / find로 SetUID·소유자 없는 파일 점검",
+    "blocks": [
+      {
+        "k": "def",
+        "title": "칼리 리눅스 (Kali Linux)",
+        "d": "<b>모의 해킹·취약점 점검용 도구를 미리 모아 놓은 리눅스 배포판</b>(데비안 기반, 옛 BackTrack의 후속). 수백 개 도구가 기본 탑재돼 <b>침투 테스트·보안 진단</b>에 쓰인다. <b>도구 자체는 중립</b>이고, <b>허가받은 대상에만</b> 사용해야 한다(무단 사용은 불법)."
+      },
+      {
+        "k": "note",
+        "title": "도구 — 목적별 분류 (이렇게 외우기)",
+        "d": "<ul class='klist'><li><b>포트·네트워크 스캔</b> — <b>Nmap</b>(Network Mapper)</li><li><b>취약점 점검</b> — <b>Nessus</b>·<b>OpenVAS</b></li><li><b>패킷 캡처·분석</b> — <b>Wireshark</b>·<b>tcpdump</b></li><li><b>패스워드 크래킹</b> — <b>John the Ripper</b>·<b>Hydra</b></li><li><b>파일 무결성 점검</b> — <b>Tripwire</b>·<b>AIDE</b> (해시로 변조 탐지)</li><li><b>침입 탐지(IDS)</b> — <b>Snort</b></li><li><b>루트킷 탐지</b> — <b>chkrootkit</b>·<b>rkhunter</b></li><li><b>접근 통제</b> — <b>TCP Wrapper</b>(<code>hosts.allow</code>/<code>hosts.deny</code>)</li></ul>"
+      },
+      {
+        "k": "note",
+        "title": "find로 이상 파일 탐지 (점검 실무)",
+        "d": "<ul class='klist'><li><code>find / -perm -4000 -print</code> — <b>SetUID 파일</b>(권한 상승 통로) 점검</li><li><code>find / -nouser -o -nogroup</code> — <b>소유자·그룹이 없는 파일</b>(삭제된 계정의 잔존물, 침입 흔적)</li><li><code>find / -name &quot;...&quot; -o -name &quot;.. &quot;</code> — <b>은닉을 노린 수상한 이름</b>의 파일</li><li><code>find / -mtime -1</code> — <b>최근 변경된 파일</b>(침해 직후 변경 추적)</li><li><code>find / -size +100M</code> — 비정상적으로 큰 파일(수집된 데이터 은닉)</li></ul>"
+      },
+      {
+        "k": "safe",
+        "title": "정리 관점",
+        "d": "시험은 <b>'이 도구가 무슨 용도인가'</b>를 묻는다. <b>Nmap=스캔 · Nessus=취약점 · Wireshark=패킷 · John the Ripper=패스워드 · Tripwire=무결성 · Snort=침입탐지 · chkrootkit=루트킷</b> — 이 대응 관계만 확실히 하면 대부분 풀린다."
+      }
+    ],
+    "finalLiner": "<b>칼리 리눅스</b>=모의해킹 도구 내장 배포판 / 용도 대응: <b>Nmap</b>스캔·<b>Nessus</b>취약점·<b>Wireshark</b>패킷·<b>John the Ripper</b>크래킹·<b>Tripwire</b>무결성·<b>Snort</b>IDS·<b>chkrootkit</b>루트킷 / 점검 <code>find / -perm -4000</code>·<code>-nouser</code>",
+    "related": ["specialperm", "passwdfile", "linuxlog"]
   }
 ]
 );
