@@ -542,6 +542,11 @@ window.DATA = (window.DATA || []).concat(
         "d": "비밀번호를 바꾸려면 <code>/etc/shadow</code>를 고쳐야 하는데, 그 파일은 <b>권한 400 — root만 읽기</b>다. 여기서 딜레마가 생긴다.<ul class='klist'><li>사용자에게 <code>/etc/shadow</code> <b>쓰기 권한을 주면</b> → <b>남의 비밀번호까지</b> 바꿀 수 있다 ❌</li><li><b>안 주면</b> → <b>자기 비밀번호도</b> 못 바꾼다 ❌</li></ul><p class='on-key'><span class='lbl'>SetUID의 답</span><b>권한을 '사람'이 아니라 '프로그램'에 붙인다.</b> — “이 프로그램을 <b>실행하는 동안만</b> 너는 잠깐 소유자(root)가 된다.” 그래서 <code>passwd</code>는 root 권한으로 shadow를 고치되, <b>하는 일이 정해져 있어</b> 그 이상은 못 한다.<br>🏦 비유: 금고엔 내가 못 들어가지만, <b>창구 직원</b>(=SetUID 프로그램)이 금고 권한으로 <b>내 것만</b> 꺼내준다.</p>"
       },
       {
+        "k": "warn",
+        "title": "오해 바로잡기 — 사용자가 root가 되는 게 아니다",
+        "d": "❌ “실행하면 <b>사용자에게</b> root 권한을 준다” → ⭕ “<b>프로그램(프로세스)이</b> root 권한으로 실행된다”. 사용자는 root가 되지 않고, <b>그 프로그램이 제공하는 기능</b>만 쓸 수 있다.<p class='on-key'><span class='lbl'>🏧 ATM 비유</span>ATM은 은행 금고 권한이 있고 <b>누구나</b> 쓸 수 있다. 하지만 내가 ATM을 쓴다고 <b>내가 금고 권한을 얻는 건 아니다</b> — 나는 '출금' 버튼만 누르고, ATM이 <b>내 잔액을 확인해 내 돈만</b> 내준다.</p><div class='cmp two'><div class='cmp-item'><span class='cmp-label'>0755 (일반)</span><div class='row'><code>-rwxr-xr-x</code><br>실행 시 EUID = <b>실행한 사람</b></div></div><div class='cmp-item'><span class='cmp-label'>4755 (SetUID)</span><div class='row'><code>-rw<b>s</b>r-xr-x</code><br>실행 시 EUID = <b>파일 소유자</b></div></div></div><b>차이는 <code>s</code> 한 글자뿐</b>이고 rwx는 동일하다. 주의: <b>root 소유라고 root 권한으로 실행되는 게 아니다</b>(<code>/bin/ls</code>도 root 소유지만 SetUID가 없어 실행자 권한으로 돈다). 또한 <b>권한이 부족할 때만 발동하는 조건부 장치가 아니라</b>, 실행하면 <b>항상</b> EUID가 소유자로 바뀐다(그래서 root가 일반 사용자 소유 SetUID를 실행하면 <b>권한이 오히려 내려간다</b>). 어떤 UID가 될지는 비트가 아니라 <b><code>ls -l</code>의 소유자 칸</b>이 정한다."
+      },
+      {
         "k": "note",
         "title": "셋의 역할",
         "d": "<ul class='klist'><li><b>SetUID(4000)</b> — 실행하는 동안 <b>EUID가 파일 소유자</b>가 된다(주로 root). 예: <code>/usr/bin/passwd</code>가 일반 사용자도 <code>/etc/shadow</code>를 고칠 수 있는 이유. 표시: 소유자 x자리에 <b><code>s</code></b> → <code>-rw<b>s</b>r-xr-x</code>(4755)</li><li><b>SetGID(2000)</b> — 실행 중 <b>그룹 권한</b>을 얻음. <b>디렉터리</b>에 걸면 그 안에 만든 파일이 <b>디렉터리의 그룹을 상속</b>(공동 작업 디렉터리). 표시: 그룹 x자리에 <b><code>s</code></b></li><li><b>스티키 비트(1000)</b> — <b>디렉터리</b>에 설정. 그 안에서 <b>자기 소유 파일만 삭제</b> 가능. 대표: <code>/tmp</code> → <code>drwxrwxrw<b>t</b></code>(1777). 표시: 기타 x자리에 <b><code>t</code></b></li></ul><p class='on-key'><span class='lbl'>대문자 S·T의 의미</span>원래 <b>실행 권한(x)이 없는데</b> 특수 권한만 걸리면 <b>대문자 <code>S</code>·<code>T</code></b>로 표시된다(설정은 됐지만 실행 불가 상태).</p>"
@@ -554,7 +559,12 @@ window.DATA = (window.DATA || []).concat(
       {
         "k": "warn",
         "title": "보안 — 권한 상승의 온상",
-        "d": "SetUID 프로그램에 <b>버퍼 오버플로·경쟁 조건(TOCTOU)·PATH 조작</b> 취약점이 있으면 <b>root 권한 탈취</b>로 직결된다. 그래서 <b>불필요한 SetUID 파일 제거</b>(<code>chmod u-s</code>)와 <b>주기적 목록 점검</b>(위 find 명령)이 리눅스 보안의 기본이다."
+        "d": "SetUID 프로그램에 <b>버퍼 오버플로·경쟁 조건(TOCTOU)·PATH 조작</b> 취약점이 있으면 <b>root 권한 탈취</b>로 직결된다. 그래서 <b>불필요한 SetUID 파일 제거</b>(<code>chmod u-s</code>)와 <b>주기적 목록 점검</b>(위 find 명령)이 리눅스 보안의 기본이다.<p class='on-key'><span class='lbl'>왜 뚫리면 끝인가</span>빌려주는 건 <b>제한 없는 소유자 열쇠(root면 전체 권한)</b>다. “김씨 칸만 여는 열쇠” 같은 건 없다. <b>'본인 것만'이라는 제한은 자물쇠가 아니라 프로그램 코드에만</b> 있어서, 프로그램이 속아 넘어가면 그 열쇠가 <b>통째로</b> 공격자에게 간다. 그래서 <b>SetUID 프로그램은 BOF 공격의 대표 표적</b>이다(일반 프로그램을 터뜨려봐야 원래 자기 권한밖에 안 나온다)."
+      },
+      {
+        "k": "safe",
+        "title": "관점 — SetUID는 '보안 기능'이 아니라 필요악",
+        "d": "SetUID를 <b>보안 기능으로 이해하면 계속 헷갈린다</b>. 정확히는 <b>보안을 희생해 기능을 가능하게 하는 장치</b>다.<ul class='klist'><li><b>보안만 생각하면</b> → SetUID는 <b>하나도 없는 게 최선</b></li><li><b>없으면</b> → 사용자가 비밀번호조차 못 바꿈(기능이 성립 안 함)</li><li><b>그래서</b> → 꼭 필요한 것만 남기고 <b>최소화</b></li></ul>즉 실무·시험의 주제는 <b>“SetUID를 잘 거는 법”이 아니라 “SetUID를 줄이는 법”</b>이다. 시험에서도 늘 <b>위험 요소·점검 대상</b>으로 출제된다(방어 수단으로 나오지 않는다). 대안은 <b>sudo·Capabilities</b>(별도 카드)."
       }
     ],
     "finalLiner": "<b>SetUID 4</b>(실행 중 소유자 권한, <code>passwd</code>=4755, 표시 <code>s</code>) · <b>SetGID 2</b>(그룹 권한·디렉터리 그룹 상속) · <b>스티키 1</b>(디렉터리, <b>자기 파일만 삭제</b>, <code>/tmp</code>=1777, 표시 <code>t</code>) / 점검 <code>find / -perm -4000 -print</code>",
@@ -697,6 +707,43 @@ window.DATA = (window.DATA || []).concat(
     ],
     "finalLiner": "<b>칼리 리눅스</b>=모의해킹 도구 내장 배포판 / 용도 대응: <b>Nmap</b>스캔·<b>Nessus</b>취약점·<b>Wireshark</b>패킷·<b>John the Ripper</b>크래킹·<b>Tripwire</b>무결성·<b>Snort</b>IDS·<b>chkrootkit</b>루트킷 / 점검 <code>find / -perm -4000</code>·<code>-nouser</code>",
     "related": ["specialperm", "passwdfile", "linuxlog"]
+  },
+  {
+    "id": "sudocap",
+    "term": "권한 위임의 대안 (sudo · Capabilities)",
+    "en": "sudo · POSIX Capabilities · MAC",
+    "cat": "시스템 보안",
+    "tags": ["SetUID는 1970년대 유산", "sudo=정책+감사로그", "Capability=root 분할", "SELinux/AppArmor=MAC", "ping은 이제 SetUID 아님"],
+    "oneLiner": "SetUID는 권한을 통째로 빌려줘 위험 / 현대는 sudo(정책·로그)·Capabilities(root를 40여 조각으로)·MAC으로 잘게 위임 / 강화 원칙=SetUID를 이들로 대체",
+    "blocks": [
+      {
+        "k": "def",
+        "title": "왜 대안이 나왔나",
+        "d": "SetUID는 <b>1970년대</b> 설계다. 당시 유닉스는 <b>서로 신뢰하는 소수</b>가 쓰던 환경이었고(인터넷도 원격 공격자도 없었다), 권한 모델이 <b><code>UID/GID + rwx</code>뿐</b>이라 표현력이 낮았다. 그 안에서 짜낸 해법이라 <b>권한을 통째로(root면 전권) 빌려주는</b> 방식이 됐다.<p class='on-key'><span class='lbl'>문제</span>필요한 건 “포트 하나 열기”뿐인데 <b>root 전체</b>를 줘야 한다 → 그 프로그램이 뚫리면 <b>시스템 전체</b>가 넘어간다. 그래서 이후 <b>“필요한 만큼만 쪼개서 위임”</b>하는 방식들이 개발됐다.</p>"
+      },
+      {
+        "k": "safe",
+        "title": "① sudo — 정책으로 위임 + 감사 로그",
+        "d": "<b>sudo(superuser do)</b>: <b>누가 / 어느 호스트에서 / 무슨 명령을</b> 실행할 수 있는지 <b><code>/etc/sudoers</code></b> 정책으로 지정한다(편집은 문법 검사가 되는 <code>visudo</code>).<ul class='klist'><li><b>명령 단위로 좁게</b> 허용 가능 — root 셸을 통째로 주지 않는다</li><li><b>누가 언제 무엇을 실행했는지 로그가 남는다</b>(<code>/var/log/secure</code>) → <b>책임 추적성</b></li><li>확인 <code>sudo -l</code>. <b><code>su</code>와 비교</b>: <code>su</code>는 <b>root 비밀번호로 root가 되어 무엇이든</b> 가능하지만, <code>sudo</code>는 <b>자기 비밀번호로 허용된 명령만</b> + 로그가 남는다 → <b>sudo 권장</b></li></ul>"
+      },
+      {
+        "k": "safe",
+        "title": "② Capabilities — root를 잘게 쪼갬",
+        "d": "리눅스는 root의 전능한 권한을 <b>40여 개의 능력(capability)</b>으로 분할했다. 필요한 <b>조각만</b> 프로그램에 부여한다.<ul class='klist'><li><b>CAP_NET_RAW</b> — 원시 소켓 사용 · <b>CAP_NET_BIND_SERVICE</b> — 1024 미만 포트 열기 · <b>CAP_DAC_OVERRIDE</b> — 파일 권한 검사 무시</li><li>부여·확인: <code>setcap</code> · <code>getcap</code></li></ul><p class='on-key'><span class='lbl'>대표 사례</span><code>ping</code>은 예전엔 <b>SetUID root</b>였다(원시 소켓이 필요해서). 지금은 대부분 <b><code>cap_net_raw</code> 하나만</b> 갖는다 → <b>뚫려도 root가 나오지 않는다</b>.</p>"
+      },
+      {
+        "k": "note",
+        "title": "③ 더 강한 통제 — MAC · seccomp",
+        "d": "<ul class='klist'><li><b>SELinux · AppArmor</b> — <b>강제 접근 통제(MAC)</b>. 관리자가 정한 정책이 우선이라 <b>root라도 정책 밖 행동은 불가</b>. (기존 rwx 방식은 소유자가 마음대로 바꿀 수 있는 <b>임의 접근 통제(DAC)</b>)</li><li><b>seccomp</b> — 프로세스가 쓸 수 있는 <b>시스템 콜 자체를 제한</b> → 뚫려도 할 수 있는 게 없다</li><li><b>PolicyKit</b> — 권한이 필요한 작업을 <b>별도 데몬에 요청</b>하고 정책으로 판단(프로그램이 권한을 직접 갖지 않음)</li></ul>"
+      },
+      {
+        "k": "warn",
+        "title": "그럼 SetUID는 왜 아직 남아 있나",
+        "d": "① <b>하위 호환성</b> — 수십 년 된 프로그램이 이를 전제로 동작 ② <b>단순함</b> — capabilities는 설정이 복잡하고 잘못 쓰면 오히려 위험. 다만 배포판들이 <b>SetUID 바이너리 수를 계속 줄이는 추세</b>다.<br><b>시험 포인트:</b> 리눅스 보안 강화의 기본 원칙은 <b>“불필요한 SetUID 제거 → sudo·Capabilities로 대체”</b>."
+      }
+    ],
+    "finalLiner": "SetUID=권한을 <b>통째로</b> 빌려주는 1970년대 방식 → 현대 대안: <b>sudo</b>(<code>/etc/sudoers</code> 정책+<b>감사 로그</b>, <code>su</code>보다 권장) · <b>Capabilities</b>(root를 40여 조각으로, <code>ping</code>=<code>cap_net_raw</code>) · <b>SELinux/AppArmor</b>(MAC, root도 정책 밖 불가) / 강화 원칙=<b>SetUID 제거 후 대체</b>",
+    "related": ["specialperm", "uidgid", "passwdfile"]
   }
 ]
 );
