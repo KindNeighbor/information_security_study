@@ -15,5 +15,6 @@
 | 고급 위협 (APT·킬체인·DLL) | 3 | [threat.md](threat.md) |
 | 애플리케이션·웹 보안 | 1 | [webapp.md](webapp.md) |
 | 포렌식·리버싱 | 3 | [forensics.md](forensics.md) |
+| 네트워크 일반 (PART 02) | 6 | [network.md](network.md) |
 
-**총 54개 카드.**
+**총 60개 카드.**

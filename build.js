@@ -18,6 +18,7 @@ const TOPICS = [
   {file:'threat',     title:'고급 위협 (APT·킬체인·DLL)'},
   {file:'webapp',     title:'애플리케이션·웹 보안'},
   {file:'forensics',  title:'포렌식·리버싱'},
+  {file:'network',    title:'네트워크 일반 (PART 02)'},
   {file:'etc',        title:'기타'},
 ];
 

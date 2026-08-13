@@ -383,6 +383,7 @@
 <script src="cards/threat.js"></script>
 <script src="cards/webapp.js"></script>
 <script src="cards/forensics.js"></script>
+<script src="cards/network.js"></script>
 <script src="quiz.js" defer></script>
 <script>
 /* =========================================================================
@@ -409,6 +410,8 @@ const GROUPS=[
   {name:"고급 위협 (APT·킬체인·DLL)", sub:"APT가 사이버 킬체인 단계를 따라 진행, DLL 인젝션·하이재킹 기법", ids:["apt","killchain","dll"]},
   {name:"애플리케이션·웹 보안", sub:"웹 인증·인가 위임 — OAuth 등", ids:["oauth"]},
   {name:"포렌식·리버싱", sub:"디지털 포렌식(웹·IE 아티팩트) + 바이너리 디핑", ids:["webartifact","ieartifact","diffing"]},
+  {name:"네트워크 일반", sub:"프로토콜·LAN/WAN·토폴로지 → OSI 7계층·TCP/IP 4계층 → 계층별 장비 → TCP/UDP·IP/ARP/ICMP", sec:"네트워크 일반",
+   ids:["netbasic","osi","tcpip","netdevice","tcpudp","netproto"]},
 ];
 // 교재 목차(사이드바). cat이 있으면 그 파트 클릭 시 필터.
 const TOC=[
@@ -435,7 +438,21 @@ const GLOSSARY=[
   {ab:"btmp",full:"bad login (실패 기록)",ko:"로그인에 실패한 시도 기록. lastb 명령으로 보며 무차별 대입 공격 탐지에 씀",id:"linuxlog"},
   {ab:"sudo",full:"superuser do",ko:"허용된 명령만 관리자 권한으로 실행하게 해주고 로그를 남기는 도구",id:"sudocap"},
   {ab:"DAC",full:"Discretionary Access Control",ko:"임의 접근 통제. 파일 소유자가 권한을 마음대로 정하는 방식(rwx)",id:"sudocap"},
-  {ab:"MAC",full:"Mandatory Access Control",ko:"강제 접근 통제. 관리자가 정한 정책이 우선이라 root도 정책 밖 행동을 못 함(SELinux)",id:"sudocap"},
+  {ab:"MAC (접근통제)",full:"Mandatory Access Control",ko:"강제 접근 통제. 관리자가 정한 정책이 우선이라 root도 정책 밖 행동을 못 함(SELinux). 네트워크의 MAC 주소와 약어가 같으니 주의",id:"sudocap"},
+  {ab:"MAC (네트워크)",full:"Media Access Control",ko:"랜카드마다 부여된 고유한 물리 주소. OSI 2계층에서 실제 전달에 사용",id:"osi"},
+  {ab:"OSI",full:"Open Systems Interconnection",ko:"통신 과정을 7계층으로 나눈 국제 표준 참조 모델",id:"osi"},
+  {ab:"PDU",full:"Protocol Data Unit",ko:"각 계층에서 주고받는 데이터 단위(비트·프레임·패킷·세그먼트)",id:"osi"},
+  {ab:"LAN",full:"Local Area Network",ko:"건물이나 사무실 같은 좁은 범위를 연결한 근거리 통신망",id:"netbasic"},
+  {ab:"WAN",full:"Wide Area Network",ko:"국가나 대륙처럼 넓은 범위를 연결한 광역 통신망(인터넷)",id:"netbasic"},
+  {ab:"MAN",full:"Metropolitan Area Network",ko:"도시 규모를 연결한 통신망. LAN보다 넓고 WAN보다 좁음",id:"netbasic"},
+  {ab:"PAN",full:"Personal Area Network",ko:"개인 주변 수 미터를 연결한 통신망(블루투스 등)",id:"netbasic"},
+  {ab:"TCP",full:"Transmission Control Protocol",ko:"연결을 맺고 데이터가 정확히 도착하도록 보장하는 전송 프로토콜",id:"tcpudp"},
+  {ab:"UDP",full:"User Datagram Protocol",ko:"연결 없이 빠르게 보내지만 도착을 보장하지 않는 전송 프로토콜",id:"tcpudp"},
+  {ab:"IP",full:"Internet Protocol",ko:"주소를 지정하고 경로를 정해 데이터를 보내는 프로토콜(도착은 보장하지 않음)",id:"netproto"},
+  {ab:"ARP",full:"Address Resolution Protocol",ko:"IP 주소를 실제 전달에 쓰는 MAC 주소로 변환하는 프로토콜",id:"netproto"},
+  {ab:"RARP",full:"Reverse Address Resolution Protocol",ko:"MAC 주소로 자신의 IP 주소를 알아내는 프로토콜(ARP의 반대)",id:"netproto"},
+  {ab:"ICMP",full:"Internet Control Message Protocol",ko:"오류 보고와 상태 확인 메시지를 주고받는 프로토콜(ping이 사용)",id:"netproto"},
+  {ab:"IGMP",full:"Internet Group Management Protocol",ko:"멀티캐스트 그룹 가입과 관리를 담당하는 프로토콜",id:"netproto"},
   {ab:"SetGID",full:"Set Group ID",ko:"실행하는 동안 파일의 그룹 권한을 갖게 하는 설정. 디렉터리에 걸면 그룹이 상속됨",id:"specialperm"},
   {ab:"Nmap",full:"Network Mapper",ko:"열린 포트와 서비스를 조사하는 대표적인 네트워크 스캔 도구",id:"sectools"},
   {ab:"BIOS",full:"Basic Input/Output System",ko:"전원을 켜면 가장 먼저 실행되어 하드웨어를 점검하고 부팅 장치를 찾는 펌웨어",id:"boot"},
@@ -538,7 +555,9 @@ const SEC_ATTACK="위협·공격 기법", SEC_DEFEND="예방 및 대응", LINUX_
 const CARD_SEC={};
 GROUPS.forEach(g=>g.ids.forEach(id=>{
   const d=DATA.find(x=>x.id===id);
-  if(!d||d.cat!=="시스템 보안")return;            // PART 01 카드만 소단원 부여
+  if(!d)return;
+  if(g.sec){CARD_SEC[id]=g.sec;return;}           // 그룹에 소단원이 지정돼 있으면 그대로 사용
+  if(d.cat!=="시스템 보안")return;                 // 그 외에는 PART 01만 ③/④로 자동 분류
   CARD_SEC[id]=(g.name===LINUX_GROUP)?SEC_ATTACK:SEC_DEFEND;
 }));
 const secCount=(cat,s)=>DATA.filter(d=>d.cat===cat&&CARD_SEC[d.id]===s).length;
