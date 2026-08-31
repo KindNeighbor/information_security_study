@@ -384,6 +384,7 @@
 <script src="cards/webapp.js"></script>
 <script src="cards/forensics.js"></script>
 <script src="cards/network.js"></script>
+<script src="cards/http.js"></script>
 <script src="quiz.js" defer></script>
 <script>
 /* =========================================================================
@@ -412,11 +413,13 @@ const GROUPS=[
   {name:"포렌식·리버싱", sub:"디지털 포렌식(웹·IE 아티팩트) + 바이너리 디핑", ids:["webartifact","ieartifact","diffing"]},
   {name:"네트워크 일반", sub:"프로토콜·LAN/WAN·토폴로지 → OSI 7계층·TCP/IP 4계층 → 계층별 장비 → TCP/UDP·IP/ARP/ICMP", sec:"네트워크 일반",
    ids:["netbasic","osi","tcpip","netdevice","tcpudp","netproto"]},
+  {name:"응용 계층 — HTTP", sub:"HTTP 개요·버전 → 연결 과정 → 메시지 구조 → 메서드 → 헤더·상태코드 → 쿠키·세션", sec:"네트워크 활용(TCP/IP)",
+   ids:["http","httpsession","httpmsg","httpmethod","httpheader","cookiesession"]},
 ];
 // 교재 목차(사이드바). cat이 있으면 그 파트 클릭 시 필터.
 const TOC=[
   {part:"PART 01 · 시스템 보안", cat:"시스템 보안", secs:["정보시스템 범위·이해","운영체제 구조","위협·공격 기법","예방 및 대응"]},
-  {part:"PART 02 · 네트워크 보안", cat:"네트워크 보안", secs:["네트워크 일반","TCP/IP 구조","공격 기술·대응","네트워크 보안 기술","위협·대응 기술"]},
+  {part:"PART 02 · 네트워크 보안", cat:"네트워크 보안", secs:["네트워크 일반","네트워크 활용(TCP/IP)","공격 기술·대응","네트워크 보안 기술","위협·대응 기술"]},
   {part:"PART 03 · 애플리케이션 보안", cat:"애플리케이션 보안", secs:["인터넷 응용 보안","DB 보안","전자상거래 보안","개발 보안"]},
   {part:"PART 04 · 정보보안 일반", cat:"정보보안 일반", secs:["보안 요소 기술","접근 통제","전자서명","암호학"]},
   {part:"PART 05 · 관리·법률", cat:"정보보안 관리 및 법률", secs:["정보보호 관리","윤리·법규"]},
@@ -440,6 +443,14 @@ const GLOSSARY=[
   {ab:"DAC",full:"Discretionary Access Control",ko:"임의 접근 통제. 파일 소유자가 권한을 마음대로 정하는 방식(rwx)",id:"sudocap"},
   {ab:"MAC (접근통제)",full:"Mandatory Access Control",ko:"강제 접근 통제. 관리자가 정한 정책이 우선이라 root도 정책 밖 행동을 못 함(SELinux). 네트워크의 MAC 주소와 약어가 같으니 주의",id:"sudocap"},
   {ab:"MAC (네트워크)",full:"Media Access Control",ko:"랜카드마다 부여된 고유한 물리 주소. OSI 2계층에서 실제 전달에 사용",id:"osi"},
+  {ab:"HTTP",full:"HyperText Transfer Protocol",ko:"웹 문서를 주고받는 응용 계층 프로토콜(80번 포트)",id:"http"},
+  {ab:"HTTPS",full:"HTTP over TLS/SSL",ko:"HTTP 통신을 암호화한 방식(443번 포트)",id:"http"},
+  {ab:"QUIC",full:"Quick UDP Internet Connections",ko:"HTTP/3이 사용하는, UDP 위에서 동작하는 빠른 전송 방식",id:"http"},
+  {ab:"CRLF",full:"Carriage Return Line Feed",ko:"줄바꿈 문자. HTTP에서 헤더와 본문을 구분하는 빈 줄에 쓰임",id:"httpmsg"},
+  {ab:"URI",full:"Uniform Resource Identifier",ko:"자원을 가리키는 식별자. 요청줄에 들어가는 주소 부분",id:"httpmsg"},
+  {ab:"XST",full:"Cross-Site Tracing",ko:"TRACE 메서드를 악용해 HttpOnly 쿠키까지 훔치는 공격",id:"httpmethod"},
+  {ab:"CSP",full:"Content Security Policy",ko:"실행 가능한 스크립트 출처를 제한해 XSS를 완화하는 응답 헤더",id:"httpheader"},
+  {ab:"HSTS",full:"HTTP Strict Transport Security",ko:"이후 접속을 HTTPS로 강제하는 응답 헤더",id:"httpheader"},
   {ab:"OSI",full:"Open Systems Interconnection",ko:"통신 과정을 7계층으로 나눈 국제 표준 참조 모델",id:"osi"},
   {ab:"PDU",full:"Protocol Data Unit",ko:"각 계층에서 주고받는 데이터 단위(비트·프레임·패킷·세그먼트)",id:"osi"},
   {ab:"LAN",full:"Local Area Network",ko:"건물이나 사무실 같은 좁은 범위를 연결한 근거리 통신망",id:"netbasic"},
