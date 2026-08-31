@@ -20,6 +20,7 @@ const TOPICS = [
   {file:'forensics',  title:'포렌식·리버싱'},
   {file:'network',    title:'네트워크 일반 (PART 02)'},
   {file:'http',       title:'네트워크 활용(TCP/IP) — HTTP'},
+  {file:'appsvc',     title:'네트워크 활용(TCP/IP) — 메일·네트워크 관리'},
   {file:'etc',        title:'기타'},
 ];
 

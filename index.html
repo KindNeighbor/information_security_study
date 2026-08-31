@@ -385,6 +385,7 @@
 <script src="cards/forensics.js"></script>
 <script src="cards/network.js"></script>
 <script src="cards/http.js"></script>
+<script src="cards/appsvc.js"></script>
 <script src="quiz.js" defer></script>
 <script>
 /* =========================================================================
@@ -415,6 +416,8 @@ const GROUPS=[
    ids:["netbasic","osi","tcpip","netdevice","tcpudp","netproto"]},
   {name:"응용 계층 — HTTP", sub:"HTTP 개요·버전 → 연결 과정 → 메시지 구조 → 메서드 → 헤더·상태코드 → 쿠키·세션", sec:"네트워크 활용(TCP/IP)",
    ids:["http","httpsession","httpmsg","httpmethod","httpheader","cookiesession"]},
+  {name:"응용 계층 — 메일·네트워크 관리", sub:"SMTP(송신)·POP3/IMAP(수신) → SNMP(장비 관리) → NMS·FCAPS", sec:"네트워크 활용(TCP/IP)",
+   ids:["smtp","snmp","nms"]},
 ];
 // 교재 목차(사이드바). cat이 있으면 그 파트 클릭 시 필터.
 const TOC=[
@@ -443,6 +446,18 @@ const GLOSSARY=[
   {ab:"DAC",full:"Discretionary Access Control",ko:"임의 접근 통제. 파일 소유자가 권한을 마음대로 정하는 방식(rwx)",id:"sudocap"},
   {ab:"MAC (접근통제)",full:"Mandatory Access Control",ko:"강제 접근 통제. 관리자가 정한 정책이 우선이라 root도 정책 밖 행동을 못 함(SELinux). 네트워크의 MAC 주소와 약어가 같으니 주의",id:"sudocap"},
   {ab:"MAC (네트워크)",full:"Media Access Control",ko:"랜카드마다 부여된 고유한 물리 주소. OSI 2계층에서 실제 전달에 사용",id:"osi"},
+  {ab:"SMTP",full:"Simple Mail Transfer Protocol",ko:"메일을 보내고 서버끼리 전달하는 프로토콜(25번 포트). 수신용이 아님",id:"smtp"},
+  {ab:"POP3",full:"Post Office Protocol version 3",ko:"메일을 서버에서 내려받고 서버에서는 지우는 수신 프로토콜(110번)",id:"smtp"},
+  {ab:"IMAP",full:"Internet Message Access Protocol",ko:"메일을 서버에 두고 여러 기기에서 동기화해 보는 수신 프로토콜(143번)",id:"smtp"},
+  {ab:"MIME",full:"Multipurpose Internet Mail Extensions",ko:"글자만 보낼 수 있던 메일에 한글·이미지·첨부를 담게 해주는 확장 규격",id:"smtp"},
+  {ab:"SPF",full:"Sender Policy Framework",ko:"그 도메인이 메일을 보낼 수 있는 서버 IP 목록을 공개해 발신자를 검증하는 방식",id:"smtp"},
+  {ab:"DKIM",full:"DomainKeys Identified Mail",ko:"메일에 전자서명을 넣어 위조와 변조를 확인하는 방식",id:"smtp"},
+  {ab:"DMARC",full:"Domain-based Message Authentication, Reporting and Conformance",ko:"SPF·DKIM 검증에 실패한 메일을 어떻게 처리할지 정하는 정책",id:"smtp"},
+  {ab:"SNMP",full:"Simple Network Management Protocol",ko:"장비 상태를 수집하고 설정을 제어하는 네트워크 관리 프로토콜(161·162번)",id:"snmp"},
+  {ab:"MIB",full:"Management Information Base",ko:"관리 대상 정보를 트리 구조로 정의해 둔 데이터베이스",id:"snmp"},
+  {ab:"OID",full:"Object Identifier",ko:"관리 정보 안의 개별 항목을 가리키는 번호",id:"snmp"},
+  {ab:"NMS",full:"Network Management System",ko:"네트워크 장비를 한곳에서 감시하고 제어하는 관리 시스템",id:"nms"},
+  {ab:"FCAPS",full:"Fault, Configuration, Accounting, Performance, Security",ko:"국제 표준이 정한 네트워크 관리 5대 기능(장애·구성·계정·성능·보안)",id:"nms"},
   {ab:"HTTP",full:"HyperText Transfer Protocol",ko:"웹 문서를 주고받는 응용 계층 프로토콜(80번 포트)",id:"http"},
   {ab:"HTTPS",full:"HTTP over TLS/SSL",ko:"HTTP 통신을 암호화한 방식(443번 포트)",id:"http"},
   {ab:"QUIC",full:"Quick UDP Internet Connections",ko:"HTTP/3이 사용하는, UDP 위에서 동작하는 빠른 전송 방식",id:"http"},

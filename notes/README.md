@@ -17,5 +17,6 @@
 | 포렌식·리버싱 | 3 | [forensics.md](forensics.md) |
 | 네트워크 일반 (PART 02) | 6 | [network.md](network.md) |
 | 네트워크 활용(TCP/IP) — HTTP | 6 | [http.md](http.md) |
+| 네트워크 활용(TCP/IP) — 메일·네트워크 관리 | 3 | [appsvc.md](appsvc.md) |
 
-**총 66개 카드.**
+**총 69개 카드.**
