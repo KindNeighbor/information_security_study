@@ -198,6 +198,14 @@ _관련 개념: tcpip · netproto · osi_
 - **ICMP**(Internet Control Message Protocol) — **오류 보고·상태 확인** 메시지. **`ping`·`traceroute`**가 이걸 씀
 - **IGMP**(Internet Group Management Protocol) — **멀티캐스트** 그룹 관리
 
+**ICMP 주요 타입 (번호로 출제)**
+
+- **0** — Echo **Reply**(ping 응답) · **8** — Echo **Request**(ping 요청)
+- **3** — **Destination Unreachable**(목적지 도달 불가). 단편화 필요(DF)일 때도 이 타입
+- **5** — **Redirect**(경로 변경 안내) → **위조하면 경로 변조 공격**
+- **11** — **Time Exceeded**(TTL 소진) → **traceroute가 이용**
+**8=요청, 0=응답** 짝과 **11=TTL 만료**가 특히 자주 나온다.
+
 **ARP 스푸핑 (매우 자주 출제)**
 
 ARP에는 **인증이 없다** — 누가 “그 IP는 내 MAC이야”라고 응답해도 **그대로 믿는다**. 공격자가 **위조 ARP 응답**을 뿌려 피해자의 ARP 캐시를 오염시키면, 트래픽이 **공격자를 거쳐** 흐른다(**중간자 공격·스니핑**). **스위치 환경에서도 도청이 가능해지는** 대표 기법.**[대응]** **정적(static) ARP 등록**, ARP 캐시 **모니터링**(`arp -a`), **동적 ARP 검사(DAI)**·포트 보안, 암호화 통신(HTTPS)으로 **가로채도 못 읽게**.

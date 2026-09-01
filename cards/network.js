@@ -160,6 +160,11 @@ window.DATA = (window.DATA || []).concat(
         "d": "<ul class='klist'><li><b>IP</b>(Internet Protocol) — <b>주소 지정과 경로 배정(라우팅)</b>. <b>비연결형·비신뢰성</b>(도착·순서를 보장하지 않음 → 신뢰성은 <b>TCP가 담당</b>)</li><li><b>ARP</b>(Address Resolution Protocol) — <b>IP 주소 → MAC 주소</b> 변환. 실제 전송은 MAC으로 하므로 반드시 필요</li><li><b>RARP</b>(Reverse ARP) — <b>MAC → IP</b>(반대). 자기 IP를 모르는 장비가 사용</li><li><b>ICMP</b>(Internet Control Message Protocol) — <b>오류 보고·상태 확인</b> 메시지. <b><code>ping</code>·<code>traceroute</code></b>가 이걸 씀</li><li><b>IGMP</b>(Internet Group Management Protocol) — <b>멀티캐스트</b> 그룹 관리</li></ul>"
       },
       {
+        "k": "note",
+        "title": "ICMP 주요 타입 (번호로 출제)",
+        "d": "<ul class='klist'><li><b>0</b> — Echo <b>Reply</b>(ping 응답) · <b>8</b> — Echo <b>Request</b>(ping 요청)</li><li><b>3</b> — <b>Destination Unreachable</b>(목적지 도달 불가). 단편화 필요(DF)일 때도 이 타입</li><li><b>5</b> — <b>Redirect</b>(경로 변경 안내) → <b>위조하면 경로 변조 공격</b></li><li><b>11</b> — <b>Time Exceeded</b>(TTL 소진) → <b>traceroute가 이용</b></li></ul><b>8=요청, 0=응답</b> 짝과 <b>11=TTL 만료</b>가 특히 자주 나온다."
+      },
+      {
         "k": "warn",
         "title": "ARP 스푸핑 (매우 자주 출제)",
         "d": "ARP에는 <b>인증이 없다</b> — 누가 “그 IP는 내 MAC이야”라고 응답해도 <b>그대로 믿는다</b>. 공격자가 <b>위조 ARP 응답</b>을 뿌려 피해자의 ARP 캐시를 오염시키면, 트래픽이 <b>공격자를 거쳐</b> 흐른다(<b>중간자 공격·스니핑</b>). <b>스위치 환경에서도 도청이 가능해지는</b> 대표 기법.<p class='on-key'><span class='lbl'>대응</span><b>정적(static) ARP 등록</b>, ARP 캐시 <b>모니터링</b>(<code>arp -a</code>), <b>동적 ARP 검사(DAI)</b>·포트 보안, 암호화 통신(HTTPS)으로 <b>가로채도 못 읽게</b>.</p>"

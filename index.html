@@ -386,6 +386,8 @@
 <script src="cards/network.js"></script>
 <script src="cards/http.js"></script>
 <script src="cards/appsvc.js"></script>
+<script src="cards/translayer.js"></script>
+<script src="cards/netlayer.js"></script>
 <script src="quiz.js" defer></script>
 <script>
 /* =========================================================================
@@ -418,6 +420,10 @@ const GROUPS=[
    ids:["http","httpsession","httpmsg","httpmethod","httpheader","cookiesession"]},
   {name:"응용 계층 — 메일·네트워크 관리", sub:"SMTP(송신)·POP3/IMAP(수신) → SNMP(장비 관리) → NMS·FCAPS", sec:"네트워크 활용(TCP/IP)",
    ids:["smtp","snmp","nms"]},
+  {name:"전송 계층", sub:"세그먼트·포트 → TCP 헤더 → 3-way handshake·연결 상태 → UDP 헤더", sec:"네트워크 활용(TCP/IP)",
+   ids:["translayer","tcpheader","tcpstate","udpheader"]},
+  {name:"인터넷 계층", sub:"IP 헤더·TTL·MTU → IP 주소·서브네팅·전송방식 → 라우팅 분류 → RIP·OSPF·BGP → 라우터 보안", sec:"네트워크 활용(TCP/IP)",
+   ids:["ipheader","subnet","routing","ripospf","routersec"]},
 ];
 // 교재 목차(사이드바). cat이 있으면 그 파트 클릭 시 필터.
 const TOC=[
@@ -446,6 +452,15 @@ const GLOSSARY=[
   {ab:"DAC",full:"Discretionary Access Control",ko:"임의 접근 통제. 파일 소유자가 권한을 마음대로 정하는 방식(rwx)",id:"sudocap"},
   {ab:"MAC (접근통제)",full:"Mandatory Access Control",ko:"강제 접근 통제. 관리자가 정한 정책이 우선이라 root도 정책 밖 행동을 못 함(SELinux). 네트워크의 MAC 주소와 약어가 같으니 주의",id:"sudocap"},
   {ab:"MAC (네트워크)",full:"Media Access Control",ko:"랜카드마다 부여된 고유한 물리 주소. OSI 2계층에서 실제 전달에 사용",id:"osi"},
+  {ab:"MTU",full:"Maximum Transmission Unit",ko:"한 번에 보낼 수 있는 최대 크기(이더넷 1500바이트). 넘으면 조각으로 나눔",id:"ipheader"},
+  {ab:"TTL",full:"Time To Live",ko:"패킷이 라우터를 지날 때마다 1씩 줄어드는 값. 0이 되면 버려져 무한 순환을 막음",id:"ipheader"},
+  {ab:"CIDR",full:"Classless Inter-Domain Routing",ko:"클래스 구분 없이 /24처럼 네트워크 범위를 표기하는 방식",id:"subnet"},
+  {ab:"NAT",full:"Network Address Translation",ko:"내부 사설 IP를 공인 IP로 바꿔 인터넷에 나가게 해주는 변환",id:"subnet"},
+  {ab:"IGP",full:"Interior Gateway Protocol",ko:"하나의 관리 구역 안에서 경로를 주고받는 라우팅 프로토콜(RIP·OSPF)",id:"routing"},
+  {ab:"EGP",full:"Exterior Gateway Protocol",ko:"서로 다른 관리 구역 사이에서 경로를 주고받는 라우팅 프로토콜(BGP)",id:"routing"},
+  {ab:"RIP",full:"Routing Information Protocol",ko:"거쳐 가는 라우터 수로 경로를 정하는 방식. 최대 15홉이라 소규모용",id:"ripospf"},
+  {ab:"OSPF",full:"Open Shortest Path First",ko:"전체 지도를 파악해 최단 경로를 계산하는 방식. 대규모 네트워크용",id:"ripospf"},
+  {ab:"BGP",full:"Border Gateway Protocol",ko:"서로 다른 관리 구역을 잇는 인터넷 근간의 라우팅 프로토콜",id:"ripospf"},
   {ab:"SMTP",full:"Simple Mail Transfer Protocol",ko:"메일을 보내고 서버끼리 전달하는 프로토콜(25번 포트). 수신용이 아님",id:"smtp"},
   {ab:"POP3",full:"Post Office Protocol version 3",ko:"메일을 서버에서 내려받고 서버에서는 지우는 수신 프로토콜(110번)",id:"smtp"},
   {ab:"IMAP",full:"Internet Message Access Protocol",ko:"메일을 서버에 두고 여러 기기에서 동기화해 보는 수신 프로토콜(143번)",id:"smtp"},
@@ -496,7 +511,8 @@ const GLOSSARY=[
   {ab:"DLL",full:"Dynamic Link Library",ko:"여러 프로그램이 공유하며 실행 시 불러 쓰는 코드 묶음 파일",id:"dll"},
   {ab:"AD",full:"Active Directory",ko:"도메인의 계정·정책을 중앙에서 관리하는 서비스",id:"winauth"},
   {ab:"ADS",full:"Alternate Data Streams",ko:"파일에 몰래 덧붙일 수 있는 보조 데이터 흐름(은닉에 악용)",id:"ads"},
-  {ab:"AS",full:"Authentication Server",ko:"커버로스에서 최초 로그인을 확인해 주는 인증 서버",id:"kerberos"},
+  {ab:"AS (커버로스)",full:"Authentication Server",ko:"커버로스에서 최초 로그인을 확인해 주는 인증 서버. 라우팅의 AS와 약어가 같으니 주의",id:"kerberos"},
+  {ab:"AS (라우팅)",full:"Autonomous System",ko:"하나의 관리 주체가 운영하는 네트워크 집단. 이 경계를 넘는 라우팅이 BGP",id:"routing"},
   {ab:"BitLocker",full:"BitLocker Drive Encryption",ko:"드라이브 전체를 통째로 암호화(보안칩 TPM 활용)",id:"efsbitlocker"},
   {ab:"CIFS",full:"Common Internet File System",ko:"SMB의 옛 이름(초기 버전 SMBv1을 가리킴)",id:"smb"},
   {ab:"DACL",full:"Discretionary Access Control List",ko:"소유자가 직접 정하는 접근 허용/거부 목록",id:"srm"},
