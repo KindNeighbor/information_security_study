@@ -599,6 +599,9 @@ $("#count").textContent=DATA.length;
 
 // quiz.js가 읽을 수 있게 노출 (카드 데이터·약어집)
 window.DATA=DATA; window.GLOSSARY=GLOSSARY;
+// quiz.js가 '지금 화면에 보이는 범위'만 출제할 수 있게 노출
+window.visibleCards=()=>DATA.filter(match);
+window.filterLabel=()=>(activeSec||(activeCat!=="전체"?activeCat:"")||"전체");
 
 
 // category chips
