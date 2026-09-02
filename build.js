@@ -1,9 +1,12 @@
 /* build.js — cards/*.js(단일 소스)에서 주제별 읽기용 notes/*.md 를 생성한다.
    사용법:  node build.js
-   새 카드를 cards/<주제>.js 에 추가한 뒤 이 스크립트를 돌리면 노트가 갱신된다. */
+   새 카드를 cards/<주제>.js 에 추가한 뒤 이 스크립트를 돌리면 노트가 갱신된다.
+   notes/README.md 와 notes/index.md 는 같은 내용의 인덱스(raw 주소·수록 개념 포함)다. */
 const fs = require('fs');
 const path = require('path');
 const ROOT = __dirname;
+
+const RAW_BASE = 'https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/';
 
 // 파일 → 표시 제목 (index.html의 GROUPS와 맞춤)
 const TOPICS = [
@@ -76,15 +79,11 @@ function cardMd(c){
   return o + '---\n\n';
 }
 
+/* ---------- 주제별 노트 생성 ---------- */
+const today = new Date().toISOString().slice(0, 10);
 let total = 0;
-const indexLines = [
-  '# 정보보안기사 학습노트',
-  '',
-  '> `cards/*.js`(원본 데이터)에서 `build.js`로 자동 생성됩니다. **이 폴더의 .md는 직접 수정하지 마세요.**',
-  '',
-  '| 주제 | 카드 수 | 파일 |',
-  '|------|--------|------|',
-];
+const rows = [];   // {title, file, count, terms[]}
+
 fs.mkdirSync(path.join(ROOT, 'notes'), {recursive:true});
 for (const t of TOPICS) {
   const cards = loadCards(t.file);
@@ -93,8 +92,47 @@ for (const t of TOPICS) {
   let md = `# ${t.title}\n\n> 자동 생성 — 원본은 \`cards/${t.file}.js\`. 직접 수정 금지.\n\n`;
   md += cards.map(cardMd).join('');
   fs.writeFileSync(path.join(ROOT, 'notes', t.file + '.md'), md);
-  indexLines.push(`| ${t.title} | ${cards.length} | [${t.file}.md](${t.file}.md) |`);
+  rows.push({ title:t.title, file:t.file, count:cards.length, terms:cards.map(c=>c.term) });
 }
-indexLines.push('', `**총 ${total}개 카드.**`, '');
-fs.writeFileSync(path.join(ROOT, 'notes', 'README.md'), indexLines.join('\n'));
-console.log('notes 생성 완료:', total, '개 카드');
+
+/* ---------- 인덱스 생성 (README.md = index.md) ---------- */
+const L = [];
+L.push('# 정보보안기사 학습노트 — 인덱스');
+L.push('');
+L.push('> `cards/*.js`가 원본이고 `node build.js`로 이 폴더가 자동 생성됩니다. **이 폴더의 .md는 직접 수정하지 마세요.**');
+L.push(`> 마지막 갱신 **${today}** · 총 **${total}장**`);
+L.push('');
+L.push('## 주제 목록');
+L.push('');
+L.push('| 주제 | 카드 수 | 파일 |');
+L.push('|------|--------|------|');
+rows.forEach(r => L.push(`| ${r.title} | ${r.count} | [${r.file}.md](${r.file}.md) |`));
+L.push('');
+L.push('## 전체 raw 주소 (다른 세션에 그대로 주면 읽힙니다)');
+L.push('');
+L.push('```');
+rows.forEach(r => L.push(RAW_BASE + r.file + '.md'));
+L.push('```');
+L.push('');
+L.push('## 새 세션에서 문제 받는 법');
+L.push('');
+L.push('아래처럼 요청하세요. 주소만 위 목록에서 원하는 주제로 바꾸면 됩니다.');
+L.push('');
+L.push('```');
+L.push('정보보안기사 필기 준비 중이야. 아래 내 학습노트를 읽고 서술형 5문제만 내줘.');
+L.push('보기는 주지 말고, 내가 답하면 채점하고 틀린 부분만 짚어줘.');
+L.push(RAW_BASE + 'dosattack.md');
+L.push('```');
+L.push('');
+L.push('## 파일별 수록 개념');
+L.push('');
+rows.forEach(r => {
+  L.push(`**${r.file}.md** (${r.count}장) — ${r.terms.join(' · ')}`);
+  L.push('');
+});
+
+const index = L.join('\n');
+fs.writeFileSync(path.join(ROOT, 'notes', 'README.md'), index);
+fs.writeFileSync(path.join(ROOT, 'notes', 'index.md'), index);
+
+console.log('notes 생성 완료:', total, '개 카드 · 인덱스 2종(README.md, index.md)');
