@@ -24,6 +24,7 @@ const TOPICS = [
   {file:'translayer', title:'네트워크 활용(TCP/IP) — 전송 계층'},
   {file:'netlayer',   title:'네트워크 활용(TCP/IP) — 인터넷 계층'},
   {file:'netaccess',  title:'네트워크 활용(TCP/IP) — 네트워크 접근 계층'},
+  {file:'dosattack',  title:'네트워크 기반 공격 — DoS·DDoS'},
   {file:'etc',        title:'기타'},
 ];
 

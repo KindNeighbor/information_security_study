@@ -21,5 +21,6 @@
 | 네트워크 활용(TCP/IP) — 전송 계층 | 4 | [translayer.md](translayer.md) |
 | 네트워크 활용(TCP/IP) — 인터넷 계층 | 5 | [netlayer.md](netlayer.md) |
 | 네트워크 활용(TCP/IP) — 네트워크 접근 계층 | 3 | [netaccess.md](netaccess.md) |
+| 네트워크 기반 공격 — DoS·DDoS | 6 | [dosattack.md](dosattack.md) |
 
-**총 81개 카드.**
+**총 87개 카드.**
