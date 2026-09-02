@@ -388,6 +388,7 @@
 <script src="cards/appsvc.js"></script>
 <script src="cards/translayer.js"></script>
 <script src="cards/netlayer.js"></script>
+<script src="cards/netaccess.js"></script>
 <script src="quiz.js" defer></script>
 <script>
 /* =========================================================================
@@ -424,6 +425,8 @@ const GROUPS=[
    ids:["translayer","tcpheader","tcpstate","udpheader"]},
   {name:"인터넷 계층", sub:"IP 헤더·TTL·MTU → IP 주소·서브네팅·전송방식 → 라우팅 분류 → RIP·OSPF·BGP → 라우터 보안", sec:"네트워크 활용(TCP/IP)",
    ids:["ipheader","subnet","routing","ripospf","routersec"]},
+  {name:"네트워크 접근 계층", sub:"프레임·MAC·주요 기능 → 매체 접근 제어(CSMA/CD·CA) → VLAN", sec:"네트워크 활용(TCP/IP)",
+   ids:["netaccess","csma","vlan"]},
 ];
 // 교재 목차(사이드바). cat이 있으면 그 파트 클릭 시 필터.
 const TOC=[
@@ -452,6 +455,13 @@ const GLOSSARY=[
   {ab:"DAC",full:"Discretionary Access Control",ko:"임의 접근 통제. 파일 소유자가 권한을 마음대로 정하는 방식(rwx)",id:"sudocap"},
   {ab:"MAC (접근통제)",full:"Mandatory Access Control",ko:"강제 접근 통제. 관리자가 정한 정책이 우선이라 root도 정책 밖 행동을 못 함(SELinux). 네트워크의 MAC 주소와 약어가 같으니 주의",id:"sudocap"},
   {ab:"MAC (네트워크)",full:"Media Access Control",ko:"랜카드마다 부여된 고유한 물리 주소. OSI 2계층에서 실제 전달에 사용",id:"osi"},
+  {ab:"CSMA/CD",full:"Carrier Sense Multiple Access with Collision Detection",ko:"유선 이더넷에서 충돌을 감지하면 잠시 기다렸다 다시 보내는 방식",id:"csma"},
+  {ab:"CSMA/CA",full:"Carrier Sense Multiple Access with Collision Avoidance",ko:"무선 랜에서 충돌을 미리 피하도록 대기하고 응답으로 확인하는 방식",id:"csma"},
+  {ab:"VLAN",full:"Virtual Local Area Network",ko:"하나의 스위치를 논리적으로 나눠 별개의 네트워크처럼 쓰는 기술",id:"vlan"},
+  {ab:"LLC",full:"Logical Link Control",ko:"데이터링크 계층에서 상위와 연결하고 흐름·오류를 제어하는 부계층",id:"netaccess"},
+  {ab:"CRC",full:"Cyclic Redundancy Check",ko:"전송 중 데이터가 훼손됐는지 계산으로 검사하는 오류 검출 방식",id:"netaccess"},
+  {ab:"FCS",full:"Frame Check Sequence",ko:"프레임 끝에 붙는 오류 검사값(여기에 CRC 결과가 들어감)",id:"netaccess"},
+  {ab:"OUI",full:"Organizationally Unique Identifier",ko:"MAC 주소 앞 3바이트에 들어가는 제조사 고유 식별 번호",id:"netaccess"},
   {ab:"MTU",full:"Maximum Transmission Unit",ko:"한 번에 보낼 수 있는 최대 크기(이더넷 1500바이트). 넘으면 조각으로 나눔",id:"ipheader"},
   {ab:"TTL",full:"Time To Live",ko:"패킷이 라우터를 지날 때마다 1씩 줄어드는 값. 0이 되면 버려져 무한 순환을 막음",id:"ipheader"},
   {ab:"CIDR",full:"Classless Inter-Domain Routing",ko:"클래스 구분 없이 /24처럼 네트워크 범위를 표기하는 방식",id:"subnet"},

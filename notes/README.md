@@ -20,5 +20,6 @@
 | 네트워크 활용(TCP/IP) — 메일·네트워크 관리 | 3 | [appsvc.md](appsvc.md) |
 | 네트워크 활용(TCP/IP) — 전송 계층 | 4 | [translayer.md](translayer.md) |
 | 네트워크 활용(TCP/IP) — 인터넷 계층 | 5 | [netlayer.md](netlayer.md) |
+| 네트워크 활용(TCP/IP) — 네트워크 접근 계층 | 3 | [netaccess.md](netaccess.md) |
 
-**총 78개 카드.**
+**총 81개 카드.**
