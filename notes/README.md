@@ -1,7 +1,7 @@
 # 정보보안기사 학습노트 — 인덱스
 
 > `cards/*.js`가 원본이고 `node build.js`로 이 폴더가 자동 생성됩니다. **이 폴더의 .md는 직접 수정하지 마세요.**
-> 마지막 갱신 **2026-09-02** · 총 **87장**
+> 마지막 갱신 **2026-09-05** · 총 **93장**
 
 ## 주제 목록
 
@@ -25,6 +25,7 @@
 | 네트워크 활용(TCP/IP) — 인터넷 계층 | 5 | [netlayer.md](netlayer.md) |
 | 네트워크 활용(TCP/IP) — 네트워크 접근 계층 | 3 | [netaccess.md](netaccess.md) |
 | 네트워크 기반 공격 — DoS·DDoS | 6 | [dosattack.md](dosattack.md) |
+| 네트워크 기반 공격 — 스캐닝·스니핑·스푸핑·하이재킹 | 6 | [netattack.md](netattack.md) |
 
 ## 전체 raw 주소 (다른 세션에 그대로 주면 읽힙니다)
 
@@ -47,6 +48,7 @@ https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/n
 https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/netlayer.md
 https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/netaccess.md
 https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/dosattack.md
+https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/netattack.md
 ```
 
 ## 새 세션에서 문제 받는 법
@@ -96,3 +98,5 @@ https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/n
 **netaccess.md** (3장) — 네트워크 접근 계층 · 주요 기능 · CSMA/CD · CSMA/CA · VLAN (가상 랜)
 
 **dosattack.md** (6장) — DoS · DDoS 개요 · TCP SYN Flooding · Land Attack · ICMP 공격 · 스머프 · UDP Flooding · IP 단편화 공격 (Ping of Death · Teardrop) · HTTP GET Flooding · Cache Control · HULK · Slow HTTP 공격 · Hash DoS
+
+**netattack.md** (6장) — 포트 스캐닝 · 스니핑 · IP 스푸핑 · ARP 스푸핑 (ARP 캐시 포이즈닝) · 세션 하이재킹 · 원격 접속 공격 · 대응

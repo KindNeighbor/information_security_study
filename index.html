@@ -390,6 +390,7 @@
 <script src="cards/netlayer.js"></script>
 <script src="cards/netaccess.js"></script>
 <script src="cards/dosattack.js"></script>
+<script src="cards/netattack.js"></script>
 <script src="quiz.js" defer></script>
 <script>
 /* =========================================================================
@@ -430,6 +431,8 @@ const GROUPS=[
    ids:["netaccess","csma","vlan"]},
   {name:"DoS · DDoS 공격", sub:"개요·분류 → SYN Flooding·Land → ICMP/스머프·UDP → 단편화(PoD·Teardrop) → HTTP GET·HULK → Slow HTTP·Hash DoS", sec:"네트워크 기반 공격 기술의 이해 및 대응",
    ids:["dos","synflood","icmpattack","fragattack","httpflood","slowdos"]},
+  {name:"스캐닝 · 스니핑 · 스푸핑 · 하이재킹", sub:"포트 스캐닝(정찰) → 스니핑(도청) → IP·ARP 스푸핑(위조) → 세션 하이재킹 → 원격 접속 공격", sec:"네트워크 기반 공격 기술의 이해 및 대응",
+   ids:["portscan","sniffing","ipspoof","arpspoof","hijacking","remoteattack"]},
 ];
 // 교재 목차(사이드바). cat이 있으면 그 파트 클릭 시 필터.
 const TOC=[
@@ -458,6 +461,12 @@ const GLOSSARY=[
   {ab:"DAC",full:"Discretionary Access Control",ko:"임의 접근 통제. 파일 소유자가 권한을 마음대로 정하는 방식(rwx)",id:"sudocap"},
   {ab:"MAC (접근통제)",full:"Mandatory Access Control",ko:"강제 접근 통제. 관리자가 정한 정책이 우선이라 root도 정책 밖 행동을 못 함(SELinux). 네트워크의 MAC 주소와 약어가 같으니 주의",id:"sudocap"},
   {ab:"MAC (네트워크)",full:"Media Access Control",ko:"랜카드마다 부여된 고유한 물리 주소. OSI 2계층에서 실제 전달에 사용",id:"osi"},
+  {ab:"MITM",full:"Man In The Middle",ko:"통신 중간에 끼어들어 몰래 엿보거나 바꾸는 중간자 공격",id:"arpspoof"},
+  {ab:"DAI",full:"Dynamic ARP Inspection",ko:"스위치가 위조된 ARP 응답을 걸러내는 기능",id:"arpspoof"},
+  {ab:"ISN",full:"Initial Sequence Number",ko:"TCP 연결을 시작할 때 정하는 첫 순서번호. 예측되면 세션을 가로챌 수 있어 난수로 만듦",id:"hijacking"},
+  {ab:"uRPF",full:"unicast Reverse Path Forwarding",ko:"들어온 경로가 그 출발지 주소에 맞는지 라우터가 역으로 검증해 위조를 걸러내는 기능",id:"ipspoof"},
+  {ab:"RDP",full:"Remote Desktop Protocol",ko:"윈도우 원격 데스크톱 접속 프로토콜(3389번). 랜섬웨어의 대표 침투 경로",id:"remoteattack"},
+  {ab:"VNC",full:"Virtual Network Computing",ko:"화면을 그대로 공유해 원격 조작하는 방식(5900번)",id:"remoteattack"},
   {ab:"DoS",full:"Denial of Service",ko:"자원을 고갈시켜 정상 사용자가 서비스를 못 받게 만드는 공격(가용성 침해)",id:"dos"},
   {ab:"DDoS",full:"Distributed Denial of Service",ko:"감염된 좀비 PC 여러 대를 동시에 동원하는 분산 서비스 거부 공격",id:"dos"},
   {ab:"DRDoS",full:"Distributed Reflection Denial of Service",ko:"출발지를 피해자로 위조해 제3의 서버들이 대신 응답을 퍼붓게 만드는 반사·증폭 공격",id:"dos"},
