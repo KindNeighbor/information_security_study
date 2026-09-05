@@ -391,6 +391,8 @@
 <script src="cards/netaccess.js"></script>
 <script src="cards/dosattack.js"></script>
 <script src="cards/netattack.js"></script>
+<script src="cards/firewall.js"></script>
+<script src="cards/vpnetc.js"></script>
 <script src="quiz.js" defer></script>
 <script>
 /* =========================================================================
@@ -433,6 +435,10 @@ const GROUPS=[
    ids:["dos","synflood","icmpattack","fragattack","httpflood","slowdos"]},
   {name:"스캐닝 · 스니핑 · 스푸핑 · 하이재킹", sub:"포트 스캐닝(정찰) → 스니핑(도청) → IP·ARP 스푸핑(위조) → 세션 하이재킹 → 원격 접속 공격", sec:"네트워크 기반 공격 기술의 이해 및 대응",
    ids:["portscan","sniffing","ipspoof","arpspoof","hijacking","remoteattack"]},
+  {name:"침입차단 · 침입탐지 시스템", sub:"방화벽 유형 → 구축 형태(DMZ) → IDS·탐지기법 → Snort·Suricata·YARA → IPS·허니팟", sec:"네트워크 보안 기술",
+   ids:["firewall","fwarch","ids","snort","ips"]},
+  {name:"VPN · 통합관리 · 무선 · RFID", sub:"VPN(SSL·PPTP·L2TP) → IPSec(AH·ESP·IKE) → NAC → ESM·SIEM → 무선랜(WEP·WPA2) → RFID/USN", sec:"네트워크 보안 기술",
+   ids:["vpn","ipsec","nac","esm","wlan","rfid"]},
 ];
 // 교재 목차(사이드바). cat이 있으면 그 파트 클릭 시 필터.
 const TOC=[
@@ -461,6 +467,26 @@ const GLOSSARY=[
   {ab:"DAC",full:"Discretionary Access Control",ko:"임의 접근 통제. 파일 소유자가 권한을 마음대로 정하는 방식(rwx)",id:"sudocap"},
   {ab:"MAC (접근통제)",full:"Mandatory Access Control",ko:"강제 접근 통제. 관리자가 정한 정책이 우선이라 root도 정책 밖 행동을 못 함(SELinux). 네트워크의 MAC 주소와 약어가 같으니 주의",id:"sudocap"},
   {ab:"MAC (네트워크)",full:"Media Access Control",ko:"랜카드마다 부여된 고유한 물리 주소. OSI 2계층에서 실제 전달에 사용",id:"osi"},
+  {ab:"IDS",full:"Intrusion Detection System",ko:"침입 시도를 탐지해 경보하는 시스템(차단은 하지 않음)",id:"ids"},
+  {ab:"IPS",full:"Intrusion Prevention System",ko:"탐지에 그치지 않고 실시간으로 차단까지 하는 시스템",id:"ips"},
+  {ab:"DMZ",full:"DeMilitarized Zone",ko:"외부에 공개하는 서버를 두는 완충 구역(비무장지대)",id:"fwarch"},
+  {ab:"SOCKS",full:"Socket Secure",ko:"회선 게이트웨이 방식의 대표 프로토콜. 응용에 상관없이 연결을 중계",id:"firewall"},
+  {ab:"VPN",full:"Virtual Private Network",ko:"공중망 위에 가상의 전용선을 만들어 안전하게 통신하는 기술",id:"vpn"},
+  {ab:"PPTP",full:"Point-to-Point Tunneling Protocol",ko:"구현이 쉬운 2계층 터널링 방식이지만 보안이 취약해 권장되지 않음",id:"vpn"},
+  {ab:"L2TP",full:"Layer 2 Tunneling Protocol",ko:"2계층 터널링 방식. 자체 암호화가 없어 IPSec과 함께 사용",id:"vpn"},
+  {ab:"IPSec",full:"IP Security",ko:"3계층에서 인증과 암호화를 제공하는 보안 표준",id:"ipsec"},
+  {ab:"AH",full:"Authentication Header",ko:"IPSec에서 인증과 무결성만 제공하는 헤더(암호화는 없음)",id:"ipsec"},
+  {ab:"ESP",full:"Encapsulating Security Payload",ko:"IPSec에서 암호화와 인증을 함께 제공하는 헤더",id:"ipsec"},
+  {ab:"IKE",full:"Internet Key Exchange",ko:"IPSec에서 키 교환과 관리를 담당하는 프로토콜(UDP 500)",id:"ipsec"},
+  {ab:"SA",full:"Security Association",ko:"IPSec 양쪽이 합의한 보안 정책 묶음(어떤 알고리즘·키를 쓸지)",id:"ipsec"},
+  {ab:"NAC",full:"Network Access Control",ko:"접속하려는 단말의 인증과 보안 상태를 검사해 통제하는 시스템",id:"nac"},
+  {ab:"ESM",full:"Enterprise Security Management",ko:"여러 보안 장비의 로그를 통합해 실시간 관제하는 시스템",id:"esm"},
+  {ab:"WEP",full:"Wired Equivalent Privacy",ko:"초기 무선랜 암호화 방식. 키가 고정이고 취약해 현재는 사용 금지",id:"wlan"},
+  {ab:"WPA",full:"Wi-Fi Protected Access",ko:"WEP의 취약점을 보완한 무선랜 보안 규격(WPA2는 AES 사용)",id:"wlan"},
+  {ab:"TKIP",full:"Temporal Key Integrity Protocol",ko:"WPA에서 키를 계속 바꿔가며 쓰는 임시 키 방식",id:"wlan"},
+  {ab:"RADIUS",full:"Remote Authentication Dial-In User Service",ko:"사용자 인증을 중앙에서 처리하는 인증 서버 프로토콜",id:"wlan"},
+  {ab:"RFID",full:"Radio Frequency IDentification",ko:"전파로 태그의 정보를 접촉 없이 읽는 인식 기술",id:"rfid"},
+  {ab:"USN",full:"Ubiquitous Sensor Network",ko:"곳곳의 센서가 정보를 수집해 네트워크로 전달하는 체계",id:"rfid"},
   {ab:"MITM",full:"Man In The Middle",ko:"통신 중간에 끼어들어 몰래 엿보거나 바꾸는 중간자 공격",id:"arpspoof"},
   {ab:"DAI",full:"Dynamic ARP Inspection",ko:"스위치가 위조된 ARP 응답을 걸러내는 기능",id:"arpspoof"},
   {ab:"ISN",full:"Initial Sequence Number",ko:"TCP 연결을 시작할 때 정하는 첫 순서번호. 예측되면 세션을 가로챌 수 있어 난수로 만듦",id:"hijacking"},
@@ -552,7 +578,7 @@ const GLOSSARY=[
   {ab:"GINA",full:"Graphical Identification and Authentication",ko:"옛 윈도우의 로그인 화면을 담당하던 모듈",id:"logon"},
   {ab:"HKCU",full:"HKEY_CURRENT_USER",ko:"레지스트리 루트키 — 현재 로그인한 사용자 설정",id:"registry"},
   {ab:"HKLM",full:"HKEY_LOCAL_MACHINE",ko:"레지스트리 루트키 — 컴퓨터 전체 설정(모든 사용자 공통)",id:"registry"},
-  {ab:"SIEM",full:"Security Information and Event Management",ko:"여러 로그를 중앙에서 수집·분석하는 보안 관제 시스템",id:"eventlog"},
+  {ab:"SIEM",full:"Security Information and Event Management",ko:"보안장비를 넘어 전사 IT 로그를 모아 장기 분석하는 통합 관제 체계(ESM보다 범위가 넓음)",id:"esm"},
   {ab:"WEF",full:"Windows Event Forwarding",ko:"다른 PC의 이벤트 로그를 중앙 서버로 모으는 전달 기능",id:"eventlog"},
   {ab:"IPC$",full:"Inter-Process Communication Share",ko:"프로세스 간 통신용 기본 공유(널세션 공격의 통로)",id:"ipc"},
   {ab:"KDC",full:"Key Distribution Center",ko:"커버로스에서 인증과 티켓을 발급하는 중앙 서버",id:"kerberos"},

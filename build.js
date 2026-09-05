@@ -29,6 +29,8 @@ const TOPICS = [
   {file:'netaccess',  title:'네트워크 활용(TCP/IP) — 네트워크 접근 계층'},
   {file:'dosattack',  title:'네트워크 기반 공격 — DoS·DDoS'},
   {file:'netattack',  title:'네트워크 기반 공격 — 스캐닝·스니핑·스푸핑·하이재킹'},
+  {file:'firewall',   title:'네트워크 보안 기술 — 침입차단·침입탐지'},
+  {file:'vpnetc',     title:'네트워크 보안 기술 — VPN·통합관리·무선·RFID'},
   {file:'etc',        title:'기타'},
 ];
 
