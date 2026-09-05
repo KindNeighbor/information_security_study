@@ -1,7 +1,7 @@
 # 정보보안기사 학습노트 — 인덱스
 
 > `cards/*.js`가 원본이고 `node build.js`로 이 폴더가 자동 생성됩니다. **이 폴더의 .md는 직접 수정하지 마세요.**
-> 마지막 갱신 **2026-09-05** · 총 **104장**
+> 마지막 갱신 **2026-09-05** · 총 **108장**
 
 ## 주제 목록
 
@@ -28,6 +28,7 @@
 | 네트워크 기반 공격 — 스캐닝·스니핑·스푸핑·하이재킹 | 6 | [netattack.md](netattack.md) |
 | 네트워크 보안 기술 — 침입차단·침입탐지 | 5 | [firewall.md](firewall.md) |
 | 네트워크 보안 기술 — VPN·통합관리·무선·RFID | 6 | [vpnetc.md](vpnetc.md) |
+| 네트워크 위협 및 대응 기술 | 4 | [netthreat.md](netthreat.md) |
 
 ## 전체 raw 주소 (다른 세션에 그대로 주면 읽힙니다)
 
@@ -53,6 +54,7 @@ https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/n
 https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/netattack.md
 https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/firewall.md
 https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/vpnetc.md
+https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/netthreat.md
 ```
 
 ## 오답 노트 (손으로 관리 — 자동 생성 아님)
@@ -118,3 +120,5 @@ https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/n
 **firewall.md** (5장) — 침입차단 시스템 (방화벽) · 유형 · 방화벽 구축 형태 · 침입탐지 시스템 (IDS) · 탐지 기법 · Snort · Suricata · YARA · 침입대응 시스템 (IPS) · 허니팟
 
 **vpnetc.md** (6장) — 가상사설망 (VPN) · SSL VPN · PPTP · L2TP · IPSec VPN (AH · ESP · IKE) · NAC (네트워크 접근 제어) · ESM · SIEM · 무선 LAN 보안 (WEP · WPA · WPA2) · RFID · USN 보안
+
+**netthreat.md** (4장) — 악성 메일 공격 · 랜섬웨어 · APT형 표적 공격 · 망분리 (인터넷 접속 차단) · 망연계 · 자료연계

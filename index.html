@@ -393,6 +393,7 @@
 <script src="cards/netattack.js"></script>
 <script src="cards/firewall.js"></script>
 <script src="cards/vpnetc.js"></script>
+<script src="cards/netthreat.js"></script>
 <script src="quiz.js" defer></script>
 <script>
 /* =========================================================================
@@ -439,11 +440,13 @@ const GROUPS=[
    ids:["firewall","fwarch","ids","snort","ips"]},
   {name:"VPN · 통합관리 · 무선 · RFID", sub:"VPN(SSL·PPTP·L2TP) → IPSec(AH·ESP·IKE) → NAC → ESM·SIEM → 무선랜(WEP·WPA2) → RFID/USN", sec:"네트워크 보안 기술",
    ids:["vpn","ipsec","nac","esm","wlan","rfid"]},
+  {name:"네트워크 위협 및 대응", sub:"악성 메일 → APT형 랜섬웨어 → 망분리(물리·논리 SBC/CBC) → 망연계(스토리지·인피니밴드)", sec:"네트워크 위협 및 대응 기술",
+   ids:["mailattack","ransomware","netsep","netlink"]},
 ];
 // 교재 목차(사이드바). cat이 있으면 그 파트 클릭 시 필터.
 const TOC=[
   {part:"PART 01 · 시스템 보안", cat:"시스템 보안", secs:["정보시스템 범위·이해","운영체제 구조","위협·공격 기법","예방 및 대응"]},
-  {part:"PART 02 · 네트워크 보안", cat:"네트워크 보안", secs:["네트워크 일반","네트워크 활용(TCP/IP)","네트워크 기반 공격 기술의 이해 및 대응","네트워크 보안 기술","위협·대응 기술"]},
+  {part:"PART 02 · 네트워크 보안", cat:"네트워크 보안", secs:["네트워크 일반","네트워크 활용(TCP/IP)","네트워크 기반 공격 기술의 이해 및 대응","네트워크 보안 기술","네트워크 위협 및 대응 기술"]},
   {part:"PART 03 · 애플리케이션 보안", cat:"애플리케이션 보안", secs:["인터넷 응용 보안","DB 보안","전자상거래 보안","개발 보안"]},
   {part:"PART 04 · 정보보안 일반", cat:"정보보안 일반", secs:["보안 요소 기술","접근 통제","전자서명","암호학"]},
   {part:"PART 05 · 관리·법률", cat:"정보보안 관리 및 법률", secs:["정보보호 관리","윤리·법규"]},
@@ -467,6 +470,11 @@ const GLOSSARY=[
   {ab:"DAC",full:"Discretionary Access Control",ko:"임의 접근 통제. 파일 소유자가 권한을 마음대로 정하는 방식(rwx)",id:"sudocap"},
   {ab:"MAC (접근통제)",full:"Mandatory Access Control",ko:"강제 접근 통제. 관리자가 정한 정책이 우선이라 root도 정책 밖 행동을 못 함(SELinux). 네트워크의 MAC 주소와 약어가 같으니 주의",id:"sudocap"},
   {ab:"MAC (네트워크)",full:"Media Access Control",ko:"랜카드마다 부여된 고유한 물리 주소. OSI 2계층에서 실제 전달에 사용",id:"osi"},
+  {ab:"SBC",full:"Server Based Computing",ko:"서버에 가상 데스크톱을 두고 접속해 쓰는 논리적 망분리 방식",id:"netsep"},
+  {ab:"CBC",full:"Client Based Computing",ko:"PC 안에 가상 영역을 만들어 나누는 논리적 망분리 방식",id:"netsep"},
+  {ab:"VDI",full:"Virtual Desktop Infrastructure",ko:"서버에서 가상 데스크톱을 만들어 제공하는 기반 구조",id:"netsep"},
+  {ab:"RaaS",full:"Ransomware as a Service",ko:"랜섬웨어를 서비스처럼 빌려 쓰게 해주는 범죄 생태계",id:"ransomware"},
+  {ab:"BEC",full:"Business Email Compromise",ko:"거래처나 임원을 사칭해 송금·정보를 요구하는 업무 메일 사기",id:"mailattack"},
   {ab:"IDS",full:"Intrusion Detection System",ko:"침입 시도를 탐지해 경보하는 시스템(차단은 하지 않음)",id:"ids"},
   {ab:"IPS",full:"Intrusion Prevention System",ko:"탐지에 그치지 않고 실시간으로 차단까지 하는 시스템",id:"ips"},
   {ab:"DMZ",full:"DeMilitarized Zone",ko:"외부에 공개하는 서버를 두는 완충 구역(비무장지대)",id:"fwarch"},
