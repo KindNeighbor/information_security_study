@@ -55,13 +55,23 @@ https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/n
 https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/vpnetc.md
 ```
 
+## 오답 노트 (손으로 관리 — 자동 생성 아님)
+
+`review/wrong.md` — 인출 연습에서 **틀린 것만 누적**한 파일. 문제를 낼 때 **이걸 먼저 읽으면 약한 곳부터** 출제할 수 있습니다.
+
+```
+https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/review/wrong.md
+```
+
 ## 새 세션에서 문제 받는 법
 
 아래처럼 요청하세요. 주소만 위 목록에서 원하는 주제로 바꾸면 됩니다.
 
 ```
-정보보안기사 필기 준비 중이야. 아래 내 학습노트를 읽고 서술형 5문제만 내줘.
+정보보안기사 필기 준비 중이야(시험 10/8). 아래 오답 노트를 먼저 읽고,
+거기서 약한 것 위주로 학습노트를 참고해 서술형 5문제만 내줘.
 보기는 주지 말고, 내가 답하면 채점하고 틀린 부분만 짚어줘.
+https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/review/wrong.md
 https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/dosattack.md
 ```
 

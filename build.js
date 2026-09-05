@@ -6,7 +6,8 @@ const fs = require('fs');
 const path = require('path');
 const ROOT = __dirname;
 
-const RAW_BASE = 'https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/';
+const REPO_RAW = 'https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/';
+const RAW_BASE = REPO_RAW + 'notes/';
 
 // 파일 → 표시 제목 (index.html의 GROUPS와 맞춤)
 const TOPICS = [
@@ -117,13 +118,23 @@ L.push('```');
 rows.forEach(r => L.push(RAW_BASE + r.file + '.md'));
 L.push('```');
 L.push('');
+L.push('## 오답 노트 (손으로 관리 — 자동 생성 아님)');
+L.push('');
+L.push('`review/wrong.md` — 인출 연습에서 **틀린 것만 누적**한 파일. 문제를 낼 때 **이걸 먼저 읽으면 약한 곳부터** 출제할 수 있습니다.');
+L.push('');
+L.push('```');
+L.push(REPO_RAW + 'review/wrong.md');
+L.push('```');
+L.push('');
 L.push('## 새 세션에서 문제 받는 법');
 L.push('');
 L.push('아래처럼 요청하세요. 주소만 위 목록에서 원하는 주제로 바꾸면 됩니다.');
 L.push('');
 L.push('```');
-L.push('정보보안기사 필기 준비 중이야. 아래 내 학습노트를 읽고 서술형 5문제만 내줘.');
+L.push('정보보안기사 필기 준비 중이야(시험 10/8). 아래 오답 노트를 먼저 읽고,');
+L.push('거기서 약한 것 위주로 학습노트를 참고해 서술형 5문제만 내줘.');
 L.push('보기는 주지 말고, 내가 답하면 채점하고 틀린 부분만 짚어줘.');
+L.push(REPO_RAW + 'review/wrong.md');
 L.push(RAW_BASE + 'dosattack.md');
 L.push('```');
 L.push('');
