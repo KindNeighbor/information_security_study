@@ -1,7 +1,7 @@
 # 정보보안기사 학습노트 — 인덱스
 
 > `cards/*.js`가 원본이고 `node build.js`로 이 폴더가 자동 생성됩니다. **이 폴더의 .md는 직접 수정하지 마세요.**
-> 마지막 갱신 **2026-09-05** · 총 **108장**
+> 마지막 갱신 **2026-09-05** · 총 **114장**
 
 ## 주제 목록
 
@@ -29,6 +29,7 @@
 | 네트워크 보안 기술 — 침입차단·침입탐지 | 5 | [firewall.md](firewall.md) |
 | 네트워크 보안 기술 — VPN·통합관리·무선·RFID | 6 | [vpnetc.md](vpnetc.md) |
 | 네트워크 위협 및 대응 기술 | 4 | [netthreat.md](netthreat.md) |
+| 인터넷 응용 보안 (PART 03) — FTP·메일·웹·DNS | 6 | [appsec.md](appsec.md) |
 
 ## 전체 raw 주소 (다른 세션에 그대로 주면 읽힙니다)
 
@@ -55,6 +56,7 @@ https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/n
 https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/firewall.md
 https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/vpnetc.md
 https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/netthreat.md
+https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/appsec.md
 ```
 
 ## 오답 노트 (손으로 관리 — 자동 생성 아님)
@@ -122,3 +124,5 @@ https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/n
 **vpnetc.md** (6장) — 가상사설망 (VPN) · SSL VPN · PPTP · L2TP · IPSec VPN (AH · ESP · IKE) · NAC (네트워크 접근 제어) · ESM · SIEM · 무선 LAN 보안 (WEP · WPA · WPA2) · RFID · USN 보안
 
 **netthreat.md** (4장) — 악성 메일 공격 · 랜섬웨어 · APT형 표적 공격 · 망분리 (인터넷 접속 차단) · 망연계 · 자료연계
+
+**appsec.md** (6장) — FTP 개요 · 종류 · 액티브/패시브 모드 · FTP 보안 취약점 · 로그 · 대책 · 메일 보안 프로토콜 (PGP · PEM · S/MIME) · sendmail · 스팸 차단 · SpamAssassin · 웹 서버 보안 (아파치 · 웹 로그 · WAF) · DNS 구조 · 보안 · DNSSEC

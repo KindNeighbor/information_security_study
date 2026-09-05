@@ -394,6 +394,7 @@
 <script src="cards/firewall.js"></script>
 <script src="cards/vpnetc.js"></script>
 <script src="cards/netthreat.js"></script>
+<script src="cards/appsec.js"></script>
 <script src="quiz.js" defer></script>
 <script>
 /* =========================================================================
@@ -442,6 +443,10 @@ const GROUPS=[
    ids:["vpn","ipsec","nac","esm","wlan","rfid"]},
   {name:"네트워크 위협 및 대응", sub:"악성 메일 → APT형 랜섬웨어 → 망분리(물리·논리 SBC/CBC) → 망연계(스토리지·인피니밴드)", sec:"네트워크 위협 및 대응 기술",
    ids:["mailattack","ransomware","netsep","netlink"]},
+  {name:"인터넷 응용 보안 — FTP·메일", sub:"FTP 개요·액티브/패시브 → FTP 보안·바운스·xferlog → 메일 보안(PGP·PEM·S/MIME) → sendmail·스팸 차단", sec:"인터넷 응용 보안",
+   ids:["ftp","ftpsec","mailsec","sendmail"]},
+  {name:"인터넷 응용 보안 — 웹·DNS", sub:"아파치 보안설정·웹로그·WAF → DNS 구조·질의 방식·캐시 포이즈닝·DNSSEC", sec:"인터넷 응용 보안",
+   ids:["websec","dns"]},
 ];
 // 교재 목차(사이드바). cat이 있으면 그 파트 클릭 시 필터.
 const TOC=[
@@ -470,6 +475,20 @@ const GLOSSARY=[
   {ab:"DAC",full:"Discretionary Access Control",ko:"임의 접근 통제. 파일 소유자가 권한을 마음대로 정하는 방식(rwx)",id:"sudocap"},
   {ab:"MAC (접근통제)",full:"Mandatory Access Control",ko:"강제 접근 통제. 관리자가 정한 정책이 우선이라 root도 정책 밖 행동을 못 함(SELinux). 네트워크의 MAC 주소와 약어가 같으니 주의",id:"sudocap"},
   {ab:"MAC (네트워크)",full:"Media Access Control",ko:"랜카드마다 부여된 고유한 물리 주소. OSI 2계층에서 실제 전달에 사용",id:"osi"},
+  {ab:"FTP",full:"File Transfer Protocol",ko:"파일을 주고받는 프로토콜. 제어 21번·데이터 20번을 따로 씀",id:"ftp"},
+  {ab:"TFTP",full:"Trivial File Transfer Protocol",ko:"인증 없이 단순 전송만 하는 간이 파일 전송 방식(UDP 69번)",id:"ftp"},
+  {ab:"SFTP",full:"SSH File Transfer Protocol",ko:"SSH 위에서 암호화해 파일을 주고받는 안전한 방식(22번)",id:"ftpsec"},
+  {ab:"FTPS",full:"FTP over SSL/TLS",ko:"기존 FTP에 SSL/TLS 암호화를 입힌 방식",id:"ftpsec"},
+  {ab:"PGP",full:"Pretty Good Privacy",ko:"사용자끼리 서로 공개키를 보증하는 분산 방식의 메일 암호화·서명 도구",id:"mailsec"},
+  {ab:"PEM",full:"Privacy Enhanced Mail",ko:"중앙 인증기관에 의존하는 메일 보안 규격. 안전하지만 복잡해 거의 안 쓰임",id:"mailsec"},
+  {ab:"S/MIME",full:"Secure/Multipurpose Internet Mail Extensions",ko:"X.509 인증서로 메일을 암호화·서명하는 상용 표준",id:"mailsec"},
+  {ab:"MTA",full:"Mail Transfer Agent",ko:"메일을 서버끼리 전달하는 프로그램(sendmail·postfix)",id:"sendmail"},
+  {ab:"RBL",full:"Real-time Blackhole List",ko:"스팸을 보낸 IP 목록을 실시간으로 조회해 차단하는 방식",id:"sendmail"},
+  {ab:"CLF",full:"Common Log Format",ko:"웹 접근 로그의 표준 형식(IP·시간·요청·상태코드·크기)",id:"websec"},
+  {ab:"DNS",full:"Domain Name System",ko:"도메인 이름을 IP 주소로 바꿔 주는 분산 데이터베이스(53번)",id:"dns"},
+  {ab:"DNSSEC",full:"DNS Security Extensions",ko:"DNS 응답에 전자서명을 붙여 위조를 막는 확장(암호화는 아님)",id:"dns"},
+  {ab:"TLD",full:"Top Level Domain",ko:"도메인 계층의 최상위 단계(.com·.kr 등)",id:"dns"},
+  {ab:"AXFR",full:"Authoritative Zone Transfer",ko:"네임서버가 도메인 정보 전체를 넘기는 존 전송 요청. 열려 있으면 구조가 통째로 유출됨",id:"dns"},
   {ab:"SBC",full:"Server Based Computing",ko:"서버에 가상 데스크톱을 두고 접속해 쓰는 논리적 망분리 방식",id:"netsep"},
   {ab:"CBC",full:"Client Based Computing",ko:"PC 안에 가상 영역을 만들어 나누는 논리적 망분리 방식",id:"netsep"},
   {ab:"VDI",full:"Virtual Desktop Infrastructure",ko:"서버에서 가상 데스크톱을 만들어 제공하는 기반 구조",id:"netsep"},

@@ -33,6 +33,7 @@ const TOPICS = [
   {file:'firewall',   title:'네트워크 보안 기술 — 침입차단·침입탐지'},
   {file:'vpnetc',     title:'네트워크 보안 기술 — VPN·통합관리·무선·RFID'},
   {file:'netthreat',  title:'네트워크 위협 및 대응 기술'},
+  {file:'appsec',     title:'인터넷 응용 보안 (PART 03) — FTP·메일·웹·DNS'},
   {file:'etc',        title:'기타'},
 ];
 
