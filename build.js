@@ -34,6 +34,7 @@ const TOPICS = [
   {file:'vpnetc',     title:'네트워크 보안 기술 — VPN·통합관리·무선·RFID'},
   {file:'netthreat',  title:'네트워크 위협 및 대응 기술'},
   {file:'appsec',     title:'인터넷 응용 보안 (PART 03) — FTP·메일·웹·DNS'},
+  {file:'dbsec',      title:'데이터베이스 보안 (PART 03) — DB·SQL·위협·백업'},
   {file:'etc',        title:'기타'},
 ];
 

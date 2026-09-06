@@ -395,6 +395,7 @@
 <script src="cards/vpnetc.js"></script>
 <script src="cards/netthreat.js"></script>
 <script src="cards/appsec.js"></script>
+<script src="cards/dbsec.js"></script>
 <script src="quiz.js" defer></script>
 <script>
 /* =========================================================================
@@ -447,6 +448,10 @@ const GROUPS=[
    ids:["ftp","ftpsec","mailsec","sendmail"]},
   {name:"인터넷 응용 보안 — 웹·DNS", sub:"아파치 보안설정·웹로그·WAF → DNS 구조·질의 방식·캐시 포이즈닝·DNSSEC", sec:"인터넷 응용 보안",
    ids:["websec","dns"]},
+  {name:"DB 기초 — 구조·모델·SQL", sub:"DB·DBMS 3대 기능·3단계 스키마 → 데이터 모델·관계형 용어·ERD → MySQL/Oracle·DDL·DML·DCL·GRANT", sec:"DB 보안",
+   ids:["db","dbmodel","sqlcmd"]},
+  {name:"DB 보안 — 위협·통제·백업", sub:"집성·추론 등 위협과 보안 요구사항 → 접근통제·뷰·암호화·감사 → 백업(전체·차등·증분)·회복(REDO·UNDO)", sec:"DB 보안",
+   ids:["dbthreat","dbsecway","dbbackup"]},
 ];
 // 교재 목차(사이드바). cat이 있으면 그 파트 클릭 시 필터.
 const TOC=[
@@ -488,6 +493,16 @@ const GLOSSARY=[
   {ab:"DNS",full:"Domain Name System",ko:"도메인 이름을 IP 주소로 바꿔 주는 분산 데이터베이스(53번)",id:"dns"},
   {ab:"DNSSEC",full:"DNS Security Extensions",ko:"DNS 응답에 전자서명을 붙여 위조를 막는 확장(암호화는 아님)",id:"dns"},
   {ab:"TLD",full:"Top Level Domain",ko:"도메인 계층의 최상위 단계(.com·.kr 등)",id:"dns"},
+  {ab:"DBMS",full:"DataBase Management System",ko:"데이터베이스를 관리하는 소프트웨어. 정의·조작·제어 기능을 제공",id:"db"},
+  {ab:"DBA",full:"DataBase Administrator",ko:"스키마 정의·권한 부여·백업 등 DB 전반을 관리하는 책임자",id:"db"},
+  {ab:"DDL",full:"Data Definition Language",ko:"CREATE·ALTER·DROP 등 DB 구조를 정의하는 SQL",id:"sqlcmd"},
+  {ab:"DML",full:"Data Manipulation Language",ko:"SELECT·INSERT·UPDATE·DELETE 등 데이터를 다루는 SQL",id:"sqlcmd"},
+  {ab:"DCL",full:"Data Control Language",ko:"GRANT·REVOKE·COMMIT 등 권한과 트랜잭션을 제어하는 SQL",id:"sqlcmd"},
+  {ab:"ERD",full:"Entity-Relationship Diagram",ko:"개체(□)·속성(○)·관계(◇)로 DB 구조를 그린 설계도",id:"dbmodel"},
+  {ab:"TDE",full:"Transparent Data Encryption",ko:"DBMS가 저장 데이터를 알아서 암·복호화하는 투명 암호화(앱 수정 최소)",id:"dbsecway"},
+  {ab:"DAM",full:"Database Activity Monitoring",ko:"DB 질의를 실시간 감시·차단하는 접근제어 솔루션",id:"dbsecway"},
+  {ab:"RTO",full:"Recovery Time Objective",ko:"장애 후 얼마나 빨리 복구할 것인가 하는 목표 복구 시간",id:"dbbackup"},
+  {ab:"RPO",full:"Recovery Point Objective",ko:"어느 시점까지 데이터를 살릴 것인가 하는 허용 손실 범위",id:"dbbackup"},
   {ab:"AXFR",full:"Authoritative Zone Transfer",ko:"네임서버가 도메인 정보 전체를 넘기는 존 전송 요청. 열려 있으면 구조가 통째로 유출됨",id:"dns"},
   {ab:"SBC",full:"Server Based Computing",ko:"서버에 가상 데스크톱을 두고 접속해 쓰는 논리적 망분리 방식",id:"netsep"},
   {ab:"CBC",full:"Client Based Computing",ko:"PC 안에 가상 영역을 만들어 나누는 논리적 망분리 방식",id:"netsep"},
