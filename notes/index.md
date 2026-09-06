@@ -1,7 +1,7 @@
 # 정보보안기사 학습노트 — 인덱스
 
 > `cards/*.js`가 원본이고 `node build.js`로 이 폴더가 자동 생성됩니다. **이 폴더의 .md는 직접 수정하지 마세요.**
-> 마지막 갱신 **2026-09-06** · 총 **120장**
+> 마지막 갱신 **2026-09-06** · 총 **127장**
 
 ## 주제 목록
 
@@ -31,6 +31,7 @@
 | 네트워크 위협 및 대응 기술 | 4 | [netthreat.md](netthreat.md) |
 | 인터넷 응용 보안 (PART 03) — FTP·메일·웹·DNS | 6 | [appsec.md](appsec.md) |
 | 데이터베이스 보안 (PART 03) — DB·SQL·위협·백업 | 6 | [dbsec.md](dbsec.md) |
+| 전자상거래 보안 (PART 03) — 전자화폐·SET·SSL·OTP·XML | 7 | [ecommerce.md](ecommerce.md) |
 
 ## 전체 raw 주소 (다른 세션에 그대로 주면 읽힙니다)
 
@@ -59,6 +60,7 @@ https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/n
 https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/netthreat.md
 https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/appsec.md
 https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/dbsec.md
+https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/ecommerce.md
 ```
 
 ## 오답 노트 (손으로 관리 — 자동 생성 아님)
@@ -130,3 +132,5 @@ https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/n
 **appsec.md** (6장) — FTP 개요 · 종류 · 액티브/패시브 모드 · FTP 보안 취약점 · 로그 · 대책 · 메일 보안 프로토콜 (PGP · PEM · S/MIME) · sendmail · 스팸 차단 · SpamAssassin · 웹 서버 보안 (아파치 · 웹 로그 · WAF) · DNS 구조 · 보안 · DNSSEC
 
 **dbsec.md** (6장) — 데이터베이스 · DBMS 개요와 구성요소 · 데이터 모델 · 관계형 모델 · ERD · MySQL · Oracle과 SQL 명령 (권한 부여) · DB 보안 위협 요소와 보안 요구사항 · 데이터베이스 보안 기법 (접근통제·암호화·감사) · 데이터베이스 백업과 회복
+
+**ecommerce.md** (7장) — 전자화폐 — 정의 · 요구조건 · 종류 · SET · 이중서명 · SSL/TLS — 보안 서비스 · 구성요소 · 핸드셰이크 · OpenSSL · S-HTTP · OTP — 정의와 동기화 방식 · 전자문서 · EDI · ebXML · 웹 서비스(SOAP·WSDL·UDDI)와 XML 보안

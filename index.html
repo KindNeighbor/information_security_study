@@ -396,6 +396,7 @@
 <script src="cards/netthreat.js"></script>
 <script src="cards/appsec.js"></script>
 <script src="cards/dbsec.js"></script>
+<script src="cards/ecommerce.js"></script>
 <script src="quiz.js" defer></script>
 <script>
 /* =========================================================================
@@ -452,6 +453,10 @@ const GROUPS=[
    ids:["db","dbmodel","sqlcmd"]},
   {name:"DB 보안 — 위협·통제·백업", sub:"집성·추론 등 위협과 보안 요구사항 → 접근통제·뷰·암호화·감사 → 백업(전체·차등·증분)·회복(REDO·UNDO)", sec:"DB 보안",
    ids:["dbthreat","dbsecway","dbbackup"]},
+  {name:"전자상거래 — 지불·인증 프로토콜", sub:"전자화폐 요구조건·IC카드형 → SET·이중서명 → SSL/TLS 핸드셰이크 → OpenSSL·S-HTTP → OTP 동기화 방식", sec:"전자상거래 보안",
+   ids:["ecash","set","ssl","sslimpl","otp"]},
+  {name:"전자문서 · 웹 서비스 · XML 보안", sub:"전자문서·EDI·ebXML(CPP/CPA) → SOAP·WSDL·UDDI → XML 서명·암호화·XKMS·SAML·XACML", sec:"전자상거래 보안",
+   ids:["edoc","websvc"]},
 ];
 // 교재 목차(사이드바). cat이 있으면 그 파트 클릭 시 필터.
 const TOC=[
@@ -493,6 +498,25 @@ const GLOSSARY=[
   {ab:"DNS",full:"Domain Name System",ko:"도메인 이름을 IP 주소로 바꿔 주는 분산 데이터베이스(53번)",id:"dns"},
   {ab:"DNSSEC",full:"DNS Security Extensions",ko:"DNS 응답에 전자서명을 붙여 위조를 막는 확장(암호화는 아님)",id:"dns"},
   {ab:"TLD",full:"Top Level Domain",ko:"도메인 계층의 최상위 단계(.com·.kr 등)",id:"dns"},
+  {ab:"SET",full:"Secure Electronic Transaction",ko:"비자·마스터가 만든 신용카드 결제 프로토콜. 이중서명이 핵심",id:"set"},
+  {ab:"PG",full:"Payment Gateway",ko:"인터넷과 금융망을 잇는 지불 중계 기관",id:"set"},
+  {ab:"OI / PI",full:"Order Information / Payment Information",ko:"SET의 주문정보(상점만 봄)와 지불정보(PG만 봄)",id:"set"},
+  {ab:"SSL",full:"Secure Sockets Layer",ko:"전송~응용 계층 사이에서 기밀성·무결성·인증을 제공하는 프로토콜(현 TLS)",id:"ssl"},
+  {ab:"TLS",full:"Transport Layer Security",ko:"SSL이 표준화된 이름. 현재는 TLS 1.2 이상을 사용",id:"ssl"},
+  {ab:"S-HTTP",full:"Secure HyperText Transfer Protocol",ko:"HTTP 메시지 단위로 암호화하던 방식. SSL에 밀려 사장",id:"sslimpl"},
+  {ab:"OTP",full:"One Time Password",ko:"한 번만 쓰는 일회용 비밀번호. 재전송 공격을 무력화",id:"otp"},
+  {ab:"TOTP",full:"Time-based One Time Password",ko:"시각을 기준으로 값이 바뀌는 시간 동기화 OTP",id:"otp"},
+  {ab:"HOTP",full:"HMAC-based One Time Password",ko:"사용 횟수(카운터)를 기준으로 값이 바뀌는 이벤트 동기화 OTP",id:"otp"},
+  {ab:"EDI",full:"Electronic Data Interchange",ko:"정형화된 서식을 기업 간에 표준 전자 형식으로 교환하는 방식",id:"edoc"},
+  {ab:"ebXML",full:"electronic business XML",ko:"XML 기반의 개방형 전자상거래 표준 프레임워크",id:"edoc"},
+  {ab:"CPP / CPA",full:"Collaboration Protocol Profile / Agreement",ko:"ebXML에서 한 기업의 거래 능력 명세(P)와 두 기업의 합의서(A)",id:"edoc"},
+  {ab:"SOAP",full:"Simple Object Access Protocol",ko:"XML 봉투 형식으로 주고받는 웹 서비스 메시지 프로토콜",id:"websvc"},
+  {ab:"WSDL",full:"Web Services Description Language",ko:"웹 서비스의 기능·매개변수·주소를 기술한 사용설명서",id:"websvc"},
+  {ab:"UDDI",full:"Universal Description, Discovery and Integration",ko:"웹 서비스를 등록·검색하는 전화번호부 역할의 등록소",id:"websvc"},
+  {ab:"XKMS",full:"XML Key Management Specification",ko:"공개키의 등록·검증·폐기를 웹 서비스로 처리하는 키 관리 규격",id:"websvc"},
+  {ab:"SAML",full:"Security Assertion Markup Language",ko:"인증·인가 정보를 주고받는 XML 표준. SSO의 핵심",id:"websvc"},
+  {ab:"XACML",full:"eXtensible Access Control Markup Language",ko:"접근통제 정책을 기술하는 XML 언어",id:"websvc"},
+  {ab:"XXE",full:"XML External Entity",ko:"XML 외부 엔티티 참조를 악용해 내부 파일을 읽어내는 취약점",id:"websvc"},
   {ab:"DBMS",full:"DataBase Management System",ko:"데이터베이스를 관리하는 소프트웨어. 정의·조작·제어 기능을 제공",id:"db"},
   {ab:"DBA",full:"DataBase Administrator",ko:"스키마 정의·권한 부여·백업 등 DB 전반을 관리하는 책임자",id:"db"},
   {ab:"DDL",full:"Data Definition Language",ko:"CREATE·ALTER·DROP 등 DB 구조를 정의하는 SQL",id:"sqlcmd"},
