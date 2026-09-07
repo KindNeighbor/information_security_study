@@ -36,6 +36,7 @@ const TOPICS = [
   {file:'appsec',     title:'인터넷 응용 보안 (PART 03) — FTP·메일·웹·DNS'},
   {file:'dbsec',      title:'데이터베이스 보안 (PART 03) — DB·SQL·위협·백업'},
   {file:'ecommerce',  title:'전자상거래 보안 (PART 03) — 전자화폐·SET·SSL·OTP·XML'},
+  {file:'devsec',     title:'보안 취약점 및 개발 보안 (PART 03) — OWASP·시큐어코딩·웹공격·SSO·DRM·포렌식'},
   {file:'etc',        title:'기타'},
 ];
 

@@ -397,6 +397,7 @@
 <script src="cards/appsec.js"></script>
 <script src="cards/dbsec.js"></script>
 <script src="cards/ecommerce.js"></script>
+<script src="cards/devsec.js"></script>
 <script src="quiz.js" defer></script>
 <script>
 /* =========================================================================
@@ -457,6 +458,12 @@ const GROUPS=[
    ids:["ecash","set","ssl","sslimpl","otp"]},
   {name:"전자문서 · 웹 서비스 · XML 보안", sub:"전자문서·EDI·ebXML(CPP/CPA) → SOAP·WSDL·UDDI → XML 서명·암호화·XKMS·SAML·XACML", sec:"전자상거래 보안",
    ids:["edoc","websvc"]},
+  {name:"개발 보안 — 기준과 프로세스", sub:"OWASP Top 10(2021) → SDLC 단계별 보안활동·STRIDE → 시큐어 코딩 7대 보안약점 유형", sec:"개발 보안",
+   ids:["owasp","sdlc"]},
+  {name:"개발 보안 — 주요 공격 기법", sub:"SQL 삽입(블라인드·매스) → 코드·OS 명령어 삽입·포맷스트링·XXE → XSS·CSRF → 파일 업로드·경로 조작", sec:"개발 보안",
+   ids:["sqli","injection","xss","upload"]},
+  {name:"인증 통합 · 콘텐츠 보호 · 포렌식", sub:"SSO(델리게이션·프로퍼게이션) → DRM·워터마킹·핑거프린팅 → 디지털 포렌식·휘발성 데이터 → 리버스 엔지니어링(정적·동적)", sec:"개발 보안",
+   ids:["sso","drm","forensic","reversing"]},
 ];
 // 교재 목차(사이드바). cat이 있으면 그 파트 클릭 시 필터.
 const TOC=[
@@ -472,7 +479,6 @@ const GLOSSARY=[
   {ab:"bash",full:"Bourne Again SHell",ko:"리눅스의 기본 명령 해석기(셸). 본 셸을 확장한 것",id:"shelltypes"},
   {ab:"sh",full:"Bourne Shell",ko:"최초의 표준 유닉스 셸. 다른 셸의 뿌리",id:"shelltypes"},
   {ab:"csh",full:"C Shell",ko:"C 언어 문법 스타일의 셸",id:"shelltypes"},
-  {ab:"CVE",full:"Common Vulnerabilities and Exposures",ko:"공개된 보안 취약점에 붙이는 고유 식별 번호(예: CVE-2014-6271)",id:"shellshock"},
   {ab:"FHS",full:"Filesystem Hierarchy Standard",ko:"리눅스 디렉터리 구조(/etc·/var 등 어디에 무엇을 두는지)를 정한 표준",id:"linuxfs"},
   {ab:"fsck",full:"File System Check",ko:"파일시스템 오류(슈퍼블록·아이노드 손상 등)를 검사·복구하는 명령",id:"fsinternal"},
   {ab:"mkfs",full:"Make File System",ko:"파티션에 파일시스템을 만드는(포맷하는) 명령",id:"fsadmin"},
@@ -498,6 +504,21 @@ const GLOSSARY=[
   {ab:"DNS",full:"Domain Name System",ko:"도메인 이름을 IP 주소로 바꿔 주는 분산 데이터베이스(53번)",id:"dns"},
   {ab:"DNSSEC",full:"DNS Security Extensions",ko:"DNS 응답에 전자서명을 붙여 위조를 막는 확장(암호화는 아님)",id:"dns"},
   {ab:"TLD",full:"Top Level Domain",ko:"도메인 계층의 최상위 단계(.com·.kr 등)",id:"dns"},
+  {ab:"OWASP",full:"Open Worldwide Application Security Project",ko:"웹 애플리케이션 보안을 연구·공개하는 비영리 커뮤니티. Top 10으로 유명",id:"owasp"},
+  {ab:"SSRF",full:"Server-Side Request Forgery",ko:"서버가 공격자가 지정한 곳으로 요청을 대신 보내게 만드는 공격(OWASP A10)",id:"owasp"},
+  {ab:"SDLC",full:"Software Development Life Cycle",ko:"요구분석→설계→구현→시험→유지보수로 이어지는 소프트웨어 개발 생명주기",id:"sdlc"},
+  {ab:"CWE",full:"Common Weakness Enumeration",ko:"소프트웨어 보안 약점(잠재적 결함)의 유형 목록",id:"sdlc"},
+  {ab:"CVE",full:"Common Vulnerabilities and Exposures",ko:"실제 발견된 개별 취약점에 붙이는 공통 식별 번호",id:"sdlc"},
+  {ab:"CVSS",full:"Common Vulnerability Scoring System",ko:"취약점 심각도를 0~10점으로 표현하는 점수 체계",id:"sdlc"},
+  {ab:"STRIDE",full:"Spoofing, Tampering, Repudiation, Information disclosure, DoS, Elevation of privilege",ko:"설계 단계 위협 모델링에서 쓰는 6가지 위협 분류",id:"sdlc"},
+  {ab:"SAST",full:"Static Application Security Testing",ko:"실행하지 않고 소스·바이너리를 진단하는 정적 분석",id:"reversing"},
+  {ab:"DAST",full:"Dynamic Application Security Testing",ko:"실제 실행·요청을 보내며 취약점을 찾는 동적 분석",id:"reversing"},
+  {ab:"XSS",full:"Cross-Site Scripting",ko:"피해자 브라우저에서 공격자의 스크립트가 실행되어 쿠키·세션을 탈취하는 공격",id:"xss"},
+  {ab:"CSRF",full:"Cross-Site Request Forgery",ko:"로그인된 피해자가 자기도 모르게 요청을 보내게 만드는 공격",id:"xss"},
+  {ab:"CSP",full:"Content Security Policy",ko:"허용된 출처의 스크립트만 실행하게 제한하는 브라우저 보안 헤더",id:"xss"},
+  {ab:"SSO",full:"Single Sign-On",ko:"한 번의 인증으로 연계된 여러 시스템을 이용하는 통합 인증",id:"sso"},
+  {ab:"DRM",full:"Digital Rights Management",ko:"콘텐츠를 암호화하고 사용 권한(기간·횟수·인쇄)을 통제하는 저작권 보호 기술",id:"drm"},
+  {ab:"CoC",full:"Chain of Custody",ko:"증거의 수집~법정까지 담당자·시각이 끊김 없이 기록되는 연계보관성",id:"forensic"},
   {ab:"SET",full:"Secure Electronic Transaction",ko:"비자·마스터가 만든 신용카드 결제 프로토콜. 이중서명이 핵심",id:"set"},
   {ab:"PG",full:"Payment Gateway",ko:"인터넷과 금융망을 잇는 지불 중계 기관",id:"set"},
   {ab:"OI / PI",full:"Order Information / Payment Information",ko:"SET의 주문정보(상점만 봄)와 지불정보(PG만 봄)",id:"set"},
@@ -600,7 +621,6 @@ const GLOSSARY=[
   {ab:"CRLF",full:"Carriage Return Line Feed",ko:"줄바꿈 문자. HTTP에서 헤더와 본문을 구분하는 빈 줄에 쓰임",id:"httpmsg"},
   {ab:"URI",full:"Uniform Resource Identifier",ko:"자원을 가리키는 식별자. 요청줄에 들어가는 주소 부분",id:"httpmsg"},
   {ab:"XST",full:"Cross-Site Tracing",ko:"TRACE 메서드를 악용해 HttpOnly 쿠키까지 훔치는 공격",id:"httpmethod"},
-  {ab:"CSP",full:"Content Security Policy",ko:"실행 가능한 스크립트 출처를 제한해 XSS를 완화하는 응답 헤더",id:"httpheader"},
   {ab:"HSTS",full:"HTTP Strict Transport Security",ko:"이후 접속을 HTTPS로 강제하는 응답 헤더",id:"httpheader"},
   {ab:"OSI",full:"Open Systems Interconnection",ko:"통신 과정을 7계층으로 나눈 국제 표준 참조 모델",id:"osi"},
   {ab:"PDU",full:"Protocol Data Unit",ko:"각 계층에서 주고받는 데이터 단위(비트·프레임·패킷·세그먼트)",id:"osi"},
@@ -682,7 +702,6 @@ const GLOSSARY=[
   {ab:"EUID",full:"Effective User ID",ko:"현재 권한 판정에 실제로 쓰이는 사용자 ID",id:"uidgid"},
   {ab:"inode",full:"index node",ko:"파일의 메타데이터와 실제 데이터 위치를 담은 관리 구조",id:"symlink"},
   {ab:"TOCTOU",full:"Time-Of-Check to Time-Of-Use",ko:"검사 시점과 사용 시점 사이의 틈을 노리는 경쟁 조건 공격",id:"race"},
-  {ab:"SSO",full:"Single Sign-On",ko:"한 번 로그인으로 여러 서비스를 이용",id:"kerberos"},
   {ab:"TGS",full:"Ticket Granting Server",ko:"TGT를 받아 서비스용 티켓을 내주는 서버",id:"kerberos"},
   {ab:"TGT",full:"Ticket Granting Ticket",ko:"본인 확인 후 받는 신분증 티켓(추가 티켓 발급용)",id:"kerberos"},
   {ab:"TPM",full:"Trusted Platform Module",ko:"암호키를 안전하게 보관하는 보안 칩(BitLocker가 사용)",id:"efsbitlocker"},
