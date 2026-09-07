@@ -1,7 +1,7 @@
 # 정보보안기사 학습노트 — 인덱스
 
 > `cards/*.js`가 원본이고 `node build.js`로 이 폴더가 자동 생성됩니다. **이 폴더의 .md는 직접 수정하지 마세요.**
-> 마지막 갱신 **2026-09-07** · 총 **137장**
+> 마지막 갱신 **2026-09-07** · 총 **143장**
 
 ## 주제 목록
 
@@ -33,6 +33,7 @@
 | 데이터베이스 보안 (PART 03) — DB·SQL·위협·백업 | 6 | [dbsec.md](dbsec.md) |
 | 전자상거래 보안 (PART 03) — 전자화폐·SET·SSL·OTP·XML | 7 | [ecommerce.md](ecommerce.md) |
 | 보안 취약점 및 개발 보안 (PART 03) — OWASP·시큐어코딩·웹공격·SSO·DRM·포렌식 | 10 | [devsec.md](devsec.md) |
+| 보안 요소 기술 (PART 04) — 정보보호 목표·공격유형·통제·FDS·인증·생체 | 6 | [secbasic.md](secbasic.md) |
 
 ## 전체 raw 주소 (다른 세션에 그대로 주면 읽힙니다)
 
@@ -63,6 +64,7 @@ https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/n
 https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/dbsec.md
 https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/ecommerce.md
 https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/devsec.md
+https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/secbasic.md
 ```
 
 ## 오답 노트 (손으로 관리 — 자동 생성 아님)
@@ -138,3 +140,5 @@ https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/n
 **ecommerce.md** (7장) — 전자화폐 — 정의 · 요구조건 · 종류 · SET · 이중서명 · SSL/TLS — 보안 서비스 · 구성요소 · 핸드셰이크 · OpenSSL · S-HTTP · OTP — 정의와 동기화 방식 · 전자문서 · EDI · ebXML · 웹 서비스(SOAP·WSDL·UDDI)와 XML 보안
 
 **devsec.md** (10장) — OWASP Top 10 · 소프트웨어 개발 보안 · SDLC · 시큐어 코딩 7대 유형 · SQL 삽입 — 일반 · 블라인드 · 매스 · 코드 삽입 · OS 명령어 삽입 · 포맷 스트링 · XXE · XSS와 CSRF · 위험한 형식 파일 업로드 · 경로 조작 · SSO (통합 인증) · DRM · 워터마킹 · 핑거프린팅 · 디지털 포렌식 — 원칙과 휘발성 데이터 · 리버스 엔지니어링 — 정적 분석과 동적 분석
+
+**secbasic.md** (6장) — 정보보호 목표 — 기밀성 · 무결성 · 가용성 · 정보보호 공격 유형 4가지와 보호대책 · 통제 — 일반통제와 응용통제 · 시점별 분류 · FDS (이상금융거래 탐지 시스템) · 사용자 인증 유형 — 지식 · 소유 · 존재 · 행위 · 생체 인증 — 평가항목과 FAR · FRR · CER

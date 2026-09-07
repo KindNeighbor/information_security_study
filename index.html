@@ -398,6 +398,7 @@
 <script src="cards/dbsec.js"></script>
 <script src="cards/ecommerce.js"></script>
 <script src="cards/devsec.js"></script>
+<script src="cards/secbasic.js"></script>
 <script src="quiz.js" defer></script>
 <script>
 /* =========================================================================
@@ -464,6 +465,10 @@ const GROUPS=[
    ids:["sqli","injection","xss","upload"]},
   {name:"인증 통합 · 콘텐츠 보호 · 포렌식", sub:"SSO(델리게이션·프로퍼게이션) → DRM·워터마킹·핑거프린팅 → 디지털 포렌식·휘발성 데이터 → 리버스 엔지니어링(정적·동적)", sec:"개발 보안",
    ids:["sso","drm","forensic","reversing"]},
+  {name:"정보보호 목표 · 공격 유형 · 통제", sub:"기밀성·무결성·가용성과 위험 구조 → 차단·가로채기·변조·위조 → 일반통제/응용통제·예방·탐지·교정 → FDS", sec:"보안 요소 기술",
+   ids:["secgoal","attacktype","control","fds"]},
+  {name:"사용자 인증 — 지식·소유·생체", sub:"인증 4요소와 패스워드 정책·스마트카드 → 생체 인증 평가항목·FAR·FRR·CER·행위 기반", sec:"보안 요소 기술",
+   ids:["authtype","biometric"]},
 ];
 // 교재 목차(사이드바). cat이 있으면 그 파트 클릭 시 필터.
 const TOC=[
@@ -504,6 +509,14 @@ const GLOSSARY=[
   {ab:"DNS",full:"Domain Name System",ko:"도메인 이름을 IP 주소로 바꿔 주는 분산 데이터베이스(53번)",id:"dns"},
   {ab:"DNSSEC",full:"DNS Security Extensions",ko:"DNS 응답에 전자서명을 붙여 위조를 막는 확장(암호화는 아님)",id:"dns"},
   {ab:"TLD",full:"Top Level Domain",ko:"도메인 계층의 최상위 단계(.com·.kr 등)",id:"dns"},
+  {ab:"CIA",full:"Confidentiality, Integrity, Availability",ko:"정보보호의 3대 목표. 기밀성·무결성·가용성",id:"secgoal"},
+  {ab:"ITGC",full:"IT General Control",ko:"여러 시스템에 공통으로 걸리는 조직 전반의 일반통제",id:"control"},
+  {ab:"ITAC",full:"IT Application Control",ko:"개별 업무의 입력·처리·출력에 걸리는 응용통제",id:"control"},
+  {ab:"FDS",full:"Fraud Detection System",ko:"평소 패턴과 대조해 이상 금융거래를 실시간 탐지·차단하는 시스템",id:"fds"},
+  {ab:"2FA",full:"Two-Factor Authentication",ko:"서로 다른 종류의 인증 요소를 둘 이상 조합하는 이중 인증",id:"authtype"},
+  {ab:"FAR",full:"False Acceptance Rate",ko:"타인을 본인으로 잘못 받아들이는 오인식률. 보안상 더 위험한 오류",id:"biometric"},
+  {ab:"FRR",full:"False Rejection Rate",ko:"본인을 타인으로 잘못 거부하는 오거부율. 사용자 불편을 유발",id:"biometric"},
+  {ab:"CER",full:"Crossover Error Rate",ko:"FAR과 FRR이 같아지는 교차 오류율. 낮을수록 우수한 생체 시스템(=EER)",id:"biometric"},
   {ab:"OWASP",full:"Open Worldwide Application Security Project",ko:"웹 애플리케이션 보안을 연구·공개하는 비영리 커뮤니티. Top 10으로 유명",id:"owasp"},
   {ab:"SSRF",full:"Server-Side Request Forgery",ko:"서버가 공격자가 지정한 곳으로 요청을 대신 보내게 만드는 공격(OWASP A10)",id:"owasp"},
   {ab:"SDLC",full:"Software Development Life Cycle",ko:"요구분석→설계→구현→시험→유지보수로 이어지는 소프트웨어 개발 생명주기",id:"sdlc"},
