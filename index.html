@@ -400,6 +400,7 @@
 <script src="cards/devsec.js"></script>
 <script src="cards/secbasic.js"></script>
 <script src="cards/access.js"></script>
+<script src="cards/esign.js"></script>
 <script src="quiz.js" defer></script>
 <script>
 /* =========================================================================
@@ -474,6 +475,10 @@ const GROUPS=[
    ids:["accessctl","macdac","accessmatrix"]},
   {name:"접근 통제 모델 · 보안 OS · 암호 기초", sub:"BLP·Biba·클락윌슨·만리장성 → Secure OS(TCB·TCSEC·CC)·Secure DBMS → 대칭키 → 공개키", sec:"접근 통제",
    ids:["accessmodel","secureos","symkey","pubkey"]},
+  {name:"전자서명 · PKI", sub:"전자서명 정의·5대 요건·서명/검증 과정 → RSA·ElGamal·Schnorr·DSS·KCDSA·ECDSA → PKI 구성(CA·RA·CRL·OCSP) → X.509 구조·ASN.1", sec:"전자서명",
+   ids:["esign","esignalg","pki","x509"]},
+  {name:"PMI · 전자투표", sub:"PKI(인증) vs PMI(인가)·속성 인증서·SOA/AA → 전자투표 방식과 요구사항(검증가능성 vs 비강제성)", sec:"전자서명",
+   ids:["pmi","evote"]},
 ];
 // 교재 목차(사이드바). cat이 있으면 그 파트 클릭 시 필터.
 const TOC=[
@@ -514,6 +519,25 @@ const GLOSSARY=[
   {ab:"DNS",full:"Domain Name System",ko:"도메인 이름을 IP 주소로 바꿔 주는 분산 데이터베이스(53번)",id:"dns"},
   {ab:"DNSSEC",full:"DNS Security Extensions",ko:"DNS 응답에 전자서명을 붙여 위조를 막는 확장(암호화는 아님)",id:"dns"},
   {ab:"TLD",full:"Top Level Domain",ko:"도메인 계층의 최상위 단계(.com·.kr 등)",id:"dns"},
+  {ab:"PKI",full:"Public Key Infrastructure",ko:"CA가 서명한 인증서로 공개키의 소유자를 보증하는 공개키 기반구조",id:"pki"},
+  {ab:"CA",full:"Certification Authority",ko:"인증서를 발급·갱신·폐지하고 CRL을 관리하는 인증기관",id:"pki"},
+  {ab:"RA",full:"Registration Authority",ko:"신원 확인과 접수를 대행하는 등록기관. 인증서를 직접 발급하지는 않는다",id:"pki"},
+  {ab:"CRL",full:"Certificate Revocation List",ko:"폐지된 인증서의 일련번호를 모아 주기적으로 배포하는 목록",id:"pki"},
+  {ab:"OCSP",full:"Online Certificate Status Protocol",ko:"인증서 폐지 여부를 실시간으로 질의하는 프로토콜(good·revoked·unknown)",id:"pki"},
+  {ab:"CPS",full:"Certification Practice Statement",ko:"CA가 어떤 절차·기준으로 인증서를 관리하는지 공표한 인증 업무 준칙",id:"pki"},
+  {ab:"LDAP",full:"Lightweight Directory Access Protocol",ko:"X.500 디렉터리를 경량화한 접근 프로토콜. 인증서·계정 조회에 사용",id:"pki"},
+  {ab:"X.509",full:"ITU-T X.509",ko:"공개키 인증서의 국제 표준. 현재 v3(확장 필드 포함)",id:"x509"},
+  {ab:"ASN.1",full:"Abstract Syntax Notation One",ko:"플랫폼과 무관하게 데이터 구조를 기술하는 표기법. X.509 구조 정의에 사용",id:"x509"},
+  {ab:"DER",full:"Distinguished Encoding Rules",ko:"표현 방법이 유일하게 정해진 ASN.1 인코딩. 서명 검증에 필수",id:"x509"},
+  {ab:"SAN",full:"Subject Alternative Name",ko:"인증서가 보증하는 도메인 목록을 담는 X.509 v3 확장 필드",id:"x509"},
+  {ab:"DSA",full:"Digital Signature Algorithm",ko:"이산대수 기반 전자서명 전용 알고리즘. 표준 규격의 이름은 DSS",id:"esignalg"},
+  {ab:"DSS",full:"Digital Signature Standard",ko:"미국 전자서명 표준 규격. 그 안의 알고리즘이 DSA",id:"esignalg"},
+  {ab:"KCDSA",full:"Korea Certificate-based Digital Signature Algorithm",ko:"국내 표준 전자서명 알고리즘. 국산 해시 HAS-160과 함께 사용",id:"esignalg"},
+  {ab:"ECDSA",full:"Elliptic Curve DSA",ko:"타원곡선 기반 전자서명. 짧은 키·서명으로 모바일·블록체인에 사용",id:"esignalg"},
+  {ab:"PMI",full:"Privilege Management Infrastructure",ko:"권한(인가)을 관리하는 기반구조. 속성 인증서를 발급한다",id:"pmi"},
+  {ab:"AC",full:"Attribute Certificate",ko:"공개키 대신 역할·자격 같은 권한 속성을 담은 속성 인증서",id:"pmi"},
+  {ab:"AA",full:"Attribute Authority",ko:"속성 인증서를 발급·폐지하는 속성기관. PKI의 CA에 대응",id:"pmi"},
+  {ab:"SOA",full:"Source of Authority",ko:"PMI 권한 체계의 최종 근원이 되는 최상위 속성기관",id:"pmi"},
   {ab:"RBAC",full:"Role-Based Access Control",ko:"권한을 역할에 묶고 사람에게 역할을 부여하는 비임의적 접근통제",id:"macdac"},
   {ab:"BLP",full:"Bell-LaPadula",ko:"기밀성 모델. No Read Up + No Write Down",id:"accessmodel"},
   {ab:"TCB",full:"Trusted Computing Base",ko:"시스템 보안을 책임지는 하드웨어·펌웨어·소프트웨어의 총합. 작을수록 안전",id:"secureos"},
@@ -528,7 +552,6 @@ const GLOSSARY=[
   {ab:"RSA",full:"Rivest-Shamir-Adleman",ko:"소인수분해 기반 공개키 암호. 암호화와 전자서명 모두 가능",id:"pubkey"},
   {ab:"DH",full:"Diffie-Hellman",ko:"이산대수 기반 키 교환 전용 방식. 인증이 없어 중간자 공격에 취약",id:"pubkey"},
   {ab:"ECC",full:"Elliptic Curve Cryptography",ko:"타원곡선 기반 공개키 암호. 짧은 키로 같은 안전성이라 모바일·IoT에 유리",id:"pubkey"},
-  {ab:"DSA",full:"Digital Signature Algorithm",ko:"이산대수 기반 전자서명 전용 알고리즘(암호화 불가)",id:"pubkey"},
   {ab:"CIA",full:"Confidentiality, Integrity, Availability",ko:"정보보호의 3대 목표. 기밀성·무결성·가용성",id:"secgoal"},
   {ab:"ITGC",full:"IT General Control",ko:"여러 시스템에 공통으로 걸리는 조직 전반의 일반통제",id:"control"},
   {ab:"ITAC",full:"IT Application Control",ko:"개별 업무의 입력·처리·출력에 걸리는 응용통제",id:"control"},
