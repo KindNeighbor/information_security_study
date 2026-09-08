@@ -399,6 +399,7 @@
 <script src="cards/ecommerce.js"></script>
 <script src="cards/devsec.js"></script>
 <script src="cards/secbasic.js"></script>
+<script src="cards/access.js"></script>
 <script src="quiz.js" defer></script>
 <script>
 /* =========================================================================
@@ -469,6 +470,10 @@ const GROUPS=[
    ids:["secgoal","attacktype","control","fds"]},
   {name:"사용자 인증 — 지식·소유·생체", sub:"인증 4요소와 패스워드 정책·스마트카드 → 생체 인증 평가항목·FAR·FRR·CER·행위 기반", sec:"보안 요소 기술",
    ids:["authtype","biometric"]},
+  {name:"접근 통제 — 개념과 기술", sub:"식별·인증·인가와 원칙·참조 모니터 → MAC·DAC·RBAC → 접근 통제 행렬(ACL·Capability)", sec:"접근 통제",
+   ids:["accessctl","macdac","accessmatrix"]},
+  {name:"접근 통제 모델 · 보안 OS · 암호 기초", sub:"BLP·Biba·클락윌슨·만리장성 → Secure OS(TCB·TCSEC·CC)·Secure DBMS → 대칭키 → 공개키", sec:"접근 통제",
+   ids:["accessmodel","secureos","symkey","pubkey"]},
 ];
 // 교재 목차(사이드바). cat이 있으면 그 파트 클릭 시 필터.
 const TOC=[
@@ -493,8 +498,8 @@ const GLOSSARY=[
   {ab:"wtmp",full:"login history (접속 이력)",ko:"로그인·로그아웃한 이력 기록. last 명령으로 봄",id:"linuxlog"},
   {ab:"btmp",full:"bad login (실패 기록)",ko:"로그인에 실패한 시도 기록. lastb 명령으로 보며 무차별 대입 공격 탐지에 씀",id:"linuxlog"},
   {ab:"sudo",full:"superuser do",ko:"허용된 명령만 관리자 권한으로 실행하게 해주고 로그를 남기는 도구",id:"sudocap"},
-  {ab:"DAC",full:"Discretionary Access Control",ko:"임의 접근 통제. 파일 소유자가 권한을 마음대로 정하는 방식(rwx)",id:"sudocap"},
-  {ab:"MAC (접근통제)",full:"Mandatory Access Control",ko:"강제 접근 통제. 관리자가 정한 정책이 우선이라 root도 정책 밖 행동을 못 함(SELinux). 네트워크의 MAC 주소와 약어가 같으니 주의",id:"sudocap"},
+  {ab:"DAC",full:"Discretionary Access Control",ko:"임의 접근 통제. 객체의 소유자가 재량으로 권한을 정하는 방식(rwx·GRANT)",id:"macdac"},
+  {ab:"MAC (접근통제)",full:"Mandatory Access Control",ko:"강제 접근 통제. 관리자가 정한 보안등급으로 시스템이 강제해 root도 정책 밖 행동을 못 함(SELinux). 네트워크의 MAC 주소와 약어가 같으니 주의",id:"macdac"},
   {ab:"MAC (네트워크)",full:"Media Access Control",ko:"랜카드마다 부여된 고유한 물리 주소. OSI 2계층에서 실제 전달에 사용",id:"osi"},
   {ab:"FTP",full:"File Transfer Protocol",ko:"파일을 주고받는 프로토콜. 제어 21번·데이터 20번을 따로 씀",id:"ftp"},
   {ab:"TFTP",full:"Trivial File Transfer Protocol",ko:"인증 없이 단순 전송만 하는 간이 파일 전송 방식(UDP 69번)",id:"ftp"},
@@ -509,6 +514,21 @@ const GLOSSARY=[
   {ab:"DNS",full:"Domain Name System",ko:"도메인 이름을 IP 주소로 바꿔 주는 분산 데이터베이스(53번)",id:"dns"},
   {ab:"DNSSEC",full:"DNS Security Extensions",ko:"DNS 응답에 전자서명을 붙여 위조를 막는 확장(암호화는 아님)",id:"dns"},
   {ab:"TLD",full:"Top Level Domain",ko:"도메인 계층의 최상위 단계(.com·.kr 등)",id:"dns"},
+  {ab:"RBAC",full:"Role-Based Access Control",ko:"권한을 역할에 묶고 사람에게 역할을 부여하는 비임의적 접근통제",id:"macdac"},
+  {ab:"BLP",full:"Bell-LaPadula",ko:"기밀성 모델. No Read Up + No Write Down",id:"accessmodel"},
+  {ab:"TCB",full:"Trusted Computing Base",ko:"시스템 보안을 책임지는 하드웨어·펌웨어·소프트웨어의 총합. 작을수록 안전",id:"secureos"},
+  {ab:"TCSEC",full:"Trusted Computer System Evaluation Criteria",ko:"미국의 옛 보안 평가 기준(오렌지북). D→C→B→A, B등급부터 MAC",id:"secureos"},
+  {ab:"CC",full:"Common Criteria (ISO/IEC 15408)",ko:"현재의 국제 공통 보안 평가 기준. 보증 등급 EAL1~EAL7",id:"secureos"},
+  {ab:"EAL",full:"Evaluation Assurance Level",ko:"CC의 보증 등급(1~7). 숫자가 클수록 엄격하게 검증",id:"secureos"},
+  {ab:"MLS",full:"Multi-Level Security",ko:"데이터마다 보안 등급을 매겨 등급별로 통제하는 다중 수준 보안",id:"secureos"},
+  {ab:"AES",full:"Advanced Encryption Standard",ko:"DES를 대체한 대칭키 표준(원명 Rijndael). 블록 128비트, 키 128/192/256, SPN 구조",id:"symkey"},
+  {ab:"DES",full:"Data Encryption Standard",ko:"옛 대칭키 표준. 블록 64비트·키 56비트·Feistel 16라운드로 현재는 취약",id:"symkey"},
+  {ab:"SEED",full:"SEED",ko:"KISA가 개발한 국산 대칭키 블록 암호(128비트, Feistel)",id:"symkey"},
+  {ab:"ARIA",full:"Academy, Research Institute, Agency",ko:"학·연·관이 공동 개발한 국가 표준 대칭키 암호(128비트, ISPN)",id:"symkey"},
+  {ab:"RSA",full:"Rivest-Shamir-Adleman",ko:"소인수분해 기반 공개키 암호. 암호화와 전자서명 모두 가능",id:"pubkey"},
+  {ab:"DH",full:"Diffie-Hellman",ko:"이산대수 기반 키 교환 전용 방식. 인증이 없어 중간자 공격에 취약",id:"pubkey"},
+  {ab:"ECC",full:"Elliptic Curve Cryptography",ko:"타원곡선 기반 공개키 암호. 짧은 키로 같은 안전성이라 모바일·IoT에 유리",id:"pubkey"},
+  {ab:"DSA",full:"Digital Signature Algorithm",ko:"이산대수 기반 전자서명 전용 알고리즘(암호화 불가)",id:"pubkey"},
   {ab:"CIA",full:"Confidentiality, Integrity, Availability",ko:"정보보호의 3대 목표. 기밀성·무결성·가용성",id:"secgoal"},
   {ab:"ITGC",full:"IT General Control",ko:"여러 시스템에 공통으로 걸리는 조직 전반의 일반통제",id:"control"},
   {ab:"ITAC",full:"IT Application Control",ko:"개별 업무의 입력·처리·출력에 걸리는 응용통제",id:"control"},
