@@ -1,7 +1,7 @@
 # 정보보안기사 학습노트 — 인덱스
 
 > `cards/*.js`가 원본이고 `node build.js`로 이 폴더가 자동 생성됩니다. **이 폴더의 .md는 직접 수정하지 마세요.**
-> 마지막 갱신 **2026-09-08** · 총 **156장**
+> 마지막 갱신 **2026-09-09** · 총 **164장**
 
 ## 주제 목록
 
@@ -36,6 +36,7 @@
 | 보안 요소 기술 (PART 04) — 정보보호 목표·공격유형·통제·FDS·인증·생체 | 6 | [secbasic.md](secbasic.md) |
 | 접근 통제 (PART 04) — 식별·인증·인가·MAC/DAC/RBAC·모델·SecureOS·대칭키·공개키 | 7 | [access.md](access.md) |
 | 전자서명 (PART 04) — 전자서명·알고리즘·PKI·X.509·PMI·전자투표 | 6 | [esign.md](esign.md) |
+| 암호학 (PART 04) — 고전암호·블록모드·DES/AES·암호분석·DH/RSA·해시·MAC | 8 | [crypto.md](crypto.md) |
 
 ## 전체 raw 주소 (다른 세션에 그대로 주면 읽힙니다)
 
@@ -69,6 +70,7 @@ https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/n
 https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/secbasic.md
 https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/access.md
 https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/esign.md
+https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/crypto.md
 ```
 
 ## 오답 노트 (손으로 관리 — 자동 생성 아님)
@@ -150,3 +152,5 @@ https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/n
 **access.md** (7장) — 접근 통제 개요 — 식별 · 인증 · 인가 · 접근 통제 기술 — MAC · DAC · RBAC · 접근 통제 매트릭스 — ACL과 자격 목록 · 접근 통제 모델 — BLP · Biba · 클락-윌슨 · 만리장성 · Secure OS와 Secure DBMS · 대칭키 암호 — 정의와 종류 · 공개키 암호 — 키 분배 원리와 종류
 
 **esign.md** (6장) — 전자서명 — 정의 · 특징 · 과정 · 전자서명 알고리즘 — RSA · ElGamal · Schnorr · DSS · KCDSA · ECDSA · PKI — 공개키 기반구조와 구성요소 · X.509 공개키 인증서 구조 · PMI와 속성 인증서 · 전자투표 — 개념과 요구사항
+
+**crypto.md** (8장) — 암호화의 개요 — 과정과 분류 · 고전 암호 — 시저 · 다중 치환 · 힐 암호 · 블록 암호 구조와 운용 모드 (ECB·CBC·CFB·OFB·CTR) · 블록 암호 알고리즘 상세 — DES · IDEA · RC5 · AES · SEED · 암호 분석 방법의 종류 · 디피-헬만 키 교환과 RSA 암·복호화 과정 · 해시 함수 — 조건 · 종류 · 생일 공격 · MAC과 HMAC

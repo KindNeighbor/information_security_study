@@ -401,6 +401,7 @@
 <script src="cards/secbasic.js"></script>
 <script src="cards/access.js"></script>
 <script src="cards/esign.js"></script>
+<script src="cards/crypto.js"></script>
 <script src="quiz.js" defer></script>
 <script>
 /* =========================================================================
@@ -479,6 +480,10 @@ const GROUPS=[
    ids:["esign","esignalg","pki","x509"]},
   {name:"PMI · 전자투표", sub:"PKI(인증) vs PMI(인가)·속성 인증서·SOA/AA → 전자투표 방식과 요구사항(검증가능성 vs 비강제성)", sec:"전자서명",
    ids:["pmi","evote"]},
+  {name:"암호학 — 개요와 대칭키 상세", sub:"암호화 개요·커크호프·혼돈과 확산 → 고전 암호(시저·비제네르·힐) → 블록 구조와 운용 모드(ECB·CBC·CFB·OFB·CTR) → DES·IDEA·RC5·AES·SEED", sec:"암호학",
+   ids:["cryptobasic","classic","blockmode","symalg"]},
+  {name:"암호 분석 · 키 교환 · 해시·MAC", sub:"암호 분석 4분류와 공격 기법 → 디피-헬만·RSA 계산 과정·하이브리드 → 해시 조건·생일 공격·랜덤 오라클 → MAC·HMAC", sec:"암호학",
+   ids:["cryptanalysis","dhrsa","hash","mac"]},
 ];
 // 교재 목차(사이드바). cat이 있으면 그 파트 클릭 시 필터.
 const TOC=[
@@ -519,6 +524,26 @@ const GLOSSARY=[
   {ab:"DNS",full:"Domain Name System",ko:"도메인 이름을 IP 주소로 바꿔 주는 분산 데이터베이스(53번)",id:"dns"},
   {ab:"DNSSEC",full:"DNS Security Extensions",ko:"DNS 응답에 전자서명을 붙여 위조를 막는 확장(암호화는 아님)",id:"dns"},
   {ab:"TLD",full:"Top Level Domain",ko:"도메인 계층의 최상위 단계(.com·.kr 등)",id:"dns"},
+  {ab:"ECB",full:"Electronic Code Book",ko:"블록을 독립 암호화하는 모드. 같은 평문이 같은 암호문이 되어 사용 금지",id:"blockmode"},
+  {ab:"CBC (블록모드)",full:"Cipher Block Chaining",ko:"앞 블록 암호문과 XOR해 연쇄 암호화하는 모드. 첫 블록은 IV 사용",id:"blockmode"},
+  {ab:"CFB",full:"Cipher FeedBack",ko:"암호문을 피드백해 블록 암호를 스트림처럼 쓰는 모드",id:"blockmode"},
+  {ab:"OFB",full:"Output FeedBack",ko:"암호화 출력을 피드백해 키 스트림을 미리 만드는 모드. 오류가 전파되지 않는다",id:"blockmode"},
+  {ab:"CTR",full:"CounTeR",ko:"증가하는 카운터를 암호화해 키 스트림을 만드는 모드. 암·복호화 모두 병렬 가능",id:"blockmode"},
+  {ab:"IV",full:"Initialization Vector",ko:"CBC 등에서 첫 블록에 쓰는 초기화 벡터. 매번 달라야 한다",id:"blockmode"},
+  {ab:"SPN",full:"Substitution-Permutation Network",ko:"블록 전체에 치환·순열을 반복하는 구조(AES·ARIA)",id:"blockmode"},
+  {ab:"GCM",full:"Galois/Counter Mode",ko:"CTR 모드에 인증을 결합해 암호화와 무결성을 함께 처리하는 방식",id:"mac"},
+  {ab:"IDEA",full:"International Data Encryption Algorithm",ko:"블록 64비트·키 128비트 대칭키 암호. PGP에 채택됐다",id:"symalg"},
+  {ab:"3DES",full:"Triple DES",ko:"DES를 EDE(암호화-복호화-암호화) 방식으로 3번 적용한 알고리즘",id:"symalg"},
+  {ab:"COA",full:"Ciphertext Only Attack",ko:"암호문만 가지고 분석하는 공격. 공격자에게 가장 불리하나 가장 현실적",id:"cryptanalysis"},
+  {ab:"KPA",full:"Known Plaintext Attack",ko:"평문-암호문 쌍을 일부 알고 하는 기지 평문 공격. 선형 분석이 여기 해당",id:"cryptanalysis"},
+  {ab:"CPA",full:"Chosen Plaintext Attack",ko:"원하는 평문을 암호화시켜 볼 수 있는 선택 평문 공격. 차분 분석이 여기 해당",id:"cryptanalysis"},
+  {ab:"CCA",full:"Chosen Ciphertext Attack",ko:"원하는 암호문을 복호화시켜 볼 수 있는 선택 암호문 공격. 가장 강력",id:"cryptanalysis"},
+  {ab:"PFS",full:"Perfect Forward Secrecy",ko:"세션마다 임시 키를 써서 개인키가 유출돼도 과거 통신은 안전한 순방향 비밀성",id:"dhrsa"},
+  {ab:"MD5",full:"Message Digest 5",ko:"128비트 출력 해시. 충돌이 발견되어 폐기됐다",id:"hash"},
+  {ab:"SHA",full:"Secure Hash Algorithm",ko:"미국 표준 해시. SHA-1(160비트)은 폐기, 현재는 SHA-2(256 등)와 SHA-3",id:"hash"},
+  {ab:"HAS-160",full:"Hash Algorithm Standard 160",ko:"국내 표준 해시(160비트). KCDSA와 짝으로 사용됐고 현재는 LSH로 대체",id:"hash"},
+  {ab:"MAC (인증코드)",full:"Message Authentication Code",ko:"메시지와 공유 대칭키로 만든 인증 코드. 무결성·인증은 되나 부인방지는 불가",id:"mac"},
+  {ab:"HMAC",full:"Hash-based Message Authentication Code",ko:"해시와 비밀키를 두 번 겹쳐 쓰는 표준 MAC. 길이 확장 공격을 막는다",id:"mac"},
   {ab:"PKI",full:"Public Key Infrastructure",ko:"CA가 서명한 인증서로 공개키의 소유자를 보증하는 공개키 기반구조",id:"pki"},
   {ab:"CA",full:"Certification Authority",ko:"인증서를 발급·갱신·폐지하고 CRL을 관리하는 인증기관",id:"pki"},
   {ab:"RA",full:"Registration Authority",ko:"신원 확인과 접수를 대행하는 등록기관. 인증서를 직접 발급하지는 않는다",id:"pki"},
@@ -606,7 +631,7 @@ const GLOSSARY=[
   {ab:"RPO",full:"Recovery Point Objective",ko:"어느 시점까지 데이터를 살릴 것인가 하는 허용 손실 범위",id:"dbbackup"},
   {ab:"AXFR",full:"Authoritative Zone Transfer",ko:"네임서버가 도메인 정보 전체를 넘기는 존 전송 요청. 열려 있으면 구조가 통째로 유출됨",id:"dns"},
   {ab:"SBC",full:"Server Based Computing",ko:"서버에 가상 데스크톱을 두고 접속해 쓰는 논리적 망분리 방식",id:"netsep"},
-  {ab:"CBC",full:"Client Based Computing",ko:"PC 안에 가상 영역을 만들어 나누는 논리적 망분리 방식",id:"netsep"},
+  {ab:"CBC (망분리)",full:"Client Based Computing",ko:"PC 안에 가상 영역을 만들어 나누는 논리적 망분리 방식",id:"netsep"},
   {ab:"VDI",full:"Virtual Desktop Infrastructure",ko:"서버에서 가상 데스크톱을 만들어 제공하는 기반 구조",id:"netsep"},
   {ab:"RaaS",full:"Ransomware as a Service",ko:"랜섬웨어를 서비스처럼 빌려 쓰게 해주는 범죄 생태계",id:"ransomware"},
   {ab:"BEC",full:"Business Email Compromise",ko:"거래처나 임원을 사칭해 송금·정보를 요구하는 업무 메일 사기",id:"mailattack"},

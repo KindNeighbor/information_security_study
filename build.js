@@ -40,6 +40,7 @@ const TOPICS = [
   {file:'secbasic',   title:'보안 요소 기술 (PART 04) — 정보보호 목표·공격유형·통제·FDS·인증·생체'},
   {file:'access',     title:'접근 통제 (PART 04) — 식별·인증·인가·MAC/DAC/RBAC·모델·SecureOS·대칭키·공개키'},
   {file:'esign',      title:'전자서명 (PART 04) — 전자서명·알고리즘·PKI·X.509·PMI·전자투표'},
+  {file:'crypto',     title:'암호학 (PART 04) — 고전암호·블록모드·DES/AES·암호분석·DH/RSA·해시·MAC'},
   {file:'etc',        title:'기타'},
 ];
 
