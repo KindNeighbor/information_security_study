@@ -402,6 +402,7 @@
 <script src="cards/access.js"></script>
 <script src="cards/esign.js"></script>
 <script src="cards/crypto.js"></script>
+<script src="cards/ismsp.js"></script>
 <script src="quiz.js" defer></script>
 <script>
 /* =========================================================================
@@ -484,6 +485,10 @@ const GROUPS=[
    ids:["cryptobasic","classic","blockmode","symalg"]},
   {name:"암호 분석 · 키 교환 · 해시·MAC", sub:"암호 분석 4분류와 공격 기법 → 디피-헬만·RSA 계산 과정·하이브리드 → 해시 조건·생일 공격·랜덤 오라클 → MAC·HMAC", sec:"암호학",
    ids:["cryptanalysis","dhrsa","hash","mac"]},
+  {name:"ISMS-P 인증 제도", sub:"ISMS-P 개요·법적 근거(망법 47조·개보법 32조의2) → 의무 대상·간편인증·심사 종류·심사원 → 인증기준 3개 영역(16·64·21)", sec:"정보보호 관리",
+   ids:["ismsp","ismstarget","ismscriteria"]},
+  {name:"거버넌스 · 위험관리", sub:"정보보호 거버넌스(ISO 27014) → 위험관리 구성요소와 3단계 → 위험분석 접근법·정량/정성·ALE·대응 전략", sec:"정보보호 관리",
+   ids:["governance","riskmgmt","riskanalysis"]},
 ];
 // 교재 목차(사이드바). cat이 있으면 그 파트 클릭 시 필터.
 const TOC=[
@@ -524,6 +529,19 @@ const GLOSSARY=[
   {ab:"DNS",full:"Domain Name System",ko:"도메인 이름을 IP 주소로 바꿔 주는 분산 데이터베이스(53번)",id:"dns"},
   {ab:"DNSSEC",full:"DNS Security Extensions",ko:"DNS 응답에 전자서명을 붙여 위조를 막는 확장(암호화는 아님)",id:"dns"},
   {ab:"TLD",full:"Top Level Domain",ko:"도메인 계층의 최상위 단계(.com·.kr 등)",id:"dns"},
+  {ab:"ISMS",full:"Information Security Management System",ko:"정보보호 관리체계 인증(정보통신망법 제47조). 기준 80개, 의무 대상 있음",id:"ismsp"},
+  {ab:"ISMS-P",full:"Personal Information & Information Security Management System",ko:"정보보호 및 개인정보보호 관리체계 인증. 기준 101개, 자율 인증",id:"ismsp"},
+  {ab:"PIMS",full:"Personal Information Management System",ko:"옛 개인정보보호 관리체계 인증. 2018년 ISMS와 통합되어 ISMS-P가 됨",id:"ismsp"},
+  {ab:"ISP",full:"Internet Service Provider",ko:"서울·광역시에서 정보통신망 서비스를 제공하는 기간통신사업자(ISMS 의무 대상)",id:"ismstarget"},
+  {ab:"IDC",full:"Internet Data Center",ko:"집적정보통신시설 사업자, 즉 데이터센터(ISMS 의무 대상)",id:"ismstarget"},
+  {ab:"CISO",full:"Chief Information Security Officer",ko:"정보보호 업무를 총괄하는 정보보호 최고책임자(정보통신망법)",id:"governance"},
+  {ab:"CPO",full:"Chief Privacy Officer",ko:"개인정보 처리 업무를 총괄하는 개인정보 보호책임자(개인정보보호법)",id:"governance"},
+  {ab:"DoA",full:"Degree of Assurance",ko:"경영진이 감수하기로 정한 수용 가능한 위험 수준",id:"riskmgmt"},
+  {ab:"AV",full:"Asset Value",ko:"위험 손실액 계산에 쓰는 자산 가치",id:"riskanalysis"},
+  {ab:"EF",full:"Exposure Factor",ko:"사고 1회 시 자산이 손실되는 비율(노출 계수)",id:"riskanalysis"},
+  {ab:"SLE",full:"Single Loss Expectancy",ko:"단일 예상 손실액. SLE = AV × EF",id:"riskanalysis"},
+  {ab:"ARO",full:"Annualized Rate of Occurrence",ko:"위협의 연간 발생 빈도",id:"riskanalysis"},
+  {ab:"ALE",full:"Annualized Loss Expectancy",ko:"연간 예상 손실액. ALE = SLE × ARO",id:"riskanalysis"},
   {ab:"ECB",full:"Electronic Code Book",ko:"블록을 독립 암호화하는 모드. 같은 평문이 같은 암호문이 되어 사용 금지",id:"blockmode"},
   {ab:"CBC (블록모드)",full:"Cipher Block Chaining",ko:"앞 블록 암호문과 XOR해 연쇄 암호화하는 모드. 첫 블록은 IV 사용",id:"blockmode"},
   {ab:"CFB",full:"Cipher FeedBack",ko:"암호문을 피드백해 블록 암호를 스트림처럼 쓰는 모드",id:"blockmode"},
