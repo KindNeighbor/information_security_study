@@ -42,6 +42,7 @@ const TOPICS = [
   {file:'esign',      title:'전자서명 (PART 04) — 전자서명·알고리즘·PKI·X.509·PMI·전자투표'},
   {file:'crypto',     title:'암호학 (PART 04) — 고전암호·블록모드·DES/AES·암호분석·DH/RSA·해시·MAC'},
   {file:'ismsp',      title:'정보보호 관리 (PART 05) — ISMS-P·의무대상·인증기준·거버넌스·위험관리'},
+  {file:'secmgmt',    title:'정보보호 관리 (PART 05) — BCP·DRP·BIA·재해복구·CC·KCMVP·GDPR·CSAP·영향평가·ISO 27000'},
   {file:'etc',        title:'기타'},
 ];
 

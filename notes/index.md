@@ -1,7 +1,7 @@
 # 정보보안기사 학습노트 — 인덱스
 
 > `cards/*.js`가 원본이고 `node build.js`로 이 폴더가 자동 생성됩니다. **이 폴더의 .md는 직접 수정하지 마세요.**
-> 마지막 갱신 **2026-09-17** · 총 **170장**
+> 마지막 갱신 **2026-09-17** · 총 **177장**
 
 ## 주제 목록
 
@@ -38,6 +38,7 @@
 | 전자서명 (PART 04) — 전자서명·알고리즘·PKI·X.509·PMI·전자투표 | 6 | [esign.md](esign.md) |
 | 암호학 (PART 04) — 고전암호·블록모드·DES/AES·암호분석·DH/RSA·해시·MAC | 8 | [crypto.md](crypto.md) |
 | 정보보호 관리 (PART 05) — ISMS-P·의무대상·인증기준·거버넌스·위험관리 | 6 | [ismsp.md](ismsp.md) |
+| 정보보호 관리 (PART 05) — BCP·DRP·BIA·재해복구·CC·KCMVP·GDPR·CSAP·영향평가·ISO 27000 | 7 | [secmgmt.md](secmgmt.md) |
 
 ## 전체 raw 주소 (다른 세션에 그대로 주면 읽힙니다)
 
@@ -73,6 +74,7 @@ https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/n
 https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/esign.md
 https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/crypto.md
 https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/ismsp.md
+https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/notes/secmgmt.md
 ```
 
 ## 오답 노트 (손으로 관리 — 자동 생성 아님)
@@ -158,3 +160,5 @@ https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/n
 **crypto.md** (8장) — 암호화의 개요 — 과정과 분류 · 고전 암호 — 시저 · 다중 치환 · 힐 암호 · 블록 암호 구조와 운용 모드 (ECB·CBC·CFB·OFB·CTR) · 블록 암호 알고리즘 상세 — DES · IDEA · RC5 · AES · SEED · 암호 분석 방법의 종류 · 디피-헬만 키 교환과 RSA 암·복호화 과정 · 해시 함수 — 조건 · 종류 · 생일 공격 · MAC과 HMAC
 
 **ismsp.md** (6장) — ISMS-P 인증 — 개요와 법적 근거 · ISMS 의무 대상 · 간편인증 · 심사 종류 · 심사원 · ISMS-P 인증기준 — 3개 영역 구성 · 정보보호 거버넌스 체계 수립 · 위험관리 — 구성요소와 3단계 절차 · 위험분석 방법론 — 접근법 · 정량/정성 · 손실액 · 대응 전략
+
+**secmgmt.md** (7장) — 재해 · BCP · DRP · 사업영향분석(BIA)과 MTD · RTO · RPO · 재해 복구 시스템(DRS)의 종류 · 정보보호 제품 평가·인증 — TCSEC · ITSEC · CC · KCMVP · GDPR — 원칙 · 정보주체 권리 · 기업 책임 · 역외이전 · 클라우드 보안 인증(CSAP) · 개인정보 영향평가 · SECaaS · ISO/IEC 27000 표준 시리즈

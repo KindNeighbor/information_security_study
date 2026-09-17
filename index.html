@@ -403,6 +403,7 @@
 <script src="cards/esign.js"></script>
 <script src="cards/crypto.js"></script>
 <script src="cards/ismsp.js"></script>
+<script src="cards/secmgmt.js"></script>
 <script src="quiz.js" defer></script>
 <script>
 /* =========================================================================
@@ -489,6 +490,10 @@ const GROUPS=[
    ids:["ismsp","ismstarget","ismscriteria"]},
   {name:"거버넌스 · 위험관리", sub:"정보보호 거버넌스(ISO 27014) → 위험관리 구성요소와 3단계 → 위험분석 접근법·정량/정성·ALE·대응 전략", sec:"정보보호 관리",
    ids:["governance","riskmgmt","riskanalysis"]},
+  {name:"업무 연속성 · 재해 복구", sub:"재해·BCP·DRP(차이와 공통점) → BIA와 MTD·RTO·RPO 관계 → 재해 복구 사이트(미러·핫·웜·콜드)", sec:"정보보호 관리",
+   ids:["bcp","bia","drsite"]},
+  {name:"평가·인증 · 국제 규범 · 표준", sub:"TCSEC·ITSEC·CC·KCMVP → GDPR(원칙·권리·72시간·역외이전) → CSAP·개인정보 영향평가·SECaaS → ISO/IEC 27000", sec:"정보보호 관리",
+   ids:["evalcert","gdpr","cloudpia","iso27000"]},
 ];
 // 교재 목차(사이드바). cat이 있으면 그 파트 클릭 시 필터.
 const TOC=[
@@ -529,6 +534,26 @@ const GLOSSARY=[
   {ab:"DNS",full:"Domain Name System",ko:"도메인 이름을 IP 주소로 바꿔 주는 분산 데이터베이스(53번)",id:"dns"},
   {ab:"DNSSEC",full:"DNS Security Extensions",ko:"DNS 응답에 전자서명을 붙여 위조를 막는 확장(암호화는 아님)",id:"dns"},
   {ab:"TLD",full:"Top Level Domain",ko:"도메인 계층의 최상위 단계(.com·.kr 등)",id:"dns"},
+  {ab:"BCP",full:"Business Continuity Planning",ko:"재해 중에도 조직의 핵심 업무를 계속하기 위한 업무 연속성 계획. DRP를 포함",id:"bcp"},
+  {ab:"DRP",full:"Disaster Recovery Planning",ko:"중단된 IT 시스템·데이터를 복구하기 위한 재해 복구 계획. BCP의 일부",id:"bcp"},
+  {ab:"BIA",full:"Business Impact Analysis",ko:"업무 중단 시 영향을 분석해 복구 우선순위와 MTD·RTO·RPO를 정하는 사업영향분석",id:"bia"},
+  {ab:"MTD",full:"Maximum Tolerable Downtime",ko:"업무가 멈춰도 버틸 수 있는 최대 허용 중단 시간. MTD ≥ RTO + WRT",id:"bia"},
+  {ab:"WRT",full:"Work Recovery Time",ko:"시스템 복구 후 업무가 실제로 정상화되기까지의 시간",id:"bia"},
+  {ab:"DRS",full:"Disaster Recovery System",ko:"재해 복구 시스템. 미러·핫·웜·콜드 사이트 등",id:"drsite"},
+  {ab:"ITSEC",full:"Information Technology Security Evaluation Criteria",ko:"유럽의 보안 평가 기준. 기능(F)과 보증(E0~E6)을 분리해 평가",id:"evalcert"},
+  {ab:"TOE",full:"Target of Evaluation",ko:"CC에서 평가를 받는 대상 제품·시스템",id:"evalcert"},
+  {ab:"PP",full:"Protection Profile",ko:"제품군 공통의 보안 요구사항 명세. 수요자 관점, 구현과 무관",id:"evalcert"},
+  {ab:"ST",full:"Security Target",ko:"특정 제품의 보안 기능 명세서. 개발자 관점, 구현에 종속",id:"evalcert"},
+  {ab:"CCRA",full:"Common Criteria Recognition Arrangement",ko:"CC 인증서를 가입국끼리 상호 인정하는 협정(한국 2006 가입)",id:"evalcert"},
+  {ab:"KCMVP",full:"Korea Cryptographic Module Validation Program",ko:"국가정보원이 운영하는 국내 암호모듈 검증제도",id:"evalcert"},
+  {ab:"GDPR",full:"General Data Protection Regulation",ko:"EU 일반 개인정보보호법(2018.5 시행). 위반 시 2천만 유로 또는 매출 4%",id:"gdpr"},
+  {ab:"DPO",full:"Data Protection Officer",ko:"GDPR상 개인정보 보호 책임자",id:"gdpr"},
+  {ab:"DPIA",full:"Data Protection Impact Assessment",ko:"GDPR상 고위험 처리 전에 수행하는 개인정보 영향평가",id:"gdpr"},
+  {ab:"SCC",full:"Standard Contractual Clauses",ko:"EU 밖으로 개인정보를 이전할 때 쓰는 EU 표준계약조항",id:"gdpr"},
+  {ab:"BCR",full:"Binding Corporate Rules",ko:"다국적 기업 그룹 내부의 개인정보 역외이전용 구속력 있는 기업 규칙",id:"gdpr"},
+  {ab:"CSAP",full:"Cloud Security Assurance Program",ko:"공공기관 클라우드 공급용 KISA 보안인증(유효 5년). 2027.7 국정원 검증으로 전환 예정",id:"cloudpia"},
+  {ab:"PIA",full:"Privacy Impact Assessment",ko:"개인정보 영향평가(개보법 제33조). 공공기관 의무, 민감·고유 5만·연계 50만·100만 명",id:"cloudpia"},
+  {ab:"SECaaS",full:"Security as a Service",ko:"보안 기능을 클라우드 구독형으로 제공하는 서비스형 보안",id:"cloudpia"},
   {ab:"ISMS",full:"Information Security Management System",ko:"정보보호 관리체계 인증(정보통신망법 제47조). 기준 80개, 의무 대상 있음",id:"ismsp"},
   {ab:"ISMS-P",full:"Personal Information & Information Security Management System",ko:"정보보호 및 개인정보보호 관리체계 인증. 기준 101개, 자율 인증",id:"ismsp"},
   {ab:"PIMS",full:"Personal Information Management System",ko:"옛 개인정보보호 관리체계 인증. 2018년 ISMS와 통합되어 ISMS-P가 됨",id:"ismsp"},
@@ -584,9 +609,9 @@ const GLOSSARY=[
   {ab:"RBAC",full:"Role-Based Access Control",ko:"권한을 역할에 묶고 사람에게 역할을 부여하는 비임의적 접근통제",id:"macdac"},
   {ab:"BLP",full:"Bell-LaPadula",ko:"기밀성 모델. No Read Up + No Write Down",id:"accessmodel"},
   {ab:"TCB",full:"Trusted Computing Base",ko:"시스템 보안을 책임지는 하드웨어·펌웨어·소프트웨어의 총합. 작을수록 안전",id:"secureos"},
-  {ab:"TCSEC",full:"Trusted Computer System Evaluation Criteria",ko:"미국의 옛 보안 평가 기준(오렌지북). D→C→B→A, B등급부터 MAC",id:"secureos"},
-  {ab:"CC",full:"Common Criteria (ISO/IEC 15408)",ko:"현재의 국제 공통 보안 평가 기준. 보증 등급 EAL1~EAL7",id:"secureos"},
-  {ab:"EAL",full:"Evaluation Assurance Level",ko:"CC의 보증 등급(1~7). 숫자가 클수록 엄격하게 검증",id:"secureos"},
+  {ab:"TCSEC",full:"Trusted Computer System Evaluation Criteria",ko:"미국의 옛 보안 평가 기준(오렌지북). D→C1→C2→B1→B2→B3→A1, B등급부터 MAC",id:"evalcert"},
+  {ab:"CC",full:"Common Criteria (ISO/IEC 15408)",ko:"현재의 국제 공통 보안 평가 기준(ISO/IEC 15408). 보증 등급 EAL1~EAL7",id:"evalcert"},
+  {ab:"EAL",full:"Evaluation Assurance Level",ko:"CC의 보증 등급(1~7). 숫자가 클수록 엄격하게 검증(기능의 강도가 아님)",id:"evalcert"},
   {ab:"MLS",full:"Multi-Level Security",ko:"데이터마다 보안 등급을 매겨 등급별로 통제하는 다중 수준 보안",id:"secureos"},
   {ab:"AES",full:"Advanced Encryption Standard",ko:"DES를 대체한 대칭키 표준(원명 Rijndael). 블록 128비트, 키 128/192/256, SPN 구조",id:"symkey"},
   {ab:"DES",full:"Data Encryption Standard",ko:"옛 대칭키 표준. 블록 64비트·키 56비트·Feistel 16라운드로 현재는 취약",id:"symkey"},
@@ -645,8 +670,8 @@ const GLOSSARY=[
   {ab:"ERD",full:"Entity-Relationship Diagram",ko:"개체(□)·속성(○)·관계(◇)로 DB 구조를 그린 설계도",id:"dbmodel"},
   {ab:"TDE",full:"Transparent Data Encryption",ko:"DBMS가 저장 데이터를 알아서 암·복호화하는 투명 암호화(앱 수정 최소)",id:"dbsecway"},
   {ab:"DAM",full:"Database Activity Monitoring",ko:"DB 질의를 실시간 감시·차단하는 접근제어 솔루션",id:"dbsecway"},
-  {ab:"RTO",full:"Recovery Time Objective",ko:"장애 후 얼마나 빨리 복구할 것인가 하는 목표 복구 시간",id:"dbbackup"},
-  {ab:"RPO",full:"Recovery Point Objective",ko:"어느 시점까지 데이터를 살릴 것인가 하는 허용 손실 범위",id:"dbbackup"},
+  {ab:"RTO",full:"Recovery Time Objective",ko:"재해 후 시스템을 복구하기까지 허용되는 목표 시간(얼마나 빨리). MTD보다 짧아야 한다",id:"bia"},
+  {ab:"RPO",full:"Recovery Point Objective",ko:"어느 시점의 데이터까지 살릴 것인가 하는 허용 손실 범위. 백업 주기를 결정한다",id:"bia"},
   {ab:"AXFR",full:"Authoritative Zone Transfer",ko:"네임서버가 도메인 정보 전체를 넘기는 존 전송 요청. 열려 있으면 구조가 통째로 유출됨",id:"dns"},
   {ab:"SBC",full:"Server Based Computing",ko:"서버에 가상 데스크톱을 두고 접속해 쓰는 논리적 망분리 방식",id:"netsep"},
   {ab:"CBC (망분리)",full:"Client Based Computing",ko:"PC 안에 가상 영역을 만들어 나누는 논리적 망분리 방식",id:"netsep"},
