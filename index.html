@@ -404,6 +404,7 @@
 <script src="cards/crypto.js"></script>
 <script src="cards/ismsp.js"></script>
 <script src="cards/secmgmt.js"></script>
+<script src="cards/lawethics.js"></script>
 <script src="quiz.js" defer></script>
 <script>
 /* =========================================================================
@@ -494,6 +495,10 @@ const GROUPS=[
    ids:["bcp","bia","drsite"]},
   {name:"평가·인증 · 국제 규범 · 표준", sub:"TCSEC·ITSEC·CC·KCMVP → GDPR(원칙·권리·72시간·역외이전) → CSAP·개인정보 영향평가·SECaaS → ISO/IEC 27000", sec:"정보보호 관리",
    ids:["evalcert","gdpr","cloudpia","iso27000"]},
+  {name:"개인정보보호법", sub:"보호 원칙·OECD 8원칙·금지행위 → 용어 정의(가명 vs 익명·민감·고유식별) → 주요 의무와 제24조의2 주민등록번호 → 데이터 3법·가명정보 특례", sec:"윤리·법규",
+   ids:["privprinciple","privterm","privlaw","data3"]},
+  {name:"정보통신망법 · 기반보호법 · 안전조치", sub:"망법 보호 영역·제48조 금지행위·침해사고 24시간 신고 → 정보통신기반 보호법 → 개인정보의 안전성 확보조치 기준(숫자 정리)", sec:"윤리·법규",
+   ids:["netlaw","kiilaw","safemeasure"]},
 ];
 // 교재 목차(사이드바). cat이 있으면 그 파트 클릭 시 필터.
 const TOC=[
@@ -534,6 +539,9 @@ const GLOSSARY=[
   {ab:"DNS",full:"Domain Name System",ko:"도메인 이름을 IP 주소로 바꿔 주는 분산 데이터베이스(53번)",id:"dns"},
   {ab:"DNSSEC",full:"DNS Security Extensions",ko:"DNS 응답에 전자서명을 붙여 위조를 막는 확장(암호화는 아님)",id:"dns"},
   {ab:"TLD",full:"Top Level Domain",ko:"도메인 계층의 최상위 단계(.com·.kr 등)",id:"dns"},
+  {ab:"OECD 8원칙",full:"OECD Guidelines on the Protection of Privacy",ko:"수집 제한·품질·목적 명확화·이용 제한·안전성·공개·개인 참가·책임의 8원칙",id:"privprinciple"},
+  {ab:"PIPA",full:"Personal Information Protection Act",ko:"개인정보 보호법. 개인정보 처리 전반을 규율하는 국내 기본법",id:"privlaw"},
+  {ab:"ISAC",full:"Information Sharing and Analysis Center",ko:"금융·통신 등 분야별로 취약점·침해 정보를 공유·분석하는 정보공유분석센터",id:"kiilaw"},
   {ab:"BCP",full:"Business Continuity Planning",ko:"재해 중에도 조직의 핵심 업무를 계속하기 위한 업무 연속성 계획. DRP를 포함",id:"bcp"},
   {ab:"DRP",full:"Disaster Recovery Planning",ko:"중단된 IT 시스템·데이터를 복구하기 위한 재해 복구 계획. BCP의 일부",id:"bcp"},
   {ab:"BIA",full:"Business Impact Analysis",ko:"업무 중단 시 영향을 분석해 복구 우선순위와 MTD·RTO·RPO를 정하는 사업영향분석",id:"bia"},

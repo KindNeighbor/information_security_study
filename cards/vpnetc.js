@@ -53,7 +53,7 @@ window.DATA = (window.DATA || []).concat(
       }
     ],
     "finalLiner": "IPSec=3계층 보안 / <b>AH=인증·무결성만(암호화 ❌, 프로토콜 51)</b> vs <b>ESP=암호화+인증(50)</b> / <b>키 관리=IKE</b>(Diffie-Hellman·<b>SA</b>·SPI·<b>UDP 500</b>) / <b>전송 모드=페이로드만(종단 간)</b> vs <b>터널 모드=패킷 전체 캡슐화+새 IP 헤더(게이트웨이 간·VPN 기본)</b>",
-    "related": ["vpn", "netlayer", "firewall"]
+    "related": ["vpn", "ipheader", "firewall"]
   },
   {
     "id": "nac",

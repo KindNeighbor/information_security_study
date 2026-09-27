@@ -73,7 +73,7 @@ _관련 개념: ipsec · firewall · http_
 
 > **시험 한줄정리:** IPSec=3계층 보안 / **AH=인증·무결성만(암호화 ❌, 프로토콜 51)** vs **ESP=암호화+인증(50)** / **키 관리=IKE**(Diffie-Hellman·**SA**·SPI·**UDP 500**) / **전송 모드=페이로드만(종단 간)** vs **터널 모드=패킷 전체 캡슐화+새 IP 헤더(게이트웨이 간·VPN 기본)**
 
-_관련 개념: vpn · netlayer · firewall_
+_관련 개념: vpn · ipheader · firewall_
 
 ---
 
