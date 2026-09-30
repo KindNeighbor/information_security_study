@@ -1,7 +1,7 @@
 # 정보보안기사 학습노트 — 인덱스
 
 > `cards/*.js`가 원본이고 `node build.js`로 이 폴더가 자동 생성됩니다. **이 폴더의 .md는 직접 수정하지 마세요.**
-> 마지막 갱신 **2026-09-30** · 총 **185장**
+> 마지막 갱신 **2026-09-30** · 총 **187장**
 
 ## 주제 목록
 
@@ -25,8 +25,8 @@
 | 네트워크 활용(TCP/IP) — 인터넷 계층 | 6 | [netlayer.md](netlayer.md) |
 | 네트워크 활용(TCP/IP) — 네트워크 접근 계층 | 3 | [netaccess.md](netaccess.md) |
 | 네트워크 기반 공격 — DoS·DDoS | 6 | [dosattack.md](dosattack.md) |
-| 네트워크 기반 공격 — 스캐닝·스니핑·스푸핑·하이재킹 | 6 | [netattack.md](netattack.md) |
-| 네트워크 보안 기술 — 침입차단·침입탐지 | 5 | [firewall.md](firewall.md) |
+| 네트워크 기반 공격 — 스캐닝·스니핑·스푸핑·하이재킹 | 7 | [netattack.md](netattack.md) |
+| 네트워크 보안 기술 — 침입차단·침입탐지 | 6 | [firewall.md](firewall.md) |
 | 네트워크 보안 기술 — VPN·통합관리·무선·RFID | 6 | [vpnetc.md](vpnetc.md) |
 | 네트워크 위협 및 대응 기술 | 4 | [netthreat.md](netthreat.md) |
 | 인터넷 응용 보안 (PART 03) — FTP·메일·웹·DNS | 6 | [appsec.md](appsec.md) |
@@ -137,9 +137,9 @@ https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/n
 
 **dosattack.md** (6장) — DoS · DDoS 개요 · TCP SYN Flooding · Land Attack · ICMP 공격 · 스머프 · UDP Flooding · IP 단편화 공격 (Ping of Death · Teardrop) · HTTP GET Flooding · Cache Control · HULK · Slow HTTP 공격 · Hash DoS
 
-**netattack.md** (6장) — 포트 스캐닝 · 스니핑 · IP 스푸핑 · ARP 스푸핑 (ARP 캐시 포이즈닝) · 세션 하이재킹 · 원격 접속 공격 · 대응
+**netattack.md** (7장) — 포트 스캐닝 · 스니핑 · IP 스푸핑 · ARP 스푸핑 (ARP 캐시 포이즈닝) · 세션 하이재킹 · 원격 접속 공격 · 대응 · nmap — 스캔 옵션
 
-**firewall.md** (5장) — 침입차단 시스템 (방화벽) · 유형 · 방화벽 구축 형태 · 침입탐지 시스템 (IDS) · 탐지 기법 · Snort · Suricata · YARA · 침입대응 시스템 (IPS) · 허니팟
+**firewall.md** (6장) — 침입차단 시스템 (방화벽) · 유형 · 방화벽 구축 형태 · 침입탐지 시스템 (IDS) · 탐지 기법 · Snort · Suricata · YARA · 침입대응 시스템 (IPS) · 허니팟 · iptables — 리눅스 방화벽 명령
 
 **vpnetc.md** (6장) — 가상사설망 (VPN) · SSL VPN · PPTP · L2TP · IPSec VPN (AH · ESP · IKE) · NAC (네트워크 접근 제어) · ESM · SIEM · 무선 LAN 보안 (WEP · WPA · WPA2) · RFID · USN 보안
 

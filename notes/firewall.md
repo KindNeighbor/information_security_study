@@ -139,6 +139,7 @@ alert tcp any any -> 192.168.0.0/24 80 (msg:"Web Attack"; content:"/etc/passwd";
 - **flags** — **TCP 플래그** 조건(예: `flags:S;` = SYN)
 - **threshold** — 임계치(횟수·시간)로 과도한 경보 억제
 - **classtype / priority** — 공격 분류·우선순위 · **pcre** — 정규식 검사
+- **dsize** — 페이로드 **크기** 조건 · **itype / icode** — **ICMP** 타입·코드 조건 · **sameip** — 출발지와 목적지 IP가 같은 경우(**Land 공격** 탐지) · **distance / within** — 직전 content 이후 **건너뛸 거리 / 검사할 범위**
 
 **Suricata · YARA — 무엇이 다른가**
 
@@ -183,6 +184,69 @@ _관련 개념: ids · ips · sectools_
 > **시험 한줄정리:** **IDS=탐지·경보(미러링·수동)** vs **IPS=탐지+실시간 차단(인라인)** — IPS는 **오탐 시 정상 트래픽까지 차단** / **허니팟**=미끼로 유인·지연·기법 수집(들어오면 곧 공격), 조건=**쉽게 발견·실제처럼·지속 감시**, **허니넷**=허니팟 네트워크 / 위험=경유지 악용 → **격리**
 
 _관련 개념: ids · snort · firewall_
+
+---
+
+## iptables — 리눅스 방화벽 명령 — iptables / netfilter
+
+`네트워크 보안`  `테이블→체인→룰→타겟` `filter·nat·mangle·raw` `INPUT·OUTPUT·FORWARD` `위에서 아래로 먼저 일치한 룰` `-P DROP 후 필요한 것만 허용`
+
+**한줄:** iptables=리눅스 커널 netfilter를 다루는 방화벽 명령 / 구조는 테이블→체인→룰→타겟이고, 룰은 위에서 아래로 평가되어 먼저 일치한 것이 적용되므로 순서가 결과를 바꾼다
+
+**구조 — 테이블 · 체인 · 타겟**
+
+- **테이블 (무엇을 하려는가)**: **filter** — 기본. 허용·차단 / **nat** — 주소 변환 / **mangle** — 헤더 값 변경(TTL·TOS) / **raw** — 연결 추적 예외
+
+- **체인 (언제 검사하는가)**: **filter**: **INPUT**(나에게 들어옴) · **OUTPUT**(내가 내보냄) · **FORWARD**(나를 거쳐 통과)
+**nat**: **PREROUTING**(라우팅 전 → **DNAT**·포트 포워딩) · **POSTROUTING**(라우팅 후 → **SNAT·MASQUERADE**)
+
+- **타겟 (어떻게 처리하는가)**: **ACCEPT** 허용 · **DROP** 조용히 버림(**무응답**) · **REJECT** 거부 응답을 보냄 · **LOG** 기록만 하고 다음 룰로 · **DNAT·SNAT·MASQUERADE**
+
+**[함정]** **REJECT·ACCEPT·DROP은 체인이 아니라 타겟**이다. 체인은 **INPUT·OUTPUT·FORWARD** 셋(+nat의 PRE/POSTROUTING). 이 둘을 섞어 내는 문항이 나온다.
+
+**주요 옵션**
+
+- **`-A`** 체인 **끝에 추가**(append) · **`-I`** **맨 앞에 삽입**(insert) · **`-D`** 삭제 · **`-R`** 교체
+- **`-L`** 목록 보기 (`-n` 숫자 그대로, `-v` 상세, `--line-numbers` 줄번호)
+- **`-F`** 룰 전체 삭제(flush) · **`-X`** 사용자 체인 삭제 · **`-Z`** 카운터 초기화
+- **`-P`** **기본 정책** 설정 — `iptables -P INPUT DROP`
+- **`-p`** 프로토콜 · **`-s`** 출발지 · **`-d`** 목적지 · **`--sport`·`--dport`** 포트 · **`-i`·`-o`** 입력·출력 인터페이스
+- **`-j`** 타겟 지정(jump) · **`-t`** 테이블 지정(생략하면 filter)
+- **`-m state --state`** 상태 추적 — **NEW·ESTABLISHED·RELATED·INVALID** (신형은 `-m conntrack --ctstate`)
+
+**예시와 읽는 법**
+
+```
+# 특정 대역에서 오는 SSH만 허용
+iptables -A INPUT -p tcp --dport 22 -s 10.0.0.0/24 -j ACCEPT
+
+# 이미 맺어진 연결의 응답은 허용 (상태 추적)
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+# 그 외 들어오는 것은 전부 차단 (기본 정책)
+iptables -P INPUT DROP
+
+# 내부망을 공인 IP 하나로 내보내기 (PAT)
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+# 외부 8080 요청을 내부 서버 80으로 넘기기 (포트 포워딩)
+iptables -t nat -A PREROUTING -p tcp --dport 8080 -j DNAT --to 192.168.0.10:80
+```
+
+**[읽는 순서]** **어느 테이블(-t) → 어느 체인(-A INPUT) → 무슨 조건(-p·-s·--dport) → 어떻게 처리(-j)**. 이 순서로 읽으면 어떤 룰이든 해석된다.
+
+**시험 포인트**
+
+- **룰은 위에서 아래로 순차 평가되고, 먼저 일치한 룰이 적용**된다. 그래서 **`-A`(뒤에 붙임)와 `-I`(앞에 삽입)의 결과가 다르다**. 차단 룰 뒤에 허용 룰을 넣으면 적용되지 않는다
+- **기본 정책은 Deny All** — `-P INPUT DROP`으로 막고 필요한 것만 `ACCEPT`하는 **화이트리스트** 방식이 원칙
+- **DROP vs REJECT** — DROP은 무응답이라 스캔에 **filtered**로 보이고, REJECT는 거부 응답을 보내 **포트가 닫힌 것처럼** 보인다. 정보를 덜 주는 쪽은 **DROP**
+- **nat 테이블의 방향** — **들어오는 것의 목적지를 바꾸면 DNAT(PREROUTING)**, **나가는 것의 출발지를 바꾸면 SNAT·MASQUERADE(POSTROUTING)**
+- **설정은 재부팅 시 사라진다** — `iptables-save`로 저장해야 유지된다
+- iptables는 **방화벽**이다. **로그 수집·분석 도구가 아니다**(이 함정이 기출에 나왔다)
+
+> **시험 한줄정리:** 구조 **테이블(filter·nat·mangle·raw) → 체인(INPUT·OUTPUT·FORWARD, nat은 PRE/POSTROUTING) → 룰 → 타겟(ACCEPT·DROP·REJECT·LOG·DNAT·SNAT)** / **ACCEPT·DROP·REJECT는 타겟이고 체인이 아니다** / **-A 뒤에 추가 · -I 앞에 삽입 · -P 기본정책 · -j 타겟 · -t 테이블 · -m state** / **위에서 아래로 먼저 일치한 룰이 적용**되므로 순서가 중요 / **DNAT=PREROUTING · SNAT·MASQUERADE=POSTROUTING**
+
+_관련 개념: firewall · nat · sudocap_
 
 ---
 

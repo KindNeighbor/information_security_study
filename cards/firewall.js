@@ -108,7 +108,7 @@ window.DATA = (window.DATA || []).concat(
       {
         "k": "note",
         "title": "Snort 주요 옵션 (출제 포인트)",
-        "d": "<ul class='klist'><li><b>msg</b> — 경보에 출력할 <b>메시지</b></li><li><b>content</b> — <b>페이로드에서 찾을 문자열·바이트</b>(핵심 옵션)</li><li><b>nocase</b> — content 검사 시 <b>대소문자 무시</b></li><li><b>offset / depth</b> — 검사 <b>시작 위치</b> / 검사할 <b>범위</b></li><li><b>sid</b> — 룰의 <b>고유 번호</b>(사용자 정의는 1,000,000 이상) · <b>rev</b> — 룰 <b>개정 번호</b></li><li><b>flags</b> — <b>TCP 플래그</b> 조건(예: <code>flags:S;</code> = SYN) </li><li><b>threshold</b> — 임계치(횟수·시간)로 과도한 경보 억제</li><li><b>classtype / priority</b> — 공격 분류·우선순위 · <b>pcre</b> — 정규식 검사</li></ul>"
+        "d": "<ul class='klist'><li><b>msg</b> — 경보에 출력할 <b>메시지</b></li><li><b>content</b> — <b>페이로드에서 찾을 문자열·바이트</b>(핵심 옵션)</li><li><b>nocase</b> — content 검사 시 <b>대소문자 무시</b></li><li><b>offset / depth</b> — 검사 <b>시작 위치</b> / 검사할 <b>범위</b></li><li><b>sid</b> — 룰의 <b>고유 번호</b>(사용자 정의는 1,000,000 이상) · <b>rev</b> — 룰 <b>개정 번호</b></li><li><b>flags</b> — <b>TCP 플래그</b> 조건(예: <code>flags:S;</code> = SYN) </li><li><b>threshold</b> — 임계치(횟수·시간)로 과도한 경보 억제</li><li><b>classtype / priority</b> — 공격 분류·우선순위 · <b>pcre</b> — 정규식 검사</li><li><b>dsize</b> — 페이로드 <b>크기</b> 조건 · <b>itype / icode</b> — <b>ICMP</b> 타입·코드 조건 · <b>sameip</b> — 출발지와 목적지 IP가 같은 경우(<b>Land 공격</b> 탐지) · <b>distance / within</b> — 직전 content 이후 <b>건너뛸 거리 / 검사할 범위</b></li></ul>"
       },
       {
         "k": "note",
@@ -145,6 +145,39 @@ window.DATA = (window.DATA || []).concat(
     ],
     "finalLiner": "<b>IDS=탐지·경보(미러링·수동)</b> vs <b>IPS=탐지+실시간 차단(인라인)</b> — IPS는 <b>오탐 시 정상 트래픽까지 차단</b> / <b>허니팟</b>=미끼로 유인·지연·기법 수집(들어오면 곧 공격), 조건=<b>쉽게 발견·실제처럼·지속 감시</b>, <b>허니넷</b>=허니팟 네트워크 / 위험=경유지 악용 → <b>격리</b>",
     "related": ["ids", "snort", "firewall"]
+  },
+  {
+    "id": "iptables",
+    "term": "iptables — 리눅스 방화벽 명령",
+    "en": "iptables / netfilter",
+    "cat": "네트워크 보안",
+    "tags": ["테이블→체인→룰→타겟", "filter·nat·mangle·raw", "INPUT·OUTPUT·FORWARD", "위에서 아래로 먼저 일치한 룰", "-P DROP 후 필요한 것만 허용"],
+    "oneLiner": "iptables=리눅스 커널 netfilter를 다루는 방화벽 명령 / 구조는 테이블→체인→룰→타겟이고, 룰은 위에서 아래로 평가되어 먼저 일치한 것이 적용되므로 순서가 결과를 바꾼다",
+    "blocks": [
+      {
+        "k": "def",
+        "title": "구조 — 테이블 · 체인 · 타겟",
+        "d": "<div class='cmp'><div class='cmp-item'><span class='cmp-label'>테이블 (무엇을 하려는가)</span><div class='row'><b>filter</b> — 기본. 허용·차단 / <b>nat</b> — 주소 변환 / <b>mangle</b> — 헤더 값 변경(TTL·TOS) / <b>raw</b> — 연결 추적 예외</div></div><div class='cmp-item'><span class='cmp-label'>체인 (언제 검사하는가)</span><div class='row'><b>filter</b>: <b>INPUT</b>(나에게 들어옴) · <b>OUTPUT</b>(내가 내보냄) · <b>FORWARD</b>(나를 거쳐 통과)<br><b>nat</b>: <b>PREROUTING</b>(라우팅 전 → <b>DNAT</b>·포트 포워딩) · <b>POSTROUTING</b>(라우팅 후 → <b>SNAT·MASQUERADE</b>)</div></div><div class='cmp-item'><span class='cmp-label'>타겟 (어떻게 처리하는가)</span><div class='row'><b>ACCEPT</b> 허용 · <b>DROP</b> 조용히 버림(<b>무응답</b>) · <b>REJECT</b> 거부 응답을 보냄 · <b>LOG</b> 기록만 하고 다음 룰로 · <b>DNAT·SNAT·MASQUERADE</b></div></div></div><p class='on-key'><span class='lbl'>함정</span><b>REJECT·ACCEPT·DROP은 체인이 아니라 타겟</b>이다. 체인은 <b>INPUT·OUTPUT·FORWARD</b> 셋(+nat의 PRE/POSTROUTING). 이 둘을 섞어 내는 문항이 나온다.</p>"
+      },
+      {
+        "k": "warn",
+        "title": "주요 옵션",
+        "d": "<ul class='klist'><li><b><code>-A</code></b> 체인 <b>끝에 추가</b>(append) · <b><code>-I</code></b> <b>맨 앞에 삽입</b>(insert) · <b><code>-D</code></b> 삭제 · <b><code>-R</code></b> 교체</li><li><b><code>-L</code></b> 목록 보기 (<code>-n</code> 숫자 그대로, <code>-v</code> 상세, <code>--line-numbers</code> 줄번호)</li><li><b><code>-F</code></b> 룰 전체 삭제(flush) · <b><code>-X</code></b> 사용자 체인 삭제 · <b><code>-Z</code></b> 카운터 초기화</li><li><b><code>-P</code></b> <b>기본 정책</b> 설정 — <code>iptables -P INPUT DROP</code></li><li><b><code>-p</code></b> 프로토콜 · <b><code>-s</code></b> 출발지 · <b><code>-d</code></b> 목적지 · <b><code>--sport</code>·<code>--dport</code></b> 포트 · <b><code>-i</code>·<code>-o</code></b> 입력·출력 인터페이스</li><li><b><code>-j</code></b> 타겟 지정(jump) · <b><code>-t</code></b> 테이블 지정(생략하면 filter)</li><li><b><code>-m state --state</code></b> 상태 추적 — <b>NEW·ESTABLISHED·RELATED·INVALID</b> (신형은 <code>-m conntrack --ctstate</code>)</li></ul>"
+      },
+      {
+        "k": "note",
+        "title": "예시와 읽는 법",
+        "d": "<pre># 특정 대역에서 오는 SSH만 허용\niptables -A INPUT -p tcp --dport 22 -s 10.0.0.0/24 -j ACCEPT\n\n# 이미 맺어진 연결의 응답은 허용 (상태 추적)\niptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT\n\n# 그 외 들어오는 것은 전부 차단 (기본 정책)\niptables -P INPUT DROP\n\n# 내부망을 공인 IP 하나로 내보내기 (PAT)\niptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE\n\n# 외부 8080 요청을 내부 서버 80으로 넘기기 (포트 포워딩)\niptables -t nat -A PREROUTING -p tcp --dport 8080 -j DNAT --to 192.168.0.10:80</pre><p class='on-key'><span class='lbl'>읽는 순서</span><b>어느 테이블(-t) → 어느 체인(-A INPUT) → 무슨 조건(-p·-s·--dport) → 어떻게 처리(-j)</b>. 이 순서로 읽으면 어떤 룰이든 해석된다.</p>"
+      },
+      {
+        "k": "warn",
+        "title": "시험 포인트",
+        "d": "<ul class='klist'><li><b>룰은 위에서 아래로 순차 평가되고, 먼저 일치한 룰이 적용</b>된다. 그래서 <b><code>-A</code>(뒤에 붙임)와 <code>-I</code>(앞에 삽입)의 결과가 다르다</b>. 차단 룰 뒤에 허용 룰을 넣으면 적용되지 않는다</li><li><b>기본 정책은 Deny All</b> — <code>-P INPUT DROP</code>으로 막고 필요한 것만 <code>ACCEPT</code>하는 <b>화이트리스트</b> 방식이 원칙</li><li><b>DROP vs REJECT</b> — DROP은 무응답이라 스캔에 <b>filtered</b>로 보이고, REJECT는 거부 응답을 보내 <b>포트가 닫힌 것처럼</b> 보인다. 정보를 덜 주는 쪽은 <b>DROP</b></li><li><b>nat 테이블의 방향</b> — <b>들어오는 것의 목적지를 바꾸면 DNAT(PREROUTING)</b>, <b>나가는 것의 출발지를 바꾸면 SNAT·MASQUERADE(POSTROUTING)</b></li><li><b>설정은 재부팅 시 사라진다</b> — <code>iptables-save</code>로 저장해야 유지된다</li><li>iptables는 <b>방화벽</b>이다. <b>로그 수집·분석 도구가 아니다</b>(이 함정이 기출에 나왔다)</li></ul>"
+      }
+    ],
+    "finalLiner": "구조 <b>테이블(filter·nat·mangle·raw) → 체인(INPUT·OUTPUT·FORWARD, nat은 PRE/POSTROUTING) → 룰 → 타겟(ACCEPT·DROP·REJECT·LOG·DNAT·SNAT)</b> / <b>ACCEPT·DROP·REJECT는 타겟이고 체인이 아니다</b> / <b>-A 뒤에 추가 · -I 앞에 삽입 · -P 기본정책 · -j 타겟 · -t 테이블 · -m state</b> / <b>위에서 아래로 먼저 일치한 룰이 적용</b>되므로 순서가 중요 / <b>DNAT=PREROUTING · SNAT·MASQUERADE=POSTROUTING</b>",
+    "related": ["firewall", "nat", "sudocap"]
   }
 ]
 );
+

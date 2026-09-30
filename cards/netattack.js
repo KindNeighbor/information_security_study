@@ -182,6 +182,34 @@ window.DATA = (window.DATA || []).concat(
     ],
     "finalLiner": "원격 접속 공격=<b>Telnet 23·SSH 22·RDP 3389·VNC 5900</b> 표적 / 수법=<b>무차별 대입·크리덴셜 스터핑·평문 도청(Telnet·FTP)·취약점</b> / 성공 시 <b>즉시 장악</b>(RDP=랜섬웨어 초기 침투) / 대응=<b>SSH·키 인증·root 로그인 금지·IP 제한·계정 잠금·MFA·VPN 경유</b>",
     "related": ["hijacking", "sniffing", "passwdfile"]
+  },
+  {
+    "id": "nmap",
+    "term": "nmap — 스캔 옵션",
+    "en": "Network Mapper",
+    "cat": "네트워크 보안",
+    "tags": ["-sS 하프오픈(로그 안 남김)", "-sT 연결 완성", "-sU UDP", "-O OS 탐지 · -sV 버전", "-Pn 핑 생략 · -f 단편화"],
+    "oneLiner": "nmap=포트·서비스·OS를 알아내는 대표 스캐너 / -sS는 RST로 끊어 로그를 안 남기는 하프오픈, -sT는 3-way를 완성해 로그에 남는다 / 상태는 open·closed·filtered로 갈린다",
+    "blocks": [
+      {
+        "k": "warn",
+        "title": "스캔 유형 옵션 (대문자 S 뒤 한 글자로 구분)",
+        "d": "<ul class='klist'><li><b><code>-sS</code> TCP SYN 스캔(하프 오픈)</b> — SYN을 보내고 <b>SYN+ACK가 오면 ACK 대신 RST로 끊는다</b>. 연결을 완성하지 않아 <b>로그에 잘 남지 않는다</b>(스텔스). <b>기본이자 가장 많이 쓰임</b>, 관리자 권한 필요</li><li><b><code>-sT</code> TCP Connect 스캔</b> — <b>3-way handshake를 완성</b>한다. 권한이 없어도 되지만 <b>연결 기록이 로그에 남는다</b></li><li><b><code>-sU</code> UDP 스캔</b> — 응답이 없으면 열림으로 <b>추정</b>, <b>ICMP port unreachable</b>이 오면 닫힘. <b>매우 느리다</b></li><li><b><code>-sA</code> ACK 스캔</b> — 포트 개폐가 아니라 <b>방화벽 룰셋·필터링 여부</b>를 파악</li><li><b><code>-sN</code>·<code>-sF</code>·<code>-sX</code></b> — <b>NULL(플래그 없음) · FIN · Xmas(FIN+PSH+URG)</b> 스캔. 비정상 플래그로 <b>IDS·방화벽 회피</b>를 노린다. <b>응답 없으면 열림, RST면 닫힘</b></li><li><b><code>-sn</code>(구 <code>-sP</code>) 핑 스캔</b> — <b>살아 있는 호스트만</b> 찾고 포트는 스캔하지 않는다</li></ul>"
+      },
+      {
+        "k": "note",
+        "title": "탐지·회피·기타 옵션",
+        "d": "<ul class='klist'><li><b><code>-sV</code></b> 서비스·<b>버전</b> 탐지 · <b><code>-O</code></b> <b>OS 탐지</b>(TCP/IP 스택 지문) · <b><code>-A</code></b> 공격적 스캔(OS+버전+스크립트+traceroute)</li><li><b><code>-p</code></b> 포트 지정(<code>-p 22,80</code>, <code>-p 1-1000</code>, <code>-p-</code>는 전체 65535)</li><li><b><code>-Pn</code></b> <b>핑 생략</b> — 호스트가 살아 있다고 가정. <b>ICMP가 차단된 환경</b>에서 필요</li><li><b><code>-f</code></b> 패킷 <b>단편화</b> · <b><code>-D</code></b> <b>디코이</b>(위장 IP를 섞어 출발지를 숨김) · <b><code>-S</code></b> 출발지 IP 위조 — <b>IDS 회피용</b></li><li><b><code>-T0</code>~<code>-T5</code></b> 타이밍(<b>T0 가장 느림·은밀 / T4 빠름</b>). 느릴수록 탐지가 어렵다</li><li><b><code>--script</code></b> <b>NSE</b>(Nmap Scripting Engine)로 취약점 점검까지 수행</li></ul>"
+      },
+      {
+        "k": "note",
+        "title": "포트 상태 6가지와 판정 근거",
+        "d": "<div class='cmp'><div class='cmp-item'><span class='cmp-label'>open</span><div class='row'><b>SYN+ACK</b> 응답 — 서비스가 대기 중</div></div><div class='cmp-item'><span class='cmp-label'>closed</span><div class='row'><b>RST</b> 응답 — 호스트는 살아 있으나 그 포트에 서비스가 없음</div></div><div class='cmp-item'><span class='cmp-label'>filtered</span><div class='row'><b>무응답</b> 또는 ICMP 차단 메시지 — <b>방화벽이 막고 있다</b></div></div><div class='cmp-item'><span class='cmp-label'>unfiltered / open|filtered / closed|filtered</span><div class='row'>필터링은 없으나 개폐 판정 불가 / 둘 중 하나로 확정 못 한 상태(UDP·NULL 스캔에서 흔함)</div></div></div><p class='on-key'><span class='lbl'>연결</span><b>SYN+ACK=열림 / RST=닫힘 / 무응답=필터링</b>은 포트 스캔 문항의 고정 답이다. 방화벽이 <b>DROP</b>이면 무응답(filtered), <b>REJECT</b>면 거부 응답이 온다.</p>"
+      }
+    ],
+    "finalLiner": "<b>-sS 하프오픈(RST로 끊어 로그 안 남김, 기본) / -sT 3-way 완성(로그 남음) / -sU UDP(느림) / -sA 방화벽 룰셋 파악 / -sN·-sF·-sX 비정상 플래그로 회피</b> / <b>-sV 버전 · -O OS · -A 공격적 · -Pn 핑 생략 · -f 단편화 · -D 디코이 · -T 타이밍 · --script NSE</b> / 상태 <b>open=SYN+ACK · closed=RST · filtered=무응답</b>",
+    "related": ["portscan", "firewall", "ids"]
   }
 ]
 );
+
