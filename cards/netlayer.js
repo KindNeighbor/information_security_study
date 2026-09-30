@@ -155,6 +155,39 @@ window.DATA = (window.DATA || []).concat(
     ],
     "finalLiner": "접근 경로 <b>콘솔·VTY(원격)·AUX·Enable</b> 각각 패스워드 / <b>enable password=평문 노출</b> vs <b>enable secret=해시(우선 적용, 권장)</b> / <code>service password-encryption</code>은 <b>약한 보호</b> / <b>Telnet 대신 SSH</b>·ACL로 관리 IP 제한·불필요 서비스 차단",
     "related": ["routing", "ripospf", "sudocap"]
+  },
+  {
+    "id": "nat",
+    "term": "NAT · PAT — 주소 변환",
+    "en": "Network Address Translation / Port Address Translation",
+    "cat": "네트워크 보안",
+    "tags": ["사설↔공인 IP 변환", "정적=1:1 고정", "동적=풀에서 배정", "PAT=포트로 구분 1:N", "NAT는 방화벽이 아니다"],
+    "oneLiner": "NAT=사설 IP와 공인 IP를 바꿔 주는 기술로 IPv4 주소 고갈 대응이 본래 목적 / 정적은 1:1 고정, 동적은 공인 IP 풀에서 배정, PAT는 공인 IP 하나에 포트로 여러 대를 태운다",
+    "blocks": [
+      {
+        "k": "def",
+        "title": "정의 · 왜 만들었나",
+        "d": "<b>NAT(Network Address Translation)</b> — 패킷이 라우터를 지날 때 <b>IP 주소를 바꿔 주는</b> 기술.<ul class='klist'><li><b>본래 목적은 IPv4 주소 고갈 대응</b>이다. 내부에서는 마음대로 쓸 수 있는 <b>사설 IP</b>를 쓰고, 밖으로 나갈 때만 <b>공인 IP</b>로 바꾼다</li><li><b>보안(내부 구조 은닉)은 부수 효과</b>다 — 시험에서 이 순서를 바꿔 묻는다</li><li>나갈 때 <b>출발지 주소·포트를 바꾸고 변환 테이블(NAT 테이블)에 기록</b>해 두었다가, 응답이 돌아오면 테이블을 보고 원래 주소로 되돌린다</li></ul>"
+      },
+      {
+        "k": "warn",
+        "title": "종류 3가지 (최다 출제)",
+        "d": "<div class='cmp'><div class='cmp-item'><span class='cmp-label'>정적 NAT (Static NAT) — 1 : 1</span><div class='row'>사설 IP 하나에 공인 IP 하나를 <b>고정 배정</b>. 매핑이 늘 살아 있으므로 <b>외부에서 내부로 먼저 접속하는 것이 가능</b>하다(공개 웹서버).<br><b>주소 절약 효과는 없다</b> — 내부 호스트 수만큼 공인 IP가 필요</div></div><div class='cmp-item'><span class='cmp-label'>동적 NAT (Dynamic NAT) — N : M</span><div class='row'>공인 IP <b>풀(pool)</b>에서 <b>남는 것을 그때그때 배정</b>하고 끝나면 회수.<br>주소를 어느 정도 절약하나 <b>풀이 고갈되면 접속이 실패</b>한다. 매핑이 미리 없으므로 <b>외부에서 먼저 들어올 수 없다</b></div></div><div class='cmp-item'><span class='cmp-label'>PAT (Port Address Translation) — N : 1</span><div class='row'>공인 IP <b>하나</b>에 여러 내부 호스트를 태우고 <b>포트 번호로 구분</b>한다. 이름에 <b>Port</b>가 있는 게 그대로 답.<br><b>주소 절약 효과가 가장 크다</b>. 가정용 공유기가 이것이며, <b>NAPT · IP 마스커레이딩 · NAT Overload</b>라고도 한다</div></div></div><p class='on-key'><span class='lbl'>구분 요령</span><b>정적=고정 1:1(주소 절약 0) / 동적=풀에서 배정 / PAT=포트로 구분 1:N(절약 최대)</b>. 「외부에서 내부로 먼저 접속할 수 있는가」를 물으면 <b>정적 NAT</b>(또는 포트 포워딩)다.</p>"
+      },
+      {
+        "k": "warn",
+        "title": "보안 관점 — 장점과 함정",
+        "d": "<ul class='klist'><li><b>장점</b> — 내부 <b>IP 주소 체계를 숨긴다</b>(정찰을 어렵게 함). PAT는 변환 테이블에 항목이 없으면 응답을 되돌릴 수 없어 <b>외부에서 내부로 직접 접속하기 어렵다</b></li><li><b>가장 중요한 함정: NAT는 방화벽이 아니다.</b> <b>접근통제 정책이 없고</b>, 내부에서 나가는 트래픽은 그대로 나간다. 악성코드가 내부에서 외부로 연결하는 것(리버스 셸·C2)은 <b>NAT가 전혀 막지 못한다</b></li><li><b>포트 포워딩</b> — 외부의 특정 포트로 온 접속을 내부의 지정 호스트로 넘긴다. 필요한 만큼만 열어야 한다</li><li><b>로그 추적이 어려워진다</b> — 여러 사용자가 <b>같은 공인 IP</b>로 보이므로, 사고 조사 때 <b>포트와 시각까지 기록</b>해야 특정이 가능하다</li></ul>"
+      },
+      {
+        "k": "note",
+        "title": "NAT가 깨뜨리는 것들",
+        "d": "<ul class='klist'><li><b>IPSec AH와 충돌</b> — AH는 <b>IP 헤더까지 인증 범위에 포함</b>하는데 NAT가 주소를 바꾸면 <b>무결성 검증이 실패</b>한다. 그래서 <b>NAT-T(NAT Traversal)</b>로 <b>UDP 4500</b>에 캡슐화해 통과시키고, 보통 <b>ESP</b>와 함께 쓴다</li><li><b>FTP 액티브 모드</b> — 서버가 클라이언트로 데이터 연결을 거는데 NAT 안쪽 주소로는 닿지 않는다 → <b>패시브 모드</b>를 쓰는 이유</li><li><b>종단 간(End-to-End) 통신 원칙을 훼손</b>하고, P2P·VoIP에 제약이 생긴다</li><li>근본 해법은 <b>IPv6</b>(주소가 충분해 NAT가 필요 없다)</li></ul>"
+      }
+    ],
+    "finalLiner": "NAT=<b>사설↔공인 주소 변환</b>, 본래 목적은 <b>IPv4 주소 고갈 대응</b>(보안은 부수 효과) / <b>정적 NAT=1:1 고정(외부에서 먼저 접속 가능, 절약 0)</b> · <b>동적 NAT=공인 IP 풀에서 배정(고갈되면 실패)</b> · <b>PAT=포트로 구분하는 N:1(절약 최대, 공유기)</b> / <b>NAT는 방화벽이 아니다</b>(접근통제 없음, 나가는 트래픽은 그대로) / <b>AH는 NAT와 충돌 → NAT-T(UDP 4500)</b>, FTP는 <b>패시브</b>로",
+    "related": ["subnet", "ipsec", "firewall"]
   }
 ]
 );
+

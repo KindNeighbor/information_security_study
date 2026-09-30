@@ -1,7 +1,7 @@
 # 정보보안기사 학습노트 — 인덱스
 
 > `cards/*.js`가 원본이고 `node build.js`로 이 폴더가 자동 생성됩니다. **이 폴더의 .md는 직접 수정하지 마세요.**
-> 마지막 갱신 **2026-09-27** · 총 **184장**
+> 마지막 갱신 **2026-09-30** · 총 **185장**
 
 ## 주제 목록
 
@@ -22,7 +22,7 @@
 | 네트워크 활용(TCP/IP) — HTTP | 6 | [http.md](http.md) |
 | 네트워크 활용(TCP/IP) — 메일·네트워크 관리 | 3 | [appsvc.md](appsvc.md) |
 | 네트워크 활용(TCP/IP) — 전송 계층 | 4 | [translayer.md](translayer.md) |
-| 네트워크 활용(TCP/IP) — 인터넷 계층 | 5 | [netlayer.md](netlayer.md) |
+| 네트워크 활용(TCP/IP) — 인터넷 계층 | 6 | [netlayer.md](netlayer.md) |
 | 네트워크 활용(TCP/IP) — 네트워크 접근 계층 | 3 | [netaccess.md](netaccess.md) |
 | 네트워크 기반 공격 — DoS·DDoS | 6 | [dosattack.md](dosattack.md) |
 | 네트워크 기반 공격 — 스캐닝·스니핑·스푸핑·하이재킹 | 6 | [netattack.md](netattack.md) |
@@ -131,7 +131,7 @@ https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/n
 
 **translayer.md** (4장) — 전송 계층 · 세그먼트 · 포트 · TCP 헤더 구조 · 3-way Handshake · TCP 연결 상태 · UDP 헤더 구조
 
-**netlayer.md** (5장) — IP 헤더 구조 · TTL · MTU/단편화 · IP 주소 체계 · 서브네팅 · 전송 방식 · 라우팅 · 라우팅 프로토콜 분류 · RIP · OSPF · BGP · 라우터 보안 · 패스워드 설정
+**netlayer.md** (6장) — IP 헤더 구조 · TTL · MTU/단편화 · IP 주소 체계 · 서브네팅 · 전송 방식 · 라우팅 · 라우팅 프로토콜 분류 · RIP · OSPF · BGP · 라우터 보안 · 패스워드 설정 · NAT · PAT — 주소 변환
 
 **netaccess.md** (3장) — 네트워크 접근 계층 · 주요 기능 · CSMA/CD · CSMA/CA · VLAN (가상 랜)
 
