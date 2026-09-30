@@ -1,7 +1,7 @@
 # 정보보안기사 학습노트 — 인덱스
 
 > `cards/*.js`가 원본이고 `node build.js`로 이 폴더가 자동 생성됩니다. **이 폴더의 .md는 직접 수정하지 마세요.**
-> 마지막 갱신 **2026-09-30** · 총 **187장**
+> 마지막 갱신 **2026-09-30** · 총 **188장**
 
 ## 주제 목록
 
@@ -13,7 +13,7 @@
 | 레지스트리·이벤트 로그 | 2 | [sysrecord.md](sysrecord.md) |
 | 악성코드 | 2 | [malware.md](malware.md) |
 | 메모리 익스플로잇 | 6 | [memexploit.md](memexploit.md) |
-| 유닉스·리눅스 보안 기초 | 22 | [unix.md](unix.md) |
+| 유닉스·리눅스 보안 기초 | 23 | [unix.md](unix.md) |
 | 소프트웨어 취약점 (개발 보안) | 1 | [swvuln.md](swvuln.md) |
 | 고급 위협 (APT·킬체인·DLL) | 3 | [threat.md](threat.md) |
 | 애플리케이션·웹 보안 | 1 | [webapp.md](webapp.md) |
@@ -113,7 +113,7 @@ https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/n
 
 **memexploit.md** (6장) — 프로세스 메모리 구조 · 버퍼 오버플로 · 위험한 C 함수 vs 안전한 함수 · 셸코드 · 힙 스프레이 · 메모리 보호 (완화 기법)
 
-**unix.md** (22장) — 리눅스·유닉스 특징 · 리눅스 구조 (커널·셸·파일시스템) · 리눅스 파일시스템 구조 · 파일시스템 내부 구조 (부트·슈퍼·아이노드·데이터) · 디스크 파티션 · 파일시스템 관리 (생성·검사·마운트) · 파일시스템 종류 · 리눅스 부팅 순서 · 부트로더 · 런레벨 · 셸 종류 (bash·sh·csh·ksh) · bash 환경 설정 파일 · 셸 환경 변수 · 셸쇼크 · 심볼릭 링크 · 하드 링크 · UID · GID (사용자·그룹 식별) · 파일 권한 (rwx · chmod · umask) · 특수 권한 (SetUID · SetGID · 스티키 비트) · 계정 파일 (/etc/passwd · /etc/shadow) · 리눅스 로그 파일 · cron · crontab (예약 작업) · 리눅스 보안 도구 · 점검 명령 · 권한 위임의 대안 (sudo · Capabilities)
+**unix.md** (23장) — 리눅스·유닉스 특징 · 리눅스 구조 (커널·셸·파일시스템) · 리눅스 파일시스템 구조 · 파일시스템 내부 구조 (부트·슈퍼·아이노드·데이터) · 디스크 파티션 · 파일시스템 관리 (생성·검사·마운트) · 파일시스템 종류 · 리눅스 부팅 순서 · 부트로더 · 런레벨 · 셸 종류 (bash·sh·csh·ksh) · bash 환경 설정 파일 · 셸 환경 변수 · 셸쇼크 · 심볼릭 링크 · 하드 링크 · UID · GID (사용자·그룹 식별) · 파일 권한 (rwx · chmod · umask) · 특수 권한 (SetUID · SetGID · 스티키 비트) · 계정 파일 (/etc/passwd · /etc/shadow) · 리눅스 로그 파일 · cron · crontab (예약 작업) · 리눅스 보안 도구 · 점검 명령 · 권한 위임의 대안 (sudo · Capabilities) · PAM — 끼워 넣는 인증 모듈
 
 **swvuln.md** (1장) — 경쟁 조건
 

@@ -808,3 +808,52 @@ _관련 개념: specialperm · uidgid · passwdfile_
 
 ---
 
+## PAM — 끼워 넣는 인증 모듈 — Pluggable Authentication Modules
+
+`시스템 보안`  `auth·account·password·session` `required는 끝까지·requisite는 즉시 중단` `/etc/pam.d/<서비스>` `pam_wheel=su 제한` `pam_tally2=계정 잠금`
+
+**한줄:** PAM=응용프로그램과 인증 방식을 분리해 설정만으로 인증 정책을 바꾸는 구조 / 타입은 auth·account·password·session 4가지 / required는 실패해도 끝까지 실행하고 requisite는 즉시 중단한다
+
+**무엇을 위한 것인가**
+
+**PAM(Pluggable Authentication Modules)** — **끼워 넣을 수 있는(Pluggable) 인증 모듈**. **su·sshd·login 같은 프로그램**과 **인증 방식**을 분리해, **프로그램을 고치지 않고 설정 파일만으로** 인증 정책을 바꿀 수 있게 한다.
+- 설정 위치 — **`/etc/pam.d/<서비스명>`**(`su`·`sshd`·`login` 등 서비스별 파일). 옛 방식은 `/etc/pam.conf` 한 파일
+- 한 줄의 형식 — **`타입  제어플래그  모듈  옵션`**
+
+**모듈 타입 4가지 (무엇을 검사하는가)**
+
+- **auth — 너 맞아?**: 사용자를 **인증**한다(패스워드 확인), 그룹 멤버십 부여
+
+- **account — 쓸 수 있는 계정이야?**: 계정의 **유효성**을 본다 — **만료 여부·접속 가능 시간·접근 허용**. **인증(auth)과는 별개 단계**
+
+- **password — 바꿀 때 규칙**: 패스워드를 **변경할 때** 적용되는 정책(복잡도·최소 길이)
+
+- **session — 쓰는 동안**: 세션 시작·종료 시 처리 — **로그 기록, 홈 디렉터리 마운트, 자원 제한**
+
+**[암기]** **auth=너 맞아? / account=쓸 수 있는 계정이야? / password=바꿀 때 / session=쓰는 동안.** 특히 **auth와 account를 다른 단계**로 구분하는 것이 출제 포인트.
+
+**제어 플래그 (required vs requisite가 핵심)**
+
+- **required** — 실패하면 **최종 실패**. 단 **즉시 중단하지 않고 나머지 모듈을 모두 실행한 뒤** 실패를 반환한다. **어느 단계에서 실패했는지 공격자에게 알려주지 않으려는** 설계
+- **requisite** — 실패하면 **그 자리에서 즉시 중단**하고 실패 반환
+- **sufficient** — 성공하면(앞의 required가 모두 통과했다면) **즉시 성공으로 끝내고 이후 모듈은 보지 않는다**. 실패해도 전체가 실패하지는 않는다
+- **optional** — 결과가 대체로 **무시**된다(그 타입의 유일한 모듈일 때만 영향)
+- **include** — 다른 설정 파일의 규칙을 **가져온다**
+**[한 줄]** **required는 끝까지 가고, requisite는 즉시 끊는다.** 둘 다 실패 시 최종 결과는 실패지만 **중단 시점**이 다르다 — 이 차이를 묻는다.
+
+**대표 모듈과 보안 설정**
+
+- **`pam_wheel.so`** — **su를 wheel 그룹 구성원만** 쓰게 제한. **기출 단골**
+`auth required pam_wheel.so use_uid`
+- **`pam_cracklib.so` · `pam_pwquality.so`** — 패스워드 **복잡도·최소 길이** 강제
+- **`pam_tally2.so` · `pam_faillock.so`** — **로그인 실패 횟수**로 **계정 잠금**(무차별 대입 대응)
+- **`pam_unix.so`** — 전통적인 `/etc/passwd`·`/etc/shadow` 기반 인증
+- `pam_limits.so`(자원 제한) · `pam_time.so`(시간대 제어) · `pam_listfile.so`(목록 기반 허용·차단) · `pam_deny.so`·`pam_permit.so`
+**[시험 범위]** 모듈 이름을 전부 외울 필요는 없다. **4가지 타입 · required/requisite/sufficient 차이 · `/etc/pam.d` 위치 · pam_wheel로 su 제한**까지가 실질 출제 범위다.
+
+> **시험 한줄정리:** PAM=**프로그램과 인증 방식을 분리**해 설정만으로 정책을 바꾸는 구조, 위치 **`/etc/pam.d/<서비스>`**, 형식 **타입·제어플래그·모듈·옵션** / 타입 **auth(너 맞아?) · account(쓸 수 있는 계정?) · password(바꿀 때) · session(쓰는 동안)** / **required=끝까지 실행 후 실패 / requisite=즉시 중단 / sufficient=성공하면 즉시 종료** / **pam_wheel=su 제한 · pam_cracklib=복잡도 · pam_tally2=계정 잠금**
+
+_관련 개념: sudocap · linuxlog · authtype_
+
+---
+

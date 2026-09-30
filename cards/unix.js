@@ -744,6 +744,39 @@ window.DATA = (window.DATA || []).concat(
     ],
     "finalLiner": "SetUID=권한을 <b>통째로</b> 빌려주는 1970년대 방식 → 현대 대안: <b>sudo</b>(<code>/etc/sudoers</code> 정책+<b>감사 로그</b>, <code>su</code>보다 권장) · <b>Capabilities</b>(root를 40여 조각으로, <code>ping</code>=<code>cap_net_raw</code>) · <b>SELinux/AppArmor</b>(MAC, root도 정책 밖 불가) / 강화 원칙=<b>SetUID 제거 후 대체</b>",
     "related": ["specialperm", "uidgid", "passwdfile"]
+  },
+  {
+    "id": "pam",
+    "term": "PAM — 끼워 넣는 인증 모듈",
+    "en": "Pluggable Authentication Modules",
+    "cat": "시스템 보안",
+    "tags": ["auth·account·password·session", "required는 끝까지·requisite는 즉시 중단", "/etc/pam.d/<서비스>", "pam_wheel=su 제한", "pam_tally2=계정 잠금"],
+    "oneLiner": "PAM=응용프로그램과 인증 방식을 분리해 설정만으로 인증 정책을 바꾸는 구조 / 타입은 auth·account·password·session 4가지 / required는 실패해도 끝까지 실행하고 requisite는 즉시 중단한다",
+    "blocks": [
+      {
+        "k": "def",
+        "title": "무엇을 위한 것인가",
+        "d": "<b>PAM(Pluggable Authentication Modules)</b> — <b>끼워 넣을 수 있는(Pluggable) 인증 모듈</b>. <b>su·sshd·login 같은 프로그램</b>과 <b>인증 방식</b>을 분리해, <b>프로그램을 고치지 않고 설정 파일만으로</b> 인증 정책을 바꿀 수 있게 한다.<ul class='klist'><li>설정 위치 — <b><code>/etc/pam.d/&lt;서비스명&gt;</code></b>(<code>su</code>·<code>sshd</code>·<code>login</code> 등 서비스별 파일). 옛 방식은 <code>/etc/pam.conf</code> 한 파일</li><li>한 줄의 형식 — <b><code>타입  제어플래그  모듈  옵션</code></b></li></ul>"
+      },
+      {
+        "k": "warn",
+        "title": "모듈 타입 4가지 (무엇을 검사하는가)",
+        "d": "<div class='cmp'><div class='cmp-item'><span class='cmp-label'>auth — 너 맞아?</span><div class='row'>사용자를 <b>인증</b>한다(패스워드 확인), 그룹 멤버십 부여</div></div><div class='cmp-item'><span class='cmp-label'>account — 쓸 수 있는 계정이야?</span><div class='row'>계정의 <b>유효성</b>을 본다 — <b>만료 여부·접속 가능 시간·접근 허용</b>. <b>인증(auth)과는 별개 단계</b></div></div><div class='cmp-item'><span class='cmp-label'>password — 바꿀 때 규칙</span><div class='row'>패스워드를 <b>변경할 때</b> 적용되는 정책(복잡도·최소 길이)</div></div><div class='cmp-item'><span class='cmp-label'>session — 쓰는 동안</span><div class='row'>세션 시작·종료 시 처리 — <b>로그 기록, 홈 디렉터리 마운트, 자원 제한</b></div></div></div><p class='on-key'><span class='lbl'>암기</span><b>auth=너 맞아? / account=쓸 수 있는 계정이야? / password=바꿀 때 / session=쓰는 동안.</b> 특히 <b>auth와 account를 다른 단계</b>로 구분하는 것이 출제 포인트.</p>"
+      },
+      {
+        "k": "warn",
+        "title": "제어 플래그 (required vs requisite가 핵심)",
+        "d": "<ul class='klist'><li><b>required</b> — 실패하면 <b>최종 실패</b>. 단 <b>즉시 중단하지 않고 나머지 모듈을 모두 실행한 뒤</b> 실패를 반환한다. <b>어느 단계에서 실패했는지 공격자에게 알려주지 않으려는</b> 설계</li><li><b>requisite</b> — 실패하면 <b>그 자리에서 즉시 중단</b>하고 실패 반환</li><li><b>sufficient</b> — 성공하면(앞의 required가 모두 통과했다면) <b>즉시 성공으로 끝내고 이후 모듈은 보지 않는다</b>. 실패해도 전체가 실패하지는 않는다</li><li><b>optional</b> — 결과가 대체로 <b>무시</b>된다(그 타입의 유일한 모듈일 때만 영향)</li><li><b>include</b> — 다른 설정 파일의 규칙을 <b>가져온다</b></li></ul><p class='on-key'><span class='lbl'>한 줄</span><b>required는 끝까지 가고, requisite는 즉시 끊는다.</b> 둘 다 실패 시 최종 결과는 실패지만 <b>중단 시점</b>이 다르다 — 이 차이를 묻는다.</p>"
+      },
+      {
+        "k": "safe",
+        "title": "대표 모듈과 보안 설정",
+        "d": "<ul class='klist'><li><b><code>pam_wheel.so</code></b> — <b>su를 wheel 그룹 구성원만</b> 쓰게 제한. <b>기출 단골</b><br><code>auth required pam_wheel.so use_uid</code></li><li><b><code>pam_cracklib.so</code> · <code>pam_pwquality.so</code></b> — 패스워드 <b>복잡도·최소 길이</b> 강제</li><li><b><code>pam_tally2.so</code> · <code>pam_faillock.so</code></b> — <b>로그인 실패 횟수</b>로 <b>계정 잠금</b>(무차별 대입 대응)</li><li><b><code>pam_unix.so</code></b> — 전통적인 <code>/etc/passwd</code>·<code>/etc/shadow</code> 기반 인증</li><li><code>pam_limits.so</code>(자원 제한) · <code>pam_time.so</code>(시간대 제어) · <code>pam_listfile.so</code>(목록 기반 허용·차단) · <code>pam_deny.so</code>·<code>pam_permit.so</code></li></ul><p class='on-key'><span class='lbl'>시험 범위</span>모듈 이름을 전부 외울 필요는 없다. <b>4가지 타입 · required/requisite/sufficient 차이 · <code>/etc/pam.d</code> 위치 · pam_wheel로 su 제한</b>까지가 실질 출제 범위다.</p>"
+      }
+    ],
+    "finalLiner": "PAM=<b>프로그램과 인증 방식을 분리</b>해 설정만으로 정책을 바꾸는 구조, 위치 <b><code>/etc/pam.d/&lt;서비스&gt;</code></b>, 형식 <b>타입·제어플래그·모듈·옵션</b> / 타입 <b>auth(너 맞아?) · account(쓸 수 있는 계정?) · password(바꿀 때) · session(쓰는 동안)</b> / <b>required=끝까지 실행 후 실패 / requisite=즉시 중단 / sufficient=성공하면 즉시 종료</b> / <b>pam_wheel=su 제한 · pam_cracklib=복잡도 · pam_tally2=계정 잠금</b>",
+    "related": ["sudocap", "linuxlog", "authtype"]
   }
 ]
 );
+

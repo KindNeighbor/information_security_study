@@ -33,6 +33,11 @@ window.DATA = (window.DATA || []).concat(
         "d": "보안 개념이 거의 없던 시절 기술. 외부 노출 시 <b>널 세션(Null Session)</b>으로 인증 없이 접속해 사용자 목록·공유·정책 정보를 긁어감(정찰 단계 단골). 도구: <code>nbtstat</code>, nbtscan, enum4linux."
       },
       {
+        "k": "warn",
+        "title": "이름 해석은 브로드캐스트다 (ARP와 같은 구조)",
+        "d": "NetBIOS는 IP가 아니라 <b>컴퓨터 이름</b>으로 상대를 찾는다. 그 이름을 찾는 <b>NBNS(137/UDP)</b>가 <b>브로드캐스트를 뿌린다</b>.<ul class='klist'><li>해석 순서 — <b>캐시 → WINS → 브로드캐스트 → LMHOSTS · hosts · DNS</b>(노드 타입에 따라 순서가 다르다)</li><li><b>브로드캐스트라서 라우터를 넘지 못한다.</b> <b>ARP 요청이 랜을 못 넘는 것과 똑같은 구조</b>다. 그래서 서브넷을 넘어 이름을 찾으려고 <b>WINS 서버</b>(중앙 이름 등록소)가 필요했다</li><li><b>인증이 없다</b> → 브로드캐스트 질의에 <b>아무나 「그거 나야」라고 먼저 답할 수 있다</b> = <b>NBNS 스푸핑</b>. 훔친 인증 정보로 <b>NTLM 릴레이</b>까지 이어진다(Responder 류 도구). <b>LLMNR 스푸핑과 한 세트</b></li><li>정찰 — <b><code>nbtstat -A &lt;IP&gt;</code></b>로 이름 테이블을 긁어 호스트·도메인·서비스를 알아낸다</li></ul><p class='on-key'><span class='lbl'>연결</span><b>초기 프로토콜은 평문·무인증이 기본</b>이라는 큰 패턴의 한 사례다. ARP→DAI, NetBIOS/LLMNR→비활성화·SMB 서명으로 대응한다.</p>"
+      },
+      {
         "k": "safe",
         "title": "방어",
         "d": "쓸 거 아니면 막아라. 외부로 향하는 <code>137~139</code>·<code>445</code> 차단, 안 쓰면 NetBIOS over TCP/IP 비활성화. '안 쓰는데 켜진 서비스'를 줄이는 <b>공격 표면 최소화(하드닝)</b>의 교과서적 예시."
