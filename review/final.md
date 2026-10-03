@@ -457,6 +457,38 @@ CTR :  [E] ← 카운터 1, 2, 3…      ← Counter
 - **변조 = 있던 걸 고침 / 위조 = 없던 걸 만듦**
 - **트래픽 분석 = 내용을 못 읽는 상태에서 송수신자·빈도·길이로 유추**(내용 노출은 도청이다)
 
+## 알고리즘 분류 — 「~가 아닌 것은」 유형의 원천 (10-03, 한 회차에서 3문항)
+
+| 분류 | 알고리즘 |
+|---|---|
+| **대칭키 — 블록** | DES · 3DES · **AES(Rijndael)** · **SEED** · **ARIA** · **HIGHT** · **LEA** · IDEA · Blowfish · Twofish · Camellia · SKIPJACK · **RC5 · RC6** |
+| **대칭키 — 스트림** | **RC4** · **A5/1 · A5/2** · SEAL · ChaCha20 · LFSR 기반 |
+| **공개키 — 소인수분해** | **RSA** · **Rabin** |
+| **공개키 — 이산대수** | **DH** · **ElGamal** · **DSA** · **KCDSA** · **ECC 계열**(ECDH · ECDSA · EC-KCDSA) |
+| **해시** | MD5 · SHA-1/2/3 · HAS-160 · RIPEMD |
+| **전자서명** | RSA · **DSA · KCDSA · ECDSA · EC-KCDSA** · ElGamal · Schnorr |
+
+**함정 셋**
+
+- **RC4만 스트림, RC5·RC6은 블록.** 같은 Rivest Cipher 가족인데 4만 다르다
+- **이름에 DSA가 들어가면 전자서명**(DSA·KCDSA·ECDSA·EC-KCDSA). **A5에는 DSA가 없다**
+- **국산 = SEED · ARIA · HIGHT · LEA · HAS-160 · KCDSA.** HIGHT·LEA는 **경량**(IoT·RFID)
+
+**스트림 암호가 쓰이는 자리 — 「무선 · 음성 · 실시간」**
+· **RC4 = WEP**(Wired Equivalent Privacy) · 초기 SSL/TLS / **A5/1·A5/2 = GSM(2G) 음성**
+· 이유: 끝없이 흘러오고 **전체 길이를 미리 모르는** 데이터는 블록만큼 모일 때까지 기다릴 수 없다
+
+**ECC는 「이산대수 기반」에만 얹을 수 있다**
+
+| 원본 | 기반 | ECC 버전 |
+|---|---|---|
+| DH · DSA · KCDSA · **ElGamal** | **이산대수** | **있다** (ECDH·ECDSA·EC-KCDSA·EC-ElGamal) |
+| **RSA · Rabin** | **소인수분해** | **없다** |
+
+· **고리 — ECDH·ECDSA는 있는데 「ECRSA」는 없다.** 그게 답이다
+
+> **「~가 아닌 것」 요령 — 모르는 보기가 있으면 아는 셋의 공통점을 찾는다. 그 공통점이 없는 게 답이다.**
+
 ## 숫자·제원
 
 - **DES** 블록 **64** / 키 **56** / **Feistel 16라운드** · **3DES는 EDE**(EEE 아님)
