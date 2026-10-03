@@ -141,6 +141,40 @@
 - DMZ에 둔다 — 웹·메일중계·DNS·외부FTP·프록시·VPN 게이트웨이
 - **DMZ에 두지 않는다 — DB 서버, 내부 업무 시스템, 도메인 컨트롤러.** **「DB를 DMZ에」는 오답**
 
+## 2과목 — 10-03 2과목 1회차에서 나온 것
+
+**IGP vs EGP — Anycast가 BGP를 쓰는 이유**
+
+| | 쓰는 곳 | 프로토콜 |
+|---|---|---|
+| **IGP**(내부 게이트웨이) | **한 조직 안** | **RIP · OSPF · EIGRP** |
+| **EGP**(외부 게이트웨이) | **조직(AS)과 조직 사이** | **BGP** |
+
+· **Anycast = 같은 IP를 전 세계 여러 곳에서 광고** → 다른 조직에 알려야 하니 **BGP**
+· **OSPF는 우리 조직 안에서만 쓴다.** 「Anycast의 주요 라우팅 프로토콜은 OSPF」는 오답
+· 예 — 1.1.1.1 · 8.8.8.8 · kr root DNS. IPv4·IPv6 모두 가능
+
+**VPN 계층 — 이름에 계층이 적혀 있다**
+
+| 프로토콜 | 계층 |
+|---|---|
+| **PPTP · L2TP** | **2계층** ← **L2**TP = **Layer 2** |
+| **IPSec** | **3계층** ← **IP**Sec = IP가 3계층 |
+| **SSL/TLS VPN** | **4~7계층** |
+| **SSH** | **7계층(응용)** |
+
+· 「IPSec이 전송 계층」·「SSL VPN이 3계층」이 단골 함정
+
+**DDoS는 「취약점」이 아니라 「양」으로 죽인다**
+· 보기에 **취약점 이름**(Heartbleed·Shell Shock·Meltdown·Spectre)이 여럿인데 **DDoS가 하나** 섞여 있으면 **성격이 다른 그것**이 답
+· **Memcached DDoS** — UDP **11211** 반사·증폭, 증폭률 약 **5만 배**(2018 GitHub 1.35Tbps)
+· **Shell Shock** = Bash 취약점(환경변수에 함수 정의 → 뒤의 명령 실행) / **Heartbleed** = OpenSSL Heartbeat 버퍼 오버리드
+
+**Smurf 방어 3종 + 섞여 들어오는 가짜**
+· 방어 — **라우터 Direct Broadcast 비활성화**(`no ip directed-broadcast`) · **브로드캐스트로 온 ICMP에 Reply 금지** · **Ingress Filtering**(스푸핑 차단)
+· **「65,535byte 초과 ICMP를 단편화해 전송」은 Ping of Death 공격**이지 방어가 아니다
+· **동사로 걸러진다** — 방어는 「비활성화한다·금지한다·막는다」, 공격은 「전송한다」. **방어를 묻는데 혼자 공격 동작인 보기**가 답
+
 ## 뒤바꿈 짝
 
 - **ICMP 증폭 = Smurf**(여럿이 한 명을) / **접속 자리 고갈 = SYN flooding**(자리만 잡고 안 앉기)
