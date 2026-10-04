@@ -41,6 +41,130 @@
 - 달러(`$`)가 붙어 **목록에서 숨겨지고 관리자 권한 필요**, 기본 **활성화**
 - **IPC 공유는 프로세스 간 통신용**(널 세션 악용) / 드라이브 공유는 **C 드라이브 관리 공유**
 
+## ★ 1과목 명령어 한 장 — 「무엇을 하려고 치는가」로 묶는다
+
+> 본인 진술(10-04): **「명령어가 많이 나오네. 이건 내가 잘 모르는데」**
+> **대부분 이름이 약어다. 풀면 뜻이 나온다.**
+
+### 유닉스 — 로그·접속 보기
+
+| 명령 | 이름 | 보는 것 |
+|---|---|---|
+| **who · w** | | **현재 접속 중** (utmp) |
+| **last** | | **접속 이력** (wtmp) |
+| **lastb** | **b**ad | **실패한 로그인** (btmp) |
+| **lastlog** | | **마지막 로그인** 시각 |
+| **lastcomm · acctcom** | | **실행한 명령 이력** (pacct) |
+| **dmesg** | **d**isplay **mes**sa**g**e | **커널 부팅 메시지** |
+| **history** | | 내가 친 명령 이력 |
+
+### 유닉스 — 텍스트 처리 (로그 분석)
+
+| 명령 | 이름 | 하는 일 |
+|---|---|---|
+| **grep** | **g**lobal **re**gular expression **p**rint | **찾기** |
+| **awk** | 만든 사람 셋의 이니셜 | **자르기**(필드 추출·가공) |
+| **sed** | **s**tream **ed**itor | **바꾸기**(치환) |
+| **wc** | **w**ord **c**ount | **세기**(줄·단어·바이트) |
+| **cut** | | **열** 잘라내기 |
+| **sort · uniq** | | 정렬 / 중복 제거 |
+| **head · tail** | | 앞·뒤 보기. **`tail -f`는 실시간** |
+| **tr** | **tr**anslate | 문자 치환·삭제 |
+| **diff** | **diff**erence | 두 파일 비교 |
+
+### 유닉스 — 프로세스
+
+| 명령 | 이름 | 하는 일 |
+|---|---|---|
+| **ps** | **p**rocess **s**tatus | 프로세스 목록 |
+| **top** | | 실시간 자원 사용 |
+| **kill** | | 신호 보내기 (`kill -9` 강제 종료) |
+| **nohup** | **no h**ang **up** | **끊어도 계속** 실행 — **텍스트 처리가 아니다** |
+| **nice · renice** | | **우선순위** 조정 |
+| **lsof** | **l**i**s**t **o**pen **f**iles | **열린 파일·포트** 확인 |
+| **pstree** | | 프로세스 **계층** |
+
+### 유닉스 — 파일·권한
+
+| 명령 | 이름 | 하는 일 |
+|---|---|---|
+| **chmod** | **ch**ange **mod**e | **권한** 변경 (`u`=소유자, `g`=그룹, **`o`=others**, `a`=all) |
+| **chown · chgrp** | **ch**ange **own**er / **gr**ou**p** | 소유자·그룹 변경 |
+| **umask** | | **파일 666 / 디렉터리 777**에서 뺀다 |
+| **find** | | **파일 찾기** — **로그 명령이 아니다**. `find / -perm -04000`(SetUID 찾기) |
+| **stat** | **stat**us | **inode 정보**(권한·링크 수·타임스탬프) |
+| **file** | | 파일 **종류** 판별 |
+| **du · df** | **d**isk **u**sage / **f**ree | 사용량 / 남은 공간 |
+| **ln** | **l**i**n**k | `ln`=하드 링크, **`ln -s`=심볼릭 링크** |
+
+### 유닉스 — 네트워크
+
+| 명령 | 이름 | 하는 일 |
+|---|---|---|
+| **netstat** | **net**work **stat**istics | **연결 목록·포트** ← **「접속을 숨긴다」는 이것** |
+| **ss** | **s**ocket **s**tatistics | netstat의 후속 |
+| **ifconfig · ip** | **i**nter**f**ace **config** | **인터페이스 상태** ← **PROMISC가 여기 보인다** |
+| **arp** | | ARP 캐시 (`arp -a`) |
+| **route** | | 라우팅 테이블 |
+| **traceroute** | | 경로 추적 (유닉스는 **UDP**) |
+| **nslookup · dig** | | DNS 질의 |
+| **tcpdump** | | **패킷 캡처** |
+
+### 유닉스 — 사용자·권한 관리
+
+| 명령 | 하는 일 |
+|---|---|
+| **useradd · usermod · userdel** | 계정 생성·변경·삭제 |
+| **passwd** | 패스워드 변경 |
+| **chage** | **ch**ange **age** — **패스워드 만료 정책** |
+| **su · sudo** | 사용자 전환 / 권한 위임 (`/etc/sudoers`, `visudo`) |
+| **id · groups** | 내 UID·GID·그룹 |
+
+### 유닉스 — 보안 점검 도구
+
+| 도구 | 하는 일 |
+|---|---|
+| **tripwire · AIDE** | **파일 무결성**(해시 비교) |
+| **chkrootkit · rkhunter** | **루트킷** 점검 |
+| **john the ripper** | 패스워드 크랙 |
+| **nmap** | 포트 스캔 |
+| **snort** | **NIDS** |
+| **swatch** | **S**imple **WATCH**er — 로그 감시·알림 |
+| **ltrace · strace** | **l**ibrary call / **s**ystem call 추적 |
+
+### 윈도우 명령어
+
+| 명령 | 하는 일 |
+|---|---|
+| **net user** | 계정 목록·생성 |
+| **net share** | **내 공유를 보여주거나 만든다** (C$·IPC$·ADMIN$ 목록) |
+| **net use** | **남의 공유에 붙는다** |
+| **net localgroup** | 로컬 그룹 관리 |
+| **net session** | 현재 세션 |
+| **netstat** | 연결·포트 (`-ano`) |
+| **ipconfig** | IP 설정 (`/all`, `/flushdns`) |
+| **nbtstat** | **NetBIOS 이름 테이블** (`-A <IP>`) |
+| **tasklist · taskkill** | 프로세스 목록·종료 |
+| **mstsc** | **M**icro**s**oft **T**erminal **S**ervices **C**lient — **원격 데스크톱** |
+| **msconfig** | 시작 프로그램·서비스 |
+| **reg · regedit** | 레지스트리 |
+| **wmic** | WMI 질의 |
+| **eventvwr.msc** | **이벤트 뷰어** |
+| **secpol.msc** | **로컬 보안 정책**(감사 정책 설정) |
+| **gpedit.msc** | 그룹 정책 |
+| **services.msc** | 서비스 관리 |
+| **compmgmt.msc** | 컴퓨터 관리 |
+
+### 자주 나오는 짝 — 방향이 반대인 것들
+
+| | |
+|---|---|
+| **net use** 남의 것에 붙는다 ↔ **net share** 내 것을 내놓는다 |
+| **traceroute** 밖으로 가는 길 ↔ **netstat** 내 안의 연결 |
+| **netstat** 연결 목록 ↔ **ifconfig** 랜카드 상태 |
+| **ln** 하드 링크(같은 inode) ↔ **ln -s** 심볼릭 링크(별도 파일) |
+| **du** 쓴 양 ↔ **df** 남은 양 |
+
 ## 1과목 — 유닉스 기초 (2018-09에서 5문항이 여기서 나왔다)
 
 **디렉터리 이름은 약어다**
