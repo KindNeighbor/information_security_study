@@ -311,6 +311,100 @@
     .sidebar{position:static;}
     .gloss-list{grid-template-columns:1fr;}
   }
+
+  /* ================= 탭 ================= */
+  .tabs{display:flex;gap:8px;margin:0 0 18px;border-bottom:2px solid var(--line);}
+  .tab{
+    appearance:none;border:0;background:none;font-family:inherit;color:var(--ink-soft);
+    font-size:15px;font-weight:700;padding:10px 16px;cursor:pointer;
+    border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s;
+  }
+  .tab:hover{color:var(--ink);}
+  .tab[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent);}
+  .tabpane[hidden]{display:none;}
+
+  /* ================= 최종 정리 (마크다운) ================= */
+  .final-wrap{display:grid;grid-template-columns:236px minmax(0,1fr);gap:22px;align-items:start;}
+  .final-wrap>*{min-width:0;}
+  .final-side{position:sticky;top:14px;max-height:calc(100vh - 28px);overflow-y:auto;
+    scrollbar-width:thin;padding-right:2px;}
+  .final-side::-webkit-scrollbar{width:7px;}
+  .final-side::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:4px;}
+  .fin-toc-sum{cursor:pointer;margin:0;list-style:none;display:flex;align-items:center;gap:7px;}
+  .fin-toc-sum::-webkit-details-marker{display:none;}
+  .fin-toc-sum::after{content:"▾";font-size:12px;color:var(--accent);transition:transform .15s;}
+  .fin-toc-box[open] .fin-toc-sum::after{transform:rotate(180deg);}
+  .fin-toc-box[open] .fin-toc-sum{margin-bottom:10px;}
+  .fin-toc{display:flex;flex-direction:column;gap:2px;}
+  .fin-toc .fin-h1{
+    font-weight:800;font-size:13px;color:var(--accent);margin:11px 0 3px;
+    padding-bottom:4px;border-bottom:1px solid var(--line);
+  }
+  .fin-toc .fin-h1:first-child{margin-top:0;}
+  .fin-toc a{
+    display:block;font-size:12.5px;color:var(--ink-soft);text-decoration:none;
+    padding:4px 7px;border-radius:7px;line-height:1.4;
+  }
+  .fin-toc a:hover{background:var(--accent-soft);color:var(--accent);}
+  .final-bar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:14px;}
+  .final-note{font-size:12.5px;color:var(--ink-soft);}
+
+  .md{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px 24px;}
+  .md>*:first-child{margin-top:0;}
+  .md h1{
+    font-size:23px;font-weight:800;letter-spacing:-.02em;margin:38px 0 14px;
+    padding-bottom:9px;border-bottom:2px solid var(--accent);scroll-margin-top:16px;
+  }
+  .md h2{
+    font-size:18px;font-weight:800;letter-spacing:-.01em;margin:30px 0 11px;
+    color:var(--accent);scroll-margin-top:16px;
+  }
+  .md h3{font-size:15.5px;font-weight:800;margin:22px 0 8px;scroll-margin-top:16px;}
+  .md p{margin:9px 0;font-size:14.5px;line-height:1.68;}
+  .md ul,.md ol{margin:9px 0;padding-left:20px;}
+  .md li{font-size:14.5px;line-height:1.68;margin:5px 0;}
+  .md li>ul,.md li>ol{margin:5px 0;}
+  .md strong{font-weight:800;color:var(--ink);}
+  .md hr{border:0;border-top:1px solid var(--line);margin:28px 0;}
+  .md blockquote{
+    margin:13px 0;padding:11px 15px;background:var(--accent-soft);
+    border-left:4px solid var(--accent);border-radius:0 10px 10px 0;
+  }
+  .md blockquote>*:first-child{margin-top:0;}
+  .md blockquote>*:last-child{margin-bottom:0;}
+  .md blockquote h3{font-size:15px;margin:7px 0;color:var(--accent);}
+  .md code{white-space:normal;}
+  .md pre{
+    background:var(--surface-2);border:1px solid var(--line);border-radius:10px;
+    padding:13px 15px;overflow-x:auto;margin:11px 0;
+  }
+  .md pre code{background:none;border:0;padding:0;color:var(--ink);font-size:12.7px;
+    line-height:1.6;white-space:pre;}
+  .md .tbl{overflow-x:auto;max-width:100%;margin:12px 0;-webkit-overflow-scrolling:touch;}
+  .md table{border-collapse:collapse;width:100%;font-size:13.8px;min-width:360px;}
+  .md th,.md td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top;line-height:1.55;}
+  .md th{background:var(--surface-2);font-weight:800;font-size:12.8px;color:var(--ink-soft);white-space:nowrap;}
+  .md tbody tr:nth-child(even){background:#F8FAFC;}
+
+  /* 가리기 모드 — 표의 둘째 칸부터 블러, 누르면 열림 */
+  .md.hide-ans td:not(:first-child){
+    filter:blur(5px);cursor:pointer;user-select:none;transition:filter .12s;
+  }
+  .md.hide-ans td:not(:first-child).shown{filter:none;user-select:auto;}
+  .md.hide-ans td:not(:first-child):hover{filter:blur(2.5px);}
+
+  .final-loading{padding:40px 0;text-align:center;color:var(--ink-soft);font-size:14px;}
+
+  @media(max-width:820px){
+    .final-wrap{grid-template-columns:1fr;}
+    .final-side{position:static;max-height:none;}
+    .md{padding:17px 15px;border-radius:12px;}
+    .md h1{font-size:20px;}
+    .md h2{font-size:16.5px;}
+    .md p,.md li{font-size:14px;}
+    .md table{font-size:13px;}
+    .md th,.md td{padding:7px 9px;}
+  }
 </style>
 </head>
 <body>
@@ -325,6 +419,12 @@
     </div>
   </header>
 
+  <div class="tabs" role="tablist">
+    <button class="tab" id="tabBtnCards" role="tab" aria-selected="true" aria-controls="paneCards">📇 개념 카드</button>
+    <button class="tab" id="tabBtnFinal" role="tab" aria-selected="false" aria-controls="paneFinal">📋 최종 정리</button>
+  </div>
+
+  <div class="tabpane" id="paneCards" role="tabpanel">
   <div class="layout">
     <aside class="sidebar">
       <div class="side-block">
@@ -354,6 +454,25 @@
       <p class="empty" id="empty" style="display:none">검색 결과가 없어요.</p>
     </div>
   </div>
+  </div><!-- /paneCards -->
+
+  <div class="tabpane" id="paneFinal" role="tabpanel" hidden>
+    <div class="final-wrap">
+      <aside class="final-side">
+        <details class="side-block fin-toc-box" id="finTocBox">
+          <summary class="side-h fin-toc-sum">목차</summary>
+          <nav class="fin-toc" id="finToc"></nav>
+        </details>
+      </aside>
+      <div>
+        <div class="final-bar">
+          <button class="review-btn" id="finHide" aria-pressed="false">가리기 모드</button>
+          <span class="final-note">표의 둘째 칸부터 가려집니다. 눌러서 확인하세요.</span>
+        </div>
+        <div class="md" id="finBody"><p class="final-loading">불러오는 중…</p></div>
+      </div>
+    </div>
+  </div><!-- /paneFinal -->
 
   <footer>
     <b>구조</b> — 카드 데이터는 주제별 <code>cards/*.js</code> 파일에 있고, 이 문서는 디자인·기능(렌더링)만 담습니다. 새 카드는 해당 주제의 <code>cards/&lt;주제&gt;.js</code>의 <code>window.DATA.concat([ ... ])</code>에 객체 하나를 추가하면 끝. 읽기용 노트는 <code>node build.js</code>로 <code>notes/*.md</code>가 자동 생성됩니다. 카드 형식은 파일 맨 아래 주석의 템플릿을 참고하세요.
@@ -1033,6 +1152,121 @@ render();
      related:["다른카드id"]
    }
    ========================================================================= */
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script>
+/* ===================== 탭 + 최종 정리(final.md) ===================== */
+(function(){
+  const btnCards = document.getElementById('tabBtnCards');
+  const btnFinal = document.getElementById('tabBtnFinal');
+  const paneCards= document.getElementById('paneCards');
+  const paneFinal= document.getElementById('paneFinal');
+  const body     = document.getElementById('finBody');
+  const tocEl    = document.getElementById('finToc');
+  const hideBtn  = document.getElementById('finHide');
+  if(!btnFinal || !paneFinal) return;
+
+  let loaded = false;
+
+  function show(which){
+    const isFinal = which === 'final';
+    paneCards.hidden = isFinal;
+    paneFinal.hidden = !isFinal;
+    btnCards.setAttribute('aria-selected', String(!isFinal));
+    btnFinal.setAttribute('aria-selected', String(isFinal));
+    try{ localStorage.setItem('isecTab', which); }catch(e){}
+    if(isFinal && !loaded) load();
+  }
+
+  const RAW = 'https://raw.githubusercontent.com/KindNeighbor/information_security_study/main/review/final.md';
+
+  async function load(){
+    loaded = true;
+    let md = null;
+    for(const url of ['review/final.md', RAW]){
+      try{
+        const r = await fetch(url, {cache:'no-cache'});
+        if(r.ok){ md = await r.text(); break; }
+      }catch(e){}
+    }
+    if(md === null){
+      body.innerHTML = '<p class="final-loading">파일을 불러오지 못했습니다.<br>'
+        + '<a href="'+RAW+'" target="_blank" rel="noopener">GitHub에서 직접 보기</a></p>';
+      return;
+    }
+    body.innerHTML = marked.parse(md);
+    wrapTables();
+    buildToc();
+    bindReveal();
+  }
+
+  // 표를 가로 스크롤 상자로 감싼다 (모바일에서 넘침 방지)
+  function wrapTables(){
+    body.querySelectorAll('table').forEach(t=>{
+      if(t.parentElement && t.parentElement.classList.contains('tbl')) return;
+      const box = document.createElement('div');
+      box.className = 'tbl';
+      t.parentNode.insertBefore(box, t);
+      box.appendChild(t);
+    });
+  }
+
+  function slug(i){ return 'fin-' + i; }
+
+  function buildToc(){
+    const heads = body.querySelectorAll('h1, h2');
+    tocEl.innerHTML = '';
+    heads.forEach((h, i)=>{
+      h.id = slug(i);
+      if(h.tagName === 'H1'){
+        const d = document.createElement('div');
+        d.className = 'fin-h1';
+        d.textContent = h.textContent;
+        tocEl.appendChild(d);
+      }else{
+        const a = document.createElement('a');
+        a.href = '#' + h.id;
+        a.textContent = h.textContent.replace(/^[★⚠️\s]+/, '');
+        a.addEventListener('click', ev=>{
+          ev.preventDefault();
+          const box = document.getElementById('finTocBox');
+          if(box && window.innerWidth <= 820) box.open = false;
+          h.scrollIntoView({behavior:'smooth', block:'start'});
+        });
+        tocEl.appendChild(a);
+      }
+    });
+  }
+
+  // 가리기 모드: 표의 둘째 칸부터 블러, 누르면 열림
+  function bindReveal(){
+    body.addEventListener('click', e=>{
+      if(!body.classList.contains('hide-ans')) return;
+      const td = e.target.closest('td');
+      if(!td || td.cellIndex === 0) return;
+      td.classList.toggle('shown');
+    });
+  }
+
+  hideBtn.addEventListener('click', ()=>{
+    const on = body.classList.toggle('hide-ans');
+    hideBtn.setAttribute('aria-pressed', String(on));
+    hideBtn.textContent = on ? '가리기 해제' : '가리기 모드';
+    if(!on) body.querySelectorAll('td.shown').forEach(td=>td.classList.remove('shown'));
+  });
+
+  btnCards.addEventListener('click', ()=>show('cards'));
+  btnFinal.addEventListener('click', ()=>show('final'));
+
+  const tocBox = document.getElementById('finTocBox');
+  if(tocBox) tocBox.open = window.innerWidth > 820;
+
+  let saved = 'cards';
+  try{ saved = localStorage.getItem('isecTab') || 'cards'; }catch(e){}
+  if(location.hash === '#final') saved = 'final';
+  show(saved);
+})();
 </script>
 </body>
 </html>
