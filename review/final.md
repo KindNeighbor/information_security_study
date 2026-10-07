@@ -605,6 +605,52 @@ i-node가 가진 것 — **파일 유형 · 권한 · 소유자·그룹 · 크�
 - Snort 공식 소개문의 단어 — **「Lightweight」**, 「실시간 트래픽 분석」, 「패킷 로깅」
 - **wireshark는 보고, snort는 잡고, iptables는 막고, tripwire는 파일을 지킨다**
 
+### ★ 보안 도구 분류 — 「무엇을 보느냐」 하나로 갈린다 (10-07 질문)
+
+| 무엇을 보나 | 분류 | 도구 |
+|---|---|---|
+| **내 파일이 바뀌었나** | **무결성 점검** | **Tripwire** · **AIDE** · Samhain · Fcheck |
+| **구멍이 있나** | **취약점 점검** | **Nessus** · OpenVAS · SATAN · SAINT · SARA · COPS |
+| 웹에 구멍이 있나 | 취약점(웹) | **Nikto** · Paros · Acunetix · OWASP ZAP |
+| **어떤 포트가 열렸나** | **포트 스캐너** | **Nmap** · hping |
+| 무슨 패킷이 오가나 | 스니퍼 | **Wireshark** · tcpdump · dsniff |
+| 공격이 들어오나 | **IDS** | **Snort** · Suricata |
+| 막는다 | 방화벽 | **iptables** |
+
+> **무결성은 「내 것」을 보고, 취약점은 「구멍」을 본다.**
+> 무결성 도구는 **내 파일 해시를 미리 저장해 두고 비교**한다(바깥을 안 본다).
+> 취약점 도구는 **알려진 취약점 목록을 들고 대상을 찔러본다**(내 파일에 관심 없다).
+
+- **시점도 반대다 — 무결성은 사후**(이미 당했는지 · 백도어·루트킷 탐지) / **취약점은 사전**(당하기 전 점검)
+
+**이름이 알려준다**
+
+| | |
+|---|---|
+| **Tripwire** | **trip(걸려 넘어지다) + wire(줄)** = **건드리면 울리는 줄** → 무결성 |
+| **AIDE** | **A**dvanced **I**ntrusion **D**etection **E**nvironment — Tripwire 오픈소스 대안 |
+| **SATAN** | Security Administrator Tool for **Analyzing** Networks — **분석 = 취약점**, 최초의 스캐너 |
+| **COPS** | 유닉스 **로컬** 취약점 점검 |
+| **Nmap** | **N**etwork **map**per — **지도를 그린다** = 포트·호스트 탐색 |
+| **Nikto** | **웹 서버 전용** 취약점 스캐너 |
+
+**헷갈리는 짝 셋**
+- **Tripwire vs Nessus** — **내 파일(무결성) vs 상대의 구멍(취약점)**
+- **Nmap vs Nessus** — **Nmap은 「열려 있나」만, Nessus는 「그 서비스에 취약점이 있나」까지.** **Nmap이 문을 세고, Nessus가 자물쇠를 검사한다**
+- **Snort vs Tripwire** — 둘 다 탐지인데 **Snort는 네트워크를 보는 NIDS, Tripwire는 디스크 파일을 보는 HIDS**
+
+**분류가 아예 다른 것들 (보기에 섞여 들어온다)**
+
+| | |
+|---|---|
+| **DDoS 공격 도구** | **Trinoo** · TFN · TFN2K · **Stacheldraht** · Shaft |
+| **세션 하이재킹** | **Hunt** · Juggernaut · T-Sight · Ettercap |
+| **패스워드 크래킹** | **John the Ripper** · L0phtCrack · Cain&Abel · Hydra |
+| **루트킷 탐지** | **chkrootkit** · rkhunter |
+| **로그 감시** | **swatch**(Simple WATCHer) · logcheck |
+
+- **2014-09 27번** — Hunt를 몰라도 **Trinoo·Nikto·Tripwire가 전부 아는 것**이라 **소거법으로 풀렸다.** 이 표의 쓸모가 거기에 있다
+
 **악성코드 이름 — 어디를 노렸나로 가른다**
 
 | | 특징 |
