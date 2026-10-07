@@ -1690,7 +1690,7 @@ TCP Half Open(SYN):  SYN → SYN+ACK → RST   ← 끊어버림.  로그 안 남
 | **공개키(비대칭)** | 기반 |
 |---|---|
 | **RSA** · **Rabin** | **소인수분해** |
-| **DH** · **ElGamal** · **DSA** · **KCDSA** · **ECC**(ECDH·ECDSA) | **이산대수** |
+| **DH** · **ElGamal** · **DSA** · **KCDSA** · **Schnorr** · **ECC**(ECDH·ECDSA) | **이산대수** |
 | **배낭(Merkle-Hellman)** | 배낭 문제(깨짐) |
 
 **나머지 암호 알고리즘은 전부 대칭키** — DES · 3DES · **AES(Rijndael)** · **SEED** · **ARIA** · **LEA** · **HIGHT** · IDEA · Blowfish · Twofish · **RC4·RC5·RC6** · Camellia · SKIPJACK
@@ -1969,7 +1969,10 @@ A: 초록+빨강 = 갈색                        B: 주황+파랑 = 갈색
 · **DH는 아무도 세션키를 보내지 않는다**(각자 계산) · **Challenge-Response는 인증**이지 키 분배가 아니다
 
 > ### ★ 기반 문제 — R로 시작하는 둘이 소인수분해
-> **RSA · Rabin = 소인수분해** / **DH · DSA · ElGamal · ECC = 이산대수**
+> **RSA · Rabin = 소인수분해**(둘뿐) / **DH · DSA · ElGamal · KCDSA · Schnorr · ECC = 이산대수**
+> **「이산대수가 아닌 것」을 물으면 보기에서 RSA나 Rabin을 찾으면 끝이다.** 나머지는 볼 필요가 없다
+> **Rabin = 제곱만 하는 RSA**(RSA는 e제곱, Rabin은 e=2). **소인수분해와 동등함이 증명돼 있지만 복호화 결과가 4개라 실용성이 낮다**
+> **이름이 돕는다 — DSA가 들어가면 전부 이산대수**(DSA·KCDSA·ECDSA·EC-KCDSA). **Schnorr도 서명 계열이라 같은 무리**
 > 그래서 **ECDH·ECDSA는 있어도 「ECRSA」는 없다** (ECC는 이산대수에만 붙는다)
 
 **DH 한 번 더 (10-03에 네 번 틀림)** — 기반 **이산대수** · **키 교환 전용**(암호화 ✗ 서명 ✗) · 약점 **중간자** · 그래서 **서명을 붙여 씀(DHE·ECDHE)** · **ECC 적용 가능(ECDH)** · **순방향 기밀성 제공**
@@ -2328,7 +2331,7 @@ CFB      IV ── [암호화] ──⊕── 암호문        평문이 상자
 | **대칭키 — 블록** | DES · 3DES · **AES(Rijndael)** · **SEED** · **ARIA** · **HIGHT** · **LEA** · IDEA · Blowfish · Twofish · Camellia · SKIPJACK · **RC5 · RC6** |
 | **대칭키 — 스트림** | **RC4** · **A5/1 · A5/2** · SEAL · ChaCha20 · LFSR 기반 |
 | **공개키 — 소인수분해** | **RSA** · **Rabin** |
-| **공개키 — 이산대수** | **DH** · **ElGamal** · **DSA** · **KCDSA** · **ECC 계열**(ECDH · ECDSA · EC-KCDSA) |
+| **공개키 — 이산대수** | **DH** · **ElGamal** · **DSA** · **KCDSA** · **Schnorr** · **ECC 계열**(ECDH · ECDSA · EC-KCDSA) |
 | **해시** | MD5 · SHA-1/2/3 · HAS-160 · RIPEMD |
 | **전자서명** | RSA · **DSA · KCDSA · ECDSA · EC-KCDSA** · ElGamal · Schnorr |
 
